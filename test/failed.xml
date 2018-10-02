@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<testsuites disabled="0" errors="0" failures="1" name="AllTests" tests="1" time="0">
+<testsuite disabled="0" errors="0" failures="1" name="Engines.Traffic.Serialization.Test.Unittest_unittest.FOR.NDS" tests="0" time="0:00:00">
+<testcase classname="***REMOVED***">
+<failure message="Assumed test timed out" type="">
+It is assumed that test did not finish in time (see CTest for maximum running time)
+</failure>
+</testcase>
+</testsuite>
+</testsuites>
