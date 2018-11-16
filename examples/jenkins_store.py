@@ -2,14 +2,13 @@ import requests
 
 from datetime import datetime
 
-from BuildResults import BuildResults
+from elastic.BuildResults import BuildResults
 
 def status():
     return "passing"
 
 def jenkins_json_decode(url):
     json_results = requests.get(url).json()
-
     results = {
         'tests': [],
         'suites': []
@@ -50,7 +49,7 @@ def jenkins_json_decode(url):
 
     return results
 
-url = "https://***REMOVED***/job/cpp-reflection-tests-BB/job/PR-1831/6/testReport/api/json"
+url = "https://***REMOVED***/view/baseline-jobs/job/cpp-reflection-tests-BB-baseline/lastSuccessfulBuild/testReport/api/json"
 
 testBuild = BuildResults(jobName = "test", buildDateTime = datetime.now().isoformat(), jobLink = url)
 testBuild.storeTests(jenkins_json_decode, {'url': url})

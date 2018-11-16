@@ -25,7 +25,7 @@ class BuildResults(Document):
     status = Text()
     tests = Nested(Test)
     suites = Nested(TestSuite)
-    
+
     def storeTests(self, retrieveFunction, args):
         results = retrieveFunction(**args)
         for test in results.get('tests', None):

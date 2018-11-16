@@ -3,9 +3,7 @@
 import requests
 
 from datetime import datetime
-
-from BuildResults import BuildResults
-
+from elastic.BuildResults import BuildResults
 from junitparser import JUnitXml
 
 def getXunitResultsAllfiles(testfiles):
@@ -17,7 +15,7 @@ def getXunitResultsAllfiles(testfiles):
         temp_results = getXunitResults(testfile)
         results['tests'].extend(temp_results['tests'])
         results['suites'].extend(temp_results['suites'])
-    
+
     return results
 
 def getXunitResults(filename):
