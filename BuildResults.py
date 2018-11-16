@@ -25,9 +25,6 @@ class BuildResults(Document):
     status = Text()
     tests = Nested(Test)
     suites = Nested(TestSuite)
-
-    class Index:
-        name = 'test_buildresults'
     
     def storeTests(self, retrieveFunction, args):
         results = retrieveFunction(**args)

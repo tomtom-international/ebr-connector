@@ -1,5 +1,11 @@
 #! /usr/bin/python3
 
+import requests
+
+from datetime import datetime
+
+from BuildResults import BuildResults
+
 from junitparser import JUnitXml
 
 def getXunitResultsAllfiles(testfiles):
@@ -66,3 +72,15 @@ def getXunitResults(filename):
             results['tests'].append(test)
 
     return results
+
+def status():
+    return "passing"
+
+testBuild = BuildResults(jobName = "test", buildDateTime = datetime.now().isoformat(), jobLink = "https://***REMOVED***/")
+testBuild.storeTests(getXunitResultsAllfiles, {'testfiles': ["test/passed.xml"]})
+testBuild.storeStatus(status)
+
+dest = 'ubuntu-logcollector.ber.global'
+port = 10010
+
+testBuild.save(dest, port)
