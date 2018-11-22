@@ -2,6 +2,7 @@ from elasticsearch_dsl import Document, Text, InnerDoc, Float, Integer, Nested, 
 
 import socket
 import json
+import warnings
 
 class Test(InnerDoc):
     suite = Text()
@@ -22,19 +23,26 @@ class BuildResults(Document):
     jobName = Text()
     jobLink = Text()
     buildDateTime = Date()
+    buildId = Text()
     status = Text()
     tests = Nested(Test)
     suites = Nested(TestSuite)
 
     def storeTests(self, retrieveFunction, args):
-        results = retrieveFunction(**args)
-        for test in results.get('tests', None):
-            self.tests.append(Test(**test))
-        for suite in results.get('suites', None):
-            self.suites.append(TestSuite(**suite))
+        try:
+            results = retrieveFunction(**args)
+            for test in results.get('tests', None):
+                self.tests.append(Test(**test))
+            for suite in results.get('suites', None):
+                self.suites.append(TestSuite(**suite))
+        except:
+            warnings.warn("Failed to retrieve test data.")
 
     def storeStatus(self, statusFunction):
-        self.status = statusFunction()
+        try:
+            self.status = statusFunction()
+        except:
+            warnings.warn("Failed to retrieve status information.")
 
     def save(self, dest, port):
         result=str.encode(json.dumps(self.to_dict()))
