@@ -1,6 +1,7 @@
 from elasticsearch_dsl import Document, Text, InnerDoc, Float, Integer, Nested, Date
 
 import socket
+import ssl
 import json
 import warnings
 
@@ -44,9 +45,19 @@ class BuildResults(Document):
         except:
             warnings.warn("Failed to retrieve status information.")
 
-    def save(self, dest, port):
+    def save(self, dest, port, cafile=None, clientcert=None, clientkey=None, keypass=""):
         result=str.encode(json.dumps(self.to_dict()))
-        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        s.connect((dest, port))
-        s.send(result)
-        s.close()
+        bareSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        bareSocket.settimeout(10)
+
+        context = ssl.create_default_context(cafile=cafile)
+
+        if clientcert:
+            context.verify_mode = ssl.CERT_REQUIRED
+            context.load_cert_chain(clientcert, clientkey, keypass)
+
+        secureSocket = context.wrap_socket(bareSocket, server_hostname=dest)
+
+        secureSocket.connect((dest, port))
+        secureSocket.send(result)
+        secureSocket.close()
