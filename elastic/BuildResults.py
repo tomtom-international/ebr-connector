@@ -12,15 +12,21 @@ class Test(InnerDoc):
     result = Text()
     message = Text()
     duration = Float()
+    reportset = Text()
+    stage = Text()
 
 class TestSuite(InnerDoc):
-    errors = Text()
-    failures = Text()
+    failures = Integer()
+    passed = Integer()
+    skipped = Integer()
     name = Text()
     test_count = Integer()
     duration = Float()
+    package = Text()
+    product = Text()
 
 class BuildResults(Document):
+    platform = Text()
     jobName = Text()
     jobLink = Text()
     buildDateTime = Date()

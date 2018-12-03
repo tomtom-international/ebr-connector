@@ -17,7 +17,11 @@ setup(
     packages=["elastic"],
     python_requires=">3.5",
     install_requires=[
-        "elasticsearch-dsl>=6.2.1,<7"
+        "elasticsearch-dsl>=6.2.1,<7",
+        "qb_results_exporter"
+    ],
+    dependency_links=[
+        "https://***REMOVED***/artifactory/api/pypi/pypi-virtual/simple/qb-results-exporter"
     ],
     classifiers=[
         "Programming Language :: Python :: 3",
