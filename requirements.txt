@@ -1,2 +1,0 @@
-twine~=1.12.1
-elasticsearch-dsl>=6.2.1,<7

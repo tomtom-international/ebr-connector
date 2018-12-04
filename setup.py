@@ -7,7 +7,7 @@ with open("README.rst", "r") as fh:
 
 setup(
     name="ebr-connector",
-    version="0.0.1",
+    version="0.0.1-dev",
     author="Eugene Davis",
     author_email="eugene.davis@tomtom.com",
     description="Library that defines the schema used for pushing test results into Elasticsearch",
