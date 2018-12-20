@@ -1,4 +1,7 @@
-from elasticsearch_dsl import Document, Text, InnerDoc, Float, Integer, Nested, Date
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+from elasticsearch_dsl import Document, Text, InnerDoc, Float, Integer, Nested, Date, Keyword
 
 import socket
 import ssl
@@ -6,32 +9,32 @@ import json
 import warnings
 
 class Test(InnerDoc):
-    suite = Text()
-    classname = Text()
-    test = Text()
+    suite = Text(fields={'raw': Keyword()})
+    classname = Text(fields={'raw': Keyword()})
+    test = Text(fields={'raw': Keyword()})
     result = Text()
     message = Text()
     duration = Float()
     reportset = Text()
-    stage = Text()
+    stage = Text(fields={'raw': Keyword()})
 
 class TestSuite(InnerDoc):
+    name = Text(fields={'raw': Keyword()})
     failures = Integer()
-    passed = Integer()
     skipped = Integer()
-    name = Text()
-    test_count = Integer()
+    passed = Integer()
+    total = Integer()
     duration = Float()
-    package = Text()
-    product = Text()
+    package = Text(fields={'raw': Keyword()})
+    product = Text(fields={'raw': Keyword()})
 
 class BuildResults(Document):
-    platform = Text()
-    jobName = Text()
+    jobName = Text(fields={'raw': Keyword()})
     jobLink = Text()
     buildDateTime = Date()
-    buildId = Text()
-    status = Text()
+    buildId = Text(fields={'raw': Keyword()})
+    platform = Text(fields={'raw': Keyword()})
+    status = Keyword()
     tests = Nested(Test)
     suites = Nested(TestSuite)
 
@@ -42,8 +45,9 @@ class BuildResults(Document):
                 self.tests.append(Test(**test))
             for suite in results.get('suites', None):
                 self.suites.append(TestSuite(**suite))
-        except:
+        except Exception as e:
             warnings.warn("Failed to retrieve test data.")
+            warnings.warn(e)
 
     def storeStatus(self, statusFunction):
         try:
