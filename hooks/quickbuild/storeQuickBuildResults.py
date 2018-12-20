@@ -1,8 +1,9 @@
 #!/usr/bin/python
 
-import logging
 import argparse
+import logging
 import pprint
+import sys
 from qb_results_exporter.qb_results_exporter import QBResultsExporter
 from elastic.BuildResults import BuildResults
 
@@ -120,7 +121,7 @@ def quickbuild_xml_decode(build_info):
 def status():
     return build_info.get(QBResultsExporter.KEY_BUILD_STATUS, None)
 
-if __name__ == '__main__':
+def main():
     logging.getLogger("urllib3").setLevel(logging.WARNING)
     logger = logging.getLogger('StoreQuickBuildResults')
 
@@ -149,3 +150,6 @@ if __name__ == '__main__':
     except Exception as err:
         logger.error(err)
         exit(1)
+
+if __name__ == '__main__':
+    sys.exit(main())
