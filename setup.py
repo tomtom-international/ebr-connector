@@ -12,7 +12,7 @@ setup(
     author_email="eugene.davis@tomtom.com",
     description="Library that defines the schema used for pushing test results into Elasticsearch",
     long_description=readme,
-    url=("https://***REMOVED***/projects/BERLINCI/repos/"
+    url=("https://***REMOVED***/projects/NAV/repos/"
          "ebr-connector/browse"),
     packages=find_packages(),
     python_requires=">3.5",
