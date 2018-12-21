@@ -1,5 +1,10 @@
-import requests
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import argparse
+import requests
+import sys
+
 from datetime import datetime
 from elastic.schema.BuildResults import BuildResults
 from json.decoder import JSONDecodeError
