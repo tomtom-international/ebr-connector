@@ -23,7 +23,7 @@ setup(
     ],
     entry_points="""
 [console_scripts]
-es-build-results-index-template = elastic.generate_index_template:main
+es-generate-index-template = elastic.index.generateTemplate:main
 es-store-quickbuild-results = elastic.hooks.quickbuild.storeResults:main
 es-store-jenkins-results = elastic.hooks.jenkins.storeResults:main
 """,
