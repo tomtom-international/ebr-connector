@@ -18,8 +18,8 @@ setup(
     python_requires=">3.5",
     install_requires=[
         "elasticsearch-dsl>=6.2.1,<7",
-        "requests>=2.21.0,<3",
-        "qb_results_exporter"
+        "requests>=2.18.4,<3",
+        "qb_results_exporter>=0.0.2"
     ],
     entry_points="""
 [console_scripts]
