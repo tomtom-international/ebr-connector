@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import argparse
+import getpass
 import logging
 import pprint
 import sys
@@ -120,6 +121,9 @@ def main():
 
         if (args.clientcert or args.clientkey) and not (args.clientcert and args.clientkey):
             raise ValueError("Either both '--clientcert' and '--clientkey' must be set or neither should be set.")
+
+        if not args.qb_password and args.qb_username:
+            args.qb_password = getpass.getpass("Password for " + args.qb_username + ": ")
 
         logging.basicConfig(level=args.log_level.upper())
         qb_results_exporter = QBResultsExporter(logger, args.qb_username, args.qb_password)
