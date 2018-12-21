@@ -142,7 +142,7 @@ def main():
             build_date = build_date.isoformat()
 
         quickbuildResults = BuildResults(platform = args.platform, jobName = args.job_name, buildId = args.build_id, buildDateTime = build_date, jobLink = build_url)
-        quickbuildResults.storeTests(quickbuild_xml_decode, {'build_info': build_info})
+        quickbuildResults.storeTests(quickbuild_xml_decode, build_info=build_info)
         quickbuildResults.storeStatus(status)
         quickbuildResults.save(args.log_collect_addr, args.log_collect_port, cafile=args.cacert,
                                clientcert=args.clientcert, clientkey=args.clientkey, keypass=args.clientpassword)

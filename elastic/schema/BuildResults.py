@@ -109,7 +109,7 @@ class BuildResults(Document):
             retrieveFunction: Callback function which provides test and suite data in dictionaries (see Test and TestSuite documentation for format)
         """
         try:
-            results = retrieveFunction(**args)
+            results = retrieveFunction(*args, **kwargs)
             for test in results.get('tests', None):
                 self.tests.append(Test(**test))
             for suite in results.get('suites', None):
@@ -126,8 +126,7 @@ class BuildResults(Document):
             statusFunction: Callback function which provides status information
         """
         try:
-            self.status = statusFunction()
-        except:
+            self.status = statusFunction(*args, **kwargs)
         except Exception as e:
             warnings.warn("Failed to retrieve status information.")
             traceback.print_exc()

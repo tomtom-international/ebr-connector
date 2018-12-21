@@ -5,7 +5,7 @@ from elastic.schema.BuildResults import BuildResults
 from json.decoder import JSONDecodeError
 
 
-def status():
+def status(args):
     return args.buildstatus
 
 
@@ -77,8 +77,8 @@ def main():
         exit()
 
     jenkinsBuild = BuildResults(jobName = args.jobname, buildId = args.buildid, buildDateTime = args.buildtime, jobLink = args.buildurl)
-    jenkinsBuild.storeTests(jenkins_json_decode, {'url': args.buildurl + "testReport/api/json"})
-    jenkinsBuild.storeStatus(status)
+    jenkinsBuild.storeTests(jenkins_json_decode, args.buildurl + "testReport/api/json")
+    jenkinsBuild.storeStatus(status, args)
 
     jenkinsBuild.save(args.logcollectname, args.logcollectport, cafile=args.cacert, clientcert=args.clientcert, clientkey=args.clientkey, keypass=args.clientpassword)
 
