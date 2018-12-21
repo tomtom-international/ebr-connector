@@ -14,17 +14,18 @@ setup(
     long_description=readme,
     url=("https://***REMOVED***/projects/BERLINCI/repos/"
          "ebr-connector/browse"),
-    package_dir = { "ebr-connector/examples": "examples" },
-    packages=[ "elastic" ],
+    packages=find_packages(),
     python_requires=">3.5",
     install_requires=[
         "elasticsearch-dsl>=6.2.1,<7",
+        "requests>=2.21.0,<3",
         "qb_results_exporter"
     ],
     entry_points="""
 [console_scripts]
 es-build-results-index-template = elastic.generate_index_template:main
-es-store-quickbuild-results = elastic.hooks.storeQuickBuildResults:main
+es-store-quickbuild-results = hooks.quickbuild.storeQuickBuildResults:main
+es-store-jenkins-results = hooks.jenkins.storeJenkinsResults:main
 """,
     dependency_links=[
         "http://***REMOVED***/artifactory/api/pypi/pypi-virtual/simple/qb-results-exporter"
