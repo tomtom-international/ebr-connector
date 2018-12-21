@@ -49,10 +49,10 @@ def jenkins_json_decode(url):
 
             results['tests'].append(test)
         suite_result = {
-            'failures': failed_case_no,
-            'skipped': skipped_case_no,
-            'passed': passed_case_no,
-            'total': len(suite['cases']),
+            'failuresCount': failed_case_no,
+            'skippedCount': skipped_case_no,
+            'passedCount': passed_case_no,
+            'totalCount': len(suite['cases']),
             'name': suite['name'],
             'duration': suite['duration']
             }

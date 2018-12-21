@@ -47,10 +47,10 @@ class Test(InnerDocFrozen):
 
 class TestSuite(InnerDocFrozen):
     name = Text(fields={'raw': Keyword()})
-    failures = Integer()
-    skipped = Integer()
-    passed = Integer()
-    total = Integer()
+    failuresCount = Integer()
+    skippedCount = Integer()
+    passedCount = Integer()
+    totalCount = Integer()
     duration = Float()
     package = Text(fields={'raw': Keyword()})
     product = Text(fields={'raw': Keyword()})
