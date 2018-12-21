@@ -6,6 +6,7 @@ from elasticsearch_dsl import Document, Text, InnerDoc, Float, Integer, Nested, 
 import socket
 import ssl
 import json
+import traceback
 import warnings
 
 class InnerDocFrozen(InnerDoc):
@@ -115,7 +116,7 @@ class BuildResults(Document):
                 self.suites.append(TestSuite(**suite))
         except Exception as e:
             warnings.warn("Failed to retrieve test data.")
-            warnings.warn(e)
+            traceback.print_exc()
 
     def storeStatus(self, statusFunction):
         """
@@ -127,7 +128,9 @@ class BuildResults(Document):
         try:
             self.status = statusFunction()
         except:
+        except Exception as e:
             warnings.warn("Failed to retrieve status information.")
+            traceback.print_exc()
 
     def save(self, dest, port, cafile=None, clientcert=None, clientkey=None, keypass=""):
         """
