@@ -5,34 +5,23 @@ import argparse
 import logging
 import pprint
 import sys
+
 from qb_results_exporter.qb_results_exporter import QBResultsExporter
 from elastic.schema.BuildResults import BuildResults
+from elastic.hooks.common.args import addCommonArgs
 
 
-DEFAULT_PLATFORM_NAME = "linux"
 DEFAULT_PROJECT_NAME = "NavKit"
 DEFAULT_LOG_LEVEL = "INFO"
 
-
-def add_args(parser):
-    parser.add_argument("-b", "--build", dest="build_id", type=str, required=True, help="QuickBuild build ID")
-    parser.add_argument("-j", "--jobname", dest="job_name", type=str, default=None, help="QuickBuild job name")
-    parser.add_argument("-p", "--platform", dest="platform", type=str, default=DEFAULT_PLATFORM_NAME, help="Platform name (Default: %s)" % DEFAULT_PLATFORM_NAME)
-    parser.add_argument("-s", "--stage", dest="stage", type=str, required=False, help="Stage name")
-    parser.add_argument("--product", dest="product", type=str, default=DEFAULT_PROJECT_NAME, help="Product name (Default: %s)" % DEFAULT_PROJECT_NAME)
-    parser.add_argument("--qbusername", dest="qb_username", help="Quickbuild username")
-    parser.add_argument("--qbpassword", dest="qb_password", help="Quickbuild password")
-    parser.add_argument("--logcollectaddr", dest="log_collect_addr", help="Address of LogCollector to send to")
-    parser.add_argument("--logcollectport", dest="log_collect_port", help="Port on the LogCollector to send to", type=int)
-    parser.add_argument("--cacert", default=None, help="Location of CA cert to verify against.")
-    parser.add_argument("--clientcert", default=None, help="Client certificate file. Must also provide client key.")
-    parser.add_argument("--clientkey", default=None, help="Client key file. Must also provide client certificate.")
-    parser.add_argument("--clientpassword", default="", help="Client key file's password. Only use if there is a password on the keyfile.")
-    parser.add_argument("-l", "--log", action="store", type=str, dest="log_level", default=DEFAULT_LOG_LEVEL, help="Log level (Default: %s)" % DEFAULT_LOG_LEVEL)
-
 def parse_args(args=None):
     parser = argparse.ArgumentParser(description='Send results of a QuickBuild job to a LogCollector instance over TCP.')
-    add_args(parser)
+    parser.add_argument("-s", "--stage", type=str, required=False, help="Stage name")
+    parser.add_argument("--product", type=str, default=DEFAULT_PROJECT_NAME, help="Product name (Default: %s)" % DEFAULT_PROJECT_NAME)
+    parser.add_argument("--qbusername", dest="qb_username", help="Quickbuild username")
+    parser.add_argument("--qbpassword", dest="qb_password", help="Quickbuild password")
+    parser.add_argument("-l", "--log", action="store", type=str, dest="log_level", default=DEFAULT_LOG_LEVEL, help="Log level (Default: %s)" % DEFAULT_LOG_LEVEL)
+    addCommonArgs(parser)
     return parser.parse_args(args)
 
 def log_formatted_results(logger, results):
@@ -142,10 +131,10 @@ def main():
         if build_date:
             build_date = build_date.isoformat()
 
-        quickbuildResults = BuildResults(platform = args.platform, jobName = args.job_name, buildId = args.build_id, buildDateTime = build_date, jobLink = build_url)
+        quickbuildResults = BuildResults(platform = args.platform, jobName = args.jobname, buildId = args.buildid, buildDateTime = build_date, jobLink = build_url)
         quickbuildResults.storeTests(quickbuild_xml_decode, build_info=build_info)
         quickbuildResults.storeStatus(status)
-        quickbuildResults.save(args.log_collect_addr, args.log_collect_port, cafile=args.cacert,
+        quickbuildResults.save(args.logcollectaddr, args.logcollectport, cafile=args.cacert,
                                clientcert=args.clientcert, clientkey=args.clientkey, keypass=args.clientpassword)
 
     except Exception as err:

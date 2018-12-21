@@ -7,6 +7,7 @@ import sys
 
 from datetime import datetime
 from elastic.schema.BuildResults import BuildResults
+from elastic.hooks.common.args import addCommonArgs
 from json.decoder import JSONDecodeError
 
 
@@ -64,17 +65,9 @@ def jenkins_json_decode(url):
 def main():
     parser = argparse.ArgumentParser(description='Send results of a Jenkins build to a LogCollector instance over TCP.')
     parser.add_argument('--buildurl', required=True, help='URL of build to send')
-    parser.add_argument('--buildid', required=True, help="ID of the build")
-    parser.add_argument('--jobname', required=True, help="Name of job")
     parser.add_argument('--buildtime', required=True, help="Build date-time string")
     parser.add_argument('--buildstatus', required=True, help="Build status string")
-    parser.add_argument('--logcollectname', required=True, help="Address of LogCollector to send to")
-    parser.add_argument('--logcollectport', required=True, help="Port on the LogCollector to send to", type=int)
-    parser.add_argument('--cacert', default=None, help="Location of CA cert to verify against.")
-    parser.add_argument('--clientcert', default=None, help="Client certificate file. Must also provide client key.")
-    parser.add_argument('--clientkey', default=None, help="Client key file. Must also provide client certificate.")
-    parser.add_argument('--clientpassword', default="", help="Client key file's password. Only use if there is a password on the keyfile.")
-
+    addCommonArgs(parser)
     args = parser.parse_args()
 
     if (args.clientcert or args.clientkey) and not (args.clientcert and args.clientkey):
@@ -85,7 +78,7 @@ def main():
     jenkinsBuild.storeTests(jenkins_json_decode, args.buildurl + "testReport/api/json")
     jenkinsBuild.storeStatus(status, args)
 
-    jenkinsBuild.save(args.logcollectname, args.logcollectport, cafile=args.cacert, clientcert=args.clientcert, clientkey=args.clientkey, keypass=args.clientpassword)
+    jenkinsBuild.save(args.logcollectaddr, args.logcollectport, cafile=args.cacert, clientcert=args.clientcert, clientkey=args.clientkey, keypass=args.clientpassword)
 
 
 if __name__ == '__main__':
