@@ -102,14 +102,15 @@ def format_quickbuild_results(build_test_data, build_info):
 
     return results
 
-def quickbuild_xml_decode(build_info):
+def quickbuild_xml_decode(build_info, qb_results_exporter, logger):
     build_id = build_info.get(QBResultsExporter.KEY_BUILD_ID, None)
+
     build_test_data = qb_results_exporter.get_build_test_data(build_id)
     results = format_quickbuild_results(build_test_data, build_info)
     log_formatted_results(logger, results)
     return results
 
-def status():
+def status(build_info):
     return build_info.get(QBResultsExporter.KEY_BUILD_STATUS, None)
 
 def main():
@@ -128,7 +129,7 @@ def main():
         logging.basicConfig(level=args.log_level.upper())
         qb_results_exporter = QBResultsExporter(logger, args.qb_username, args.qb_password)
 
-        build_info = qb_results_exporter.get_build_info(args.build_id, args.product, args.stage)
+        build_info = qb_results_exporter.get_build_info(args.buildid, args.product, args.stage)
         build_date = build_info.get(QBResultsExporter.KEY_BUILD_DATE_TIME_UTC, None)
         build_url = build_info.get(QBResultsExporter.KEY_BUILD_URL, None)
 
@@ -136,8 +137,8 @@ def main():
             build_date = build_date.isoformat()
 
         quickbuildResults = BuildResults(platform = args.platform, jobName = args.jobname, buildId = args.buildid, buildDateTime = build_date, jobLink = build_url)
-        quickbuildResults.storeTests(quickbuild_xml_decode, build_info=build_info)
-        quickbuildResults.storeStatus(status)
+        quickbuildResults.storeTests(quickbuild_xml_decode, build_info=build_info, qb_results_exporter=qb_results_exporter, logger=logger)
+        quickbuildResults.storeStatus(status, build_info=build_info)
         quickbuildResults.save(args.logcollectaddr, args.logcollectport, cafile=args.cacert,
                                clientcert=args.clientcert, clientkey=args.clientkey, keypass=args.clientpassword)
 
