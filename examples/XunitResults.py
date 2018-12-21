@@ -3,7 +3,7 @@
 import requests
 
 from datetime import datetime
-from elastic.BuildResults import BuildResults
+from elastic.schema.BuildResults import BuildResults
 from junitparser import JUnitXml
 
 def getXunitResultsAllfiles(testfiles):

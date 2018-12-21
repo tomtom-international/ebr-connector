@@ -1,7 +1,7 @@
 import requests
 import argparse
 from datetime import datetime
-from elastic.BuildResults import BuildResults
+from elastic.schema.BuildResults import BuildResults
 from json.decoder import JSONDecodeError
 
 

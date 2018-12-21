@@ -5,7 +5,7 @@ import argparse
 import json
 import sys
 from elasticsearch_dsl import Index
-from elastic.BuildResults import BuildResults
+from elastic.schema.BuildResults import BuildResults
 
 
 def main():

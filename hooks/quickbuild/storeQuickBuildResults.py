@@ -5,7 +5,7 @@ import logging
 import pprint
 import sys
 from qb_results_exporter.qb_results_exporter import QBResultsExporter
-from elastic.BuildResults import BuildResults
+from elastic.schema.BuildResults import BuildResults
 
 
 DEFAULT_PLATFORM_NAME = "linux"
