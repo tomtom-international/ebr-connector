@@ -5,7 +5,7 @@ Terms
 * *Build ID*: The **unique** ID associated with a given *build*
 * *Job*: A collection of tasks that describe how a *build* should be run. Running a *job* should result in a *build*. In jenkins this maps to a
   job/project, in Quickbuild this maps to a configuration.
-* *Stage*: A component of a *job*, a subset of tasks
+* *Stage*: A component of a *job*, a subset of tasks with a descriptive name (eg. checkout source code, build app, ...)
 * *Product*: Product that a given build is associated with (e.g. Michi)
 * *Test Case*: Individual tests (sometimes aggregrations of closely related tests in C++) with result information
 * *Test Set*: An aggregated collection of test cases, i.e. a suite
