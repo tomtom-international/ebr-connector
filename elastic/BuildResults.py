@@ -27,6 +27,10 @@ class Test(InnerDocFrozen):
     reportset = Text()
     stage = Text(fields={'raw': Keyword()})
 
+    def __init__(self, suite, classname, test, result, message, duration, reportset = None, stage = None):
+        InnerDocFrozen.__init__(self, suite = suite, classname = classname, test = test, result = result, message = message, duration = duration, \
+        reportset = reportset, stage = stage)
+
 class TestSuite(InnerDocFrozen):
     name = Text(fields={'raw': Keyword()})
     failures = Integer()
@@ -37,6 +41,10 @@ class TestSuite(InnerDocFrozen):
     package = Text(fields={'raw': Keyword()})
     product = Text(fields={'raw': Keyword()})
 
+    def __init__(self, name, failures, skipped, passed, total, duration, package = None, product = None):
+        InnerDocFrozen.__init__(self, name = name, failures = failures, skipped = skipped, passed = passed, total = total, duration = duration, \
+        package = package, product = product)
+
 class BuildResults(Document):
     jobName = Text(fields={'raw': Keyword()})
     jobLink = Text()
@@ -46,6 +54,10 @@ class BuildResults(Document):
     status = Keyword()
     tests = Nested(Test)
     suites = Nested(TestSuite)
+
+    def __init__(self, jobName, jobLink, buildDateTime, buildId, status, platform = None):
+        Document.__init__(self, jobName = jobName, jobLink = jobLink, buildDateTime = buildDateTime, buildId = buildId, platform = platform, \
+         status = status)
 
     def __setattr__(self, key, value):
         if not hasattr(self, key):
