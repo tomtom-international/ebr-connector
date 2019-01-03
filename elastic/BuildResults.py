@@ -8,7 +8,16 @@ import ssl
 import json
 import warnings
 
-class Test(InnerDoc):
+class InnerDocFrozen(InnerDoc):
+    """
+    Update the InnerDoc class to be frozen
+    """
+    def __setattr__(self, key, value):
+        if not hasattr(self, key):
+            raise TypeError( "%r is a frozen class" % self )
+        object.__setattr__(self, key, value)
+
+class Test(InnerDocFrozen):
     suite = Text(fields={'raw': Keyword()})
     classname = Text(fields={'raw': Keyword()})
     test = Text(fields={'raw': Keyword()})
@@ -18,7 +27,7 @@ class Test(InnerDoc):
     reportset = Text()
     stage = Text(fields={'raw': Keyword()})
 
-class TestSuite(InnerDoc):
+class TestSuite(InnerDocFrozen):
     name = Text(fields={'raw': Keyword()})
     failures = Integer()
     skipped = Integer()
@@ -37,6 +46,11 @@ class BuildResults(Document):
     status = Keyword()
     tests = Nested(Test)
     suites = Nested(TestSuite)
+
+    def __setattr__(self, key, value):
+        if not hasattr(self, key):
+            raise TypeError( "%r is a frozen class" % self )
+        object.__setattr__(self, key, value)
 
     def storeTests(self, retrieveFunction, args):
         try:
