@@ -19,6 +19,9 @@ class InnerDocFrozen(InnerDoc):
     """
 
     def __setattr__(self, key, value):
+        """
+        Overridden to prevent accidential schema modifications
+        """
         if not hasattr(self, key):
             raise TypeError("%r is a frozen class" % self)
         object.__setattr__(self, key, value)
@@ -27,6 +30,16 @@ class InnerDocFrozen(InnerDoc):
 class Test(InnerDocFrozen):
     """
     Provides serialization for a single test
+
+    Args:
+        suite: Set the test is a part of
+        classname: Class that the test is from
+        test: Name of the test
+        result: Result of the test (e.g. passed)
+        message: Any output from the test
+        duration: Duration in miliseconds (float) of the test
+        reportset: (Optional) Report set the test is a part of
+        stage: (Optional) Stage during which the test was executed
     """
     suite = Text(fields={'raw': Keyword()})
     classname = Text(fields={'raw': Keyword()})
@@ -47,19 +60,6 @@ class Test(InnerDocFrozen):
             duration,
             reportset=None,
             stage=None):
-        """
-        Construct Test class
-
-        Args:
-            suite: Set the test is a part of
-            classname: Class that the test is from
-            test: Name of the test
-            result: Result of the test (e.g. passed)
-            message: Any output from the test
-            duration: Duration in miliseconds (float) of the test
-            reportset: (Optional) Report set the test is a part of
-            stage: (Optional) Stage during which the test was executed
-        """
         InnerDocFrozen.__init__(
             self,
             suite=suite,
@@ -75,6 +75,16 @@ class Test(InnerDocFrozen):
 class TestSuite(InnerDocFrozen):
     """
     Provides serialization for Test Sets (test suites)
+
+    Args:
+        name: Name of the suite
+        failures: Number of failing tests
+        skipped: Number of skipped tests
+        passed: Number of passed tests
+        total: Total number of tests
+        duration: Duration in miliseconds (float) of the entire test suite
+        package: (Optional) package the test set is associated with
+        product: (Optional) product the test set is associated with
     """
     name = Text(fields={'raw': Keyword()})
     failuresCount = Integer()
@@ -95,19 +105,6 @@ class TestSuite(InnerDocFrozen):
             duration,
             package=None,
             product=None):
-        """
-        Constructs TestSuite class
-
-        Args:
-            name: Name of the suite
-            failures: Number of failing tests
-            skipped: Number of skipped tests
-            passed: Number of passed tests
-            total: Total number of tests
-            duration: Duration in miliseconds (float) of the entire test suite
-            package: (Optional) package the test set is associated with
-            product: (Optional) product the test set is associated with
-        """
         InnerDocFrozen.__init__(
             self,
             name=name,
@@ -123,6 +120,13 @@ class TestSuite(InnerDocFrozen):
 class BuildResults(Document):
     """
     Top level serialization for build results
+
+    Args:
+        jobName: Name of the job that owns the build being recorded
+        jobLink: Link to the job on the CI system that executed it
+        buildDateTime: Execution time of the build
+        buildId: Unique ID of the build
+        platform: (Optional) Platform of the build
     """
     jobName = Text(fields={'raw': Keyword()})
     jobLink = Text()
@@ -140,17 +144,6 @@ class BuildResults(Document):
             buildDateTime,
             buildId,
             platform=None):
-        """
-        Constructs BuildResults class
-
-        Args:
-            jobName: Name of the job that owns the build being recorded
-            jobLink: Link to the job on the CI system that executed it
-            buildDateTime: Execution time of the build
-            buildId: Unique ID of the build
-            platform: (Optional) Platform of the build
-
-        """
         Document.__init__(
             self,
             jobName=jobName,
