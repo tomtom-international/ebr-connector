@@ -28,6 +28,19 @@ class Test(InnerDocFrozen):
     stage = Text(fields={'raw': Keyword()})
 
     def __init__(self, suite, classname, test, result, message, duration, reportset = None, stage = None):
+        """
+        Construct Test class
+
+        Args:
+            suite: Set the test is a part of
+            classname: Class that the test is from
+            test: Name of the test
+            result: Result of the test (e.g. passed)
+            message: Any output from the test
+            duration: Duration in miliseconds (float) of the test
+            reportset: (Optional) Report set the test is a part of
+            stage: (Optional) Stage during which the test was executed
+        """
         InnerDocFrozen.__init__(self, suite = suite, classname = classname, test = test, result = result, message = message, duration = duration, \
         reportset = reportset, stage = stage)
 
@@ -42,6 +55,19 @@ class TestSuite(InnerDocFrozen):
     product = Text(fields={'raw': Keyword()})
 
     def __init__(self, name, failures, skipped, passed, total, duration, package = None, product = None):
+        """
+        Constructs TestSuite class
+
+        Args:
+            name: Name of the suite
+            failures: Number of failing tests
+            skipped: Number of skipped tests
+            passed: Number of passed tests
+            total: Total number of tests
+            duration: Duration in miliseconds (float) of the entire test suite
+            package: (Optional) package the test set is associated with
+            product: (Optional) product the test set is associated with
+        """
         InnerDocFrozen.__init__(self, name = name, failures = failures, skipped = skipped, passed = passed, total = total, duration = duration, \
         package = package, product = product)
 
@@ -55,9 +81,19 @@ class BuildResults(Document):
     tests = Nested(Test)
     suites = Nested(TestSuite)
 
-    def __init__(self, jobName, jobLink, buildDateTime, buildId, status, platform = None):
-        Document.__init__(self, jobName = jobName, jobLink = jobLink, buildDateTime = buildDateTime, buildId = buildId, platform = platform, \
-         status = status)
+    def __init__(self, jobName, jobLink, buildDateTime, buildId, platform = None):
+        """
+        Constructs BuildResults class
+
+        Args:
+            jobName: Name of the job that owns the build being recorded
+            jobLink: Link to the job on the CI system that executed it
+            buildDateTime: Execution time of the build
+            buildId: Unique ID of the build
+            platform: (Optional) Platform of the build
+
+        """
+        Document.__init__(self, jobName = jobName, jobLink = jobLink, buildDateTime = buildDateTime, buildId = buildId, platform = platform)
 
     def __setattr__(self, key, value):
         if not hasattr(self, key):
@@ -65,6 +101,12 @@ class BuildResults(Document):
         object.__setattr__(self, key, value)
 
     def storeTests(self, retrieveFunction, args):
+        """
+        Retrieves the test results of a build and adds them to the BuildResults object
+
+        Args:
+            retrieveFunction: Callback function which provides test and suite data in dictionaries (see Test and TestSuite documentation for format)
+        """
         try:
             results = retrieveFunction(**args)
             for test in results.get('tests', None):
@@ -76,12 +118,29 @@ class BuildResults(Document):
             warnings.warn(e)
 
     def storeStatus(self, statusFunction):
+        """
+        Retrieves the status of a build and adds it to the BuildResults object
+
+        Args:
+            statusFunction: Callback function which provides status information
+        """
         try:
             self.status = statusFunction()
         except:
             warnings.warn("Failed to retrieve status information.")
 
     def save(self, dest, port, cafile=None, clientcert=None, clientkey=None, keypass=""):
+        """
+        Saves the BuildResults object to a LogCollector instance.
+
+        Args:
+            dest: URL/IP of the LogCollector server
+            port: port of the raw intake on the LogCollector server
+            cafile: (optional) file location of the root CA cert that signed the LogCollector's cert (or the LogCollector's cert if self-signed)
+            clientcert: (optional) file location of the client certificate
+            clientkey: (optional) file location of the client key
+            keypass: (optional) password of the client key (leave blank if unset)
+        """
         result=str.encode(json.dumps(self.to_dict()))
         bareSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         bareSocket.settimeout(10)
