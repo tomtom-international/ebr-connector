@@ -169,7 +169,7 @@ class BuildResults(Document):
         Retrieves the test results of a build and adds them to the BuildResults object
 
         Args:
-            retrieveFunction: Callback function which provides test and suite data in dictionaries 
+            retrieveFunction: Callback function which provides test and suite data in dictionaries
             (see Test and TestSuite documentation for format)
         """
         try:
@@ -178,7 +178,7 @@ class BuildResults(Document):
                 self.tests.append(Test(**test))
             for suite in results.get('suites', None):
                 self.suites.append(TestSuite(**suite))
-        except Exception as e:
+        except Exception:
             warnings.warn("Failed to retrieve test data.")
             traceback.print_exc()
 
