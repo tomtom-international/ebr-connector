@@ -55,7 +55,7 @@ def jenkins_json_decode(url):
             'totalCount': len(suite['cases']),
             'name': suite['name'],
             'duration': suite['duration']
-            }
+        }
 
         results['suites'].append(suite_result)
 
@@ -63,22 +63,46 @@ def jenkins_json_decode(url):
 
 
 def main():
-    parser = argparse.ArgumentParser(description='Send results of a Jenkins build to a LogCollector instance over TCP.')
-    parser.add_argument('--buildurl', required=True, help='URL of build to send')
-    parser.add_argument('--buildtime', required=True, help="Build date-time string")
-    parser.add_argument('--buildstatus', required=True, help="Build status string")
+    parser = argparse.ArgumentParser(
+        description='Send results of a Jenkins build to a LogCollector instance over TCP.')
+    parser.add_argument(
+        '--buildurl',
+        required=True,
+        help='URL of build to send')
+    parser.add_argument(
+        '--buildtime',
+        required=True,
+        help="Build date-time string")
+    parser.add_argument(
+        '--buildstatus',
+        required=True,
+        help="Build status string")
     addCommonArgs(parser)
     args = parser.parse_args()
 
-    if (args.clientcert or args.clientkey) and not (args.clientcert and args.clientkey):
+    if (args.clientcert or args.clientkey) and not (
+            args.clientcert and args.clientkey):
         print("Either both '--clientcert' and '--clientkey' must be set or neither should be set.")
         exit()
 
-    jenkinsBuild = BuildResults(jobName = args.jobname, buildId = args.buildid, buildDateTime = args.buildtime, jobLink = args.buildurl)
-    jenkinsBuild.storeTests(jenkins_json_decode, args.buildurl + "testReport/api/json")
+    jenkinsBuild = BuildResults(
+        jobName=args.jobname,
+        buildId=args.buildid,
+        buildDateTime=args.buildtime,
+        jobLink=args.buildurl)
+    jenkinsBuild.storeTests(
+        jenkins_json_decode,
+        args.buildurl +
+        "testReport/api/json")
     jenkinsBuild.storeStatus(status, args)
 
-    jenkinsBuild.save(args.logcollectaddr, args.logcollectport, cafile=args.cacert, clientcert=args.clientcert, clientkey=args.clientkey, keypass=args.clientpassword)
+    jenkinsBuild.save(
+        args.logcollectaddr,
+        args.logcollectport,
+        cafile=args.cacert,
+        clientcert=args.clientcert,
+        clientkey=args.clientkey,
+        keypass=args.clientpassword)
 
 
 if __name__ == '__main__':

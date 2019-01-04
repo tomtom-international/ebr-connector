@@ -13,6 +13,7 @@ import warnings
 
 from elasticsearch_dsl import Document, Text, InnerDoc, Float, Integer, Nested, Date, Keyword
 
+
 class _InnerDocFrozen(InnerDoc):
     """
     Update the InnerDoc class to be frozen
