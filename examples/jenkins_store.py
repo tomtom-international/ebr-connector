@@ -58,4 +58,4 @@ testBuild.store_status(status)
 dest = 'ubuntu-logcollector.ber.global'
 port = 10010
 
-testBuild.save(dest, port)
+testBuild.save_logcollect(dest, port)

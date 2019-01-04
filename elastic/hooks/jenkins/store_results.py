@@ -97,7 +97,7 @@ def main():
         "testReport/api/json")
     jenkins_build.store_status(status, args)
 
-    jenkins_build.save(
+    jenkins_build.save_logcollect(
         args.logcollectaddr,
         args.logcollectport,
         cafile=args.cacert,

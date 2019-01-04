@@ -189,7 +189,7 @@ class BuildResults(Document):
             warnings.warn("Failed to retrieve status information.")
             traceback.print_exc()
 
-    def save(
+    def save_logcollect(
             self,
             dest,
             port,

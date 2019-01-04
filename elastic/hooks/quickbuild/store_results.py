@@ -198,7 +198,7 @@ def main():
             qb_results_exporter=qb_results_exporter,
             logger=logger)
         quick_build_results.store_status(get_status, build_info=build_info)
-        quick_build_results.save(
+        quick_build_results.save_logcollect(
             args.logcollectaddr,
             args.logcollectport,
             cafile=args.cacert,
