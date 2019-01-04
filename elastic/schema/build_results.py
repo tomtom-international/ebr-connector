@@ -96,9 +96,9 @@ class BuildResults(Document):
         platform: (Optional) Platform of the build
     """
     jobName = Text(fields={'raw': Keyword()})
-    jobLink = Text()
+    jobLink = Keyword()
     buildDateTime = Date()
-    buildId = Text(fields={'raw': Keyword()})
+    buildId = Keyword()
     platform = Text(fields={'raw': Keyword()})
     status = Keyword()
     tests = Nested(Test)
