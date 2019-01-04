@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import argparse
-import requests
 import sys
+from json.decoder import JSONDecodeError
+import argparse
 
-from datetime import datetime
+import requests
+
+
 from elastic.schema.BuildResults import BuildResults
 from elastic.hooks.common.args import addCommonArgs
-from json.decoder import JSONDecodeError
 
 
 def status(args):
@@ -85,18 +86,18 @@ def main():
         print("Either both '--clientcert' and '--clientkey' must be set or neither should be set.")
         exit()
 
-    jenkinsBuild = BuildResults(
+    jenkins_build = BuildResults(
         jobName=args.jobname,
         buildId=args.buildid,
         buildDateTime=args.buildtime,
         jobLink=args.buildurl)
-    jenkinsBuild.storeTests(
+    jenkins_build.storeTests(
         jenkins_json_decode,
         args.buildurl +
         "testReport/api/json")
-    jenkinsBuild.storeStatus(status, args)
+    jenkins_build.storeStatus(status, args)
 
-    jenkinsBuild.save(
+    jenkins_build.save(
         args.logcollectaddr,
         args.logcollectport,
         cafile=args.cacert,
