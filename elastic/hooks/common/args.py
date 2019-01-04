@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 
-def addCommonArgs(parser):
+def add_common_args(parser):
     parser.add_argument(
         "-b",
         "--buildid",

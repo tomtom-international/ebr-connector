@@ -9,7 +9,7 @@ import sys
 
 from qb_results_exporter.qb_results_exporter import QBResultsExporter
 from elastic.schema.BuildResults import BuildResults
-from elastic.hooks.common.args import addCommonArgs
+from elastic.hooks.common.args import add_common_args
 
 
 DEFAULT_PROJECT_NAME = "NavKit"
@@ -48,7 +48,7 @@ def parse_args(args=None):
         default=DEFAULT_LOG_LEVEL,
         help="Log level (Default: %s)" %
         DEFAULT_LOG_LEVEL)
-    addCommonArgs(parser)
+    add_common_args(parser)
     return parser.parse_args(args)
 
 

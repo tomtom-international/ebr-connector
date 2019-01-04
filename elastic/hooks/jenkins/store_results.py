@@ -9,7 +9,7 @@ import requests
 
 
 from elastic.schema.BuildResults import BuildResults
-from elastic.hooks.common.args import addCommonArgs
+from elastic.hooks.common.args import add_common_args
 
 
 def status(args):
@@ -78,7 +78,7 @@ def main():
         '--buildstatus',
         required=True,
         help="Build status string")
-    addCommonArgs(parser)
+    add_common_args(parser)
     args = parser.parse_args()
 
     if (args.clientcert or args.clientkey) and not (
