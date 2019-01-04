@@ -13,7 +13,7 @@ import warnings
 
 from elasticsearch_dsl import Document, Text, InnerDoc, Float, Integer, Nested, Date, Keyword
 
-class InnerDocFrozen(InnerDoc):
+class _InnerDocFrozen(InnerDoc):
     """
     Update the InnerDoc class to be frozen
     """
@@ -27,17 +27,17 @@ class InnerDocFrozen(InnerDoc):
         object.__setattr__(self, key, value)
 
 
-class Test(InnerDocFrozen):
+class Test(_InnerDocFrozen):
     """
     Provides serialization for a single test
 
     Args:
-        suite: Set the test is a part of
+        suite: Set (suite) the test is a part of
         classname: Class that the test is from
         test: Name of the test
         result: Result of the test (e.g. passed)
         message: Any output from the test
-        duration: Duration in miliseconds (float) of the test
+        duration: Duration in milliseconds (float) of the test
         reportset: (Optional) Report set the test is a part of
         stage: (Optional) Stage during which the test was executed
     """
@@ -60,7 +60,7 @@ class Test(InnerDocFrozen):
             duration,
             reportset=None,
             stage=None):
-        InnerDocFrozen.__init__(
+        _InnerDocFrozen.__init__(
             self,
             suite=suite,
             classname=classname,
@@ -72,17 +72,17 @@ class Test(InnerDocFrozen):
             stage=stage)
 
 
-class TestSuite(InnerDocFrozen):
+class TestSuite(_InnerDocFrozen):
     """
     Provides serialization for Test Sets (test suites)
 
     Args:
         name: Name of the suite
-        failures: Number of failing tests
-        skipped: Number of skipped tests
-        passed: Number of passed tests
-        total: Total number of tests
-        duration: Duration in miliseconds (float) of the entire test suite
+        failuresCount: Number of failing tests
+        skippedCount: Number of skipped tests
+        passedCount: Number of passed tests
+        totalCount: Total number of tests
+        duration: Duration in milliseconds (float) of the entire test suite
         package: (Optional) package the test set is associated with
         product: (Optional) product the test set is associated with
     """
@@ -105,7 +105,7 @@ class TestSuite(InnerDocFrozen):
             duration,
             package=None,
             product=None):
-        InnerDocFrozen.__init__(
+        _InnerDocFrozen.__init__(
             self,
             name=name,
             failures=failures,
@@ -124,7 +124,7 @@ class BuildResults(Document):
     Args:
         jobName: Name of the job that owns the build being recorded
         jobLink: Link to the job on the CI system that executed it
-        buildDateTime: Execution time of the build
+        buildDateTime: Execution time of the build (ISO-8601 format recommended)
         buildId: Unique ID of the build
         platform: (Optional) Platform of the build
     """
@@ -202,8 +202,8 @@ class BuildResults(Document):
         Args:
             dest: URL/IP of the LogCollector server
             port: port of the raw intake on the LogCollector server
-            cafile: (optional) file location of the root CA cert that signed the LogCollector's cert
-            (or the LogCollector's cert if self-signed)
+            cafile: (optional) file location of the root CA certificate that signed the LogCollector's certificate
+            (or the LogCollector's certificate if self-signed)
             clientcert: (optional) file location of the client certificate
             clientkey: (optional) file location of the client key
             keypass: (optional) password of the client key (leave blank if unset)
