@@ -1,3 +1,7 @@
+"""
+Library for exporting QuickBuild build results to logstash (ElasticSearch).
+"""
+
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
@@ -17,6 +21,15 @@ DEFAULT_LOG_LEVEL = "INFO"
 
 
 def parse_args(args=None):
+    """
+    Parses command line arguments.
+
+    Args:
+        args: Optional default arguments.
+
+    Returns:
+        Arguments object.
+    """
     parser = argparse.ArgumentParser(description='Send results of a QuickBuild job to a LogCollector instance over TCP.')
     parser.add_argument("-s", "--stage", type=str, required=False, help="Stage name")
     parser.add_argument("--product", type=str, default=DEFAULT_PROJECT_NAME, help="Product name (Default: %s)" % DEFAULT_PROJECT_NAME)
@@ -29,6 +42,13 @@ def parse_args(args=None):
 
 
 def log_formatted_results(logger, results):
+    """
+    Logs the results to be uploaded to logstash (for debugging purposes).
+
+    Args:
+        logger: Logger object.
+        results: Results to be uploaded to logstash.
+    """
     tests = results.get('tests', [])
     logger.debug("NUMBER OF FORMATTED TEST RESULTS: %d" % len(tests))
     logger.debug(
@@ -51,6 +71,16 @@ def log_formatted_results(logger, results):
 
 
 def format_quickbuild_results(build_test_data, build_info):
+    """
+    Converts the raw results from QuickBuild into a format used by logstash.
+
+    Args:
+        build_test_data: Test results data from QuickBuild for a particular build.
+        build_info: Dictionary containing information about the QuickBuild build.
+
+    Returns:
+        logstash formatted results.
+    """
     tests = []
     suites = {}
 
@@ -120,6 +150,17 @@ def format_quickbuild_results(build_test_data, build_info):
 
 
 def quickbuild_xml_decode(build_info, qb_results_exporter, logger):
+    """
+    Exports the raw results from QuickBuild for a particular build and formats them for use by logstash.
+
+    Args:
+        build_info: Dictionary containing information about the QuickBuild build.
+        qb_results_exporter: QBResultsExporter object.
+        logger: Logger object.
+
+    Returns:
+        logstash formatted results.
+    """
     build_id = build_info.get(QBResultsExporter.KEY_BUILD_ID, None)
 
     build_test_data = qb_results_exporter.get_build_test_data(build_id)
@@ -127,12 +168,23 @@ def quickbuild_xml_decode(build_info, qb_results_exporter, logger):
     log_formatted_results(logger, results)
     return results
 
+def status(build_info):
+    """
+    Returns the status of the QuickBuild build.
 
-def get_status(build_info):
+    Args:
+        build_info: Dictionary containing information about the QuickBuild build.
+
+    Returns:
+        Status string of the QuickBuild build.
+    """
     return build_info.get(QBResultsExporter.KEY_BUILD_STATUS, None)
 
 
 def main():
+    """
+    Exports QuickBuild build results to logstash.
+    """
     logging.getLogger("urllib3").setLevel(logging.WARNING)
     logger = logging.getLogger('StoreQuickBuildResults')
 
