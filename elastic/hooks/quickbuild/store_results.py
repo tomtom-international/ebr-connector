@@ -166,8 +166,7 @@ def main():
         if (args.clientcert or args.clientkey) and not (
                 args.clientcert and args.clientkey):
             raise ValueError(
-                """Either both '--clientcert' and '--clientkey'
-                must be set or neither should be set.""")
+                "Either both '--clientcert' and '--clientkey' must be set or neither should be set.")
 
         if not args.qb_password and args.qb_username:
             args.qb_password = getpass.getpass(
