@@ -2,14 +2,13 @@ Welcome to ebr-connector's documentation!
 =================================================
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
    :caption: Overview:
+   :titlesonly:
 
-   README
-
-.. automodule:: elastic.schema.BuildResults
-    :members:
-
+   Modules <modules.rst>
+   Readme <README.rst>
+   
 
 
 Indices and tables

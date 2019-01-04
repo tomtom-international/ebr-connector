@@ -4,7 +4,7 @@ ElasticSearch Build Results
 Simple Python package to define a schema for build and test results to be stored in logstash.
 
 Terms
-=====
+-----
 
 * *Build*: A single instance of a CI systems build/test execution. It should map to a single URL/URI/UID on a CI system.
 * *Build ID*: The **unique** ID associated with a given *build*
@@ -14,9 +14,6 @@ Terms
 * *Product*: Product that a given build is associated with (e.g. Michi)
 * *Test Case*: Individual tests (sometimes aggregrations of closely related tests in C++) with result information
 * *Test Set*: An aggregated collection of test cases, i.e. a suite
-
-Other Info
-==========
 
 Test and Suite Separation
 -------------------------
