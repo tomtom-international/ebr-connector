@@ -152,7 +152,7 @@ def quickbuild_xml_decode(build_info, qb_results_exporter, logger):
     return results
 
 
-def status(build_info):
+def get_status(build_info):
     return build_info.get(QBResultsExporter.KEY_BUILD_STATUS, None)
 
 
@@ -166,7 +166,8 @@ def main():
         if (args.clientcert or args.clientkey) and not (
                 args.clientcert and args.clientkey):
             raise ValueError(
-                "Either both '--clientcert' and '--clientkey' must be set or neither should be set.")
+                """Either both '--clientcert' and '--clientkey'
+                must be set or neither should be set.""")
 
         if not args.qb_password and args.qb_username:
             args.qb_password = getpass.getpass(
@@ -185,19 +186,20 @@ def main():
         if build_date:
             build_date = build_date.isoformat()
 
-        quickbuildResults = BuildResults(
+
+        quick_build_results = BuildResults(
             platform=args.platform,
             jobName=args.jobname,
             buildId=args.buildid,
             buildDateTime=build_date,
             jobLink=build_url)
-        quickbuildResults.store_tests(
+        quick_build_results.store_tests(
             quickbuild_xml_decode,
             build_info=build_info,
             qb_results_exporter=qb_results_exporter,
             logger=logger)
-        quickbuildResults.store_status(status, build_info=build_info)
-        quickbuildResults.save(
+        quick_build_results.store_status(get_status, build_info=build_info)
+        quick_build_results.save(
             args.logcollectaddr,
             args.logcollectport,
             cafile=args.cacert,
