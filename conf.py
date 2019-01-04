@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.abspath('.'))
 # -- Project information -----------------------------------------------------
 
 project = u'ebr-connector'
-copyright = u'2019, TomTom'
+copyright = u'2019, TomTom N.V.'
 author = u'Eugene Davis, Martin Migasiewicz, James Mechen'
 
 # The short X.Y version
