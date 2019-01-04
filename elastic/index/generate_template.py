@@ -1,3 +1,6 @@
+"""
+Generates a index template for ElasticSearch from the BuildResults document.
+"""
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
@@ -9,6 +12,10 @@ from elastic.schema.BuildResults import BuildResults
 
 
 def main():
+    """
+    Generates the index template associated with the structure of the BuildResults
+    document, allowing it to be uploaded to an ElasticSearch instance.
+    """
     parser = argparse.ArgumentParser(
         description="Script for generating an index template out of a document")
     parser.add_argument("INDEX_NAME", help="Name of index")
