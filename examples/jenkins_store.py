@@ -2,7 +2,7 @@ import requests
 
 from datetime import datetime
 
-from elastic.schema.BuildResults import BuildResults
+from elastic.schema.build_results import BuildResults
 
 def status():
     return "passing"
@@ -52,8 +52,8 @@ def jenkins_json_decode(url):
 url = "https://***REMOVED***/view/baseline-jobs/job/cpp-reflection-tests-BB-baseline/lastSuccessfulBuild/testReport/api/json"
 
 testBuild = BuildResults(jobName = "test", buildDateTime = datetime.now().isoformat(), jobLink = url)
-testBuild.storeTests(jenkins_json_decode, {'url': url})
-testBuild.storeStatus(status)
+testBuild.store_tests(jenkins_json_decode, {'url': url})
+testBuild.store_status(status)
 
 dest = 'ubuntu-logcollector.ber.global'
 port = 10010

@@ -8,7 +8,7 @@ import argparse
 import json
 import sys
 from elasticsearch_dsl import Index
-from elastic.schema.BuildResults import BuildResults
+from elastic.schema.build_results import BuildResults
 
 
 def main():

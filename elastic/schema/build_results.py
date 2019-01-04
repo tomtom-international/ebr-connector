@@ -158,7 +158,7 @@ class BuildResults(Document):
             raise TypeError("%r is a frozen class" % self)
         object.__setattr__(self, key, value)
 
-    def storeTests(self, retrieveFunction, args):
+    def store_tests(self, retrieve_function, *args, **kwargs):
         """
         Retrieves the test results of a build and adds them to the BuildResults object
 
@@ -167,7 +167,7 @@ class BuildResults(Document):
             (see Test and TestSuite documentation for format)
         """
         try:
-            results = retrieveFunction(*args, **kwargs)
+            results = retrieve_function(*args, **kwargs)
             for test in results.get('tests', None):
                 self.tests.append(Test(**test))
             for suite in results.get('suites', None):
@@ -176,7 +176,7 @@ class BuildResults(Document):
             warnings.warn("Failed to retrieve test data.")
             traceback.print_exc()
 
-    def storeStatus(self, statusFunction):
+    def store_status(self, status_function, *args, **kwargs):
         """
         Retrieves the status of a build and adds it to the BuildResults object
 
@@ -184,7 +184,7 @@ class BuildResults(Document):
             statusFunction: Callback function which provides status information
         """
         try:
-            self.status = statusFunction(*args, **kwargs)
+            self.status = status_function(*args, **kwargs)
         except Exception:
             warnings.warn("Failed to retrieve status information.")
             traceback.print_exc()
@@ -203,8 +203,8 @@ class BuildResults(Document):
         Args:
             dest: URL/IP of the LogCollector server
             port: port of the raw intake on the LogCollector server
-            cafile: (optional) file location of the root CA certificate that signed the LogCollector's certificate
-            (or the LogCollector's certificate if self-signed)
+            cafile: (optional) file location of the root CA certificate that signed the
+            LogCollector's certificate (or the LogCollector's certificate if self-signed)
             clientcert: (optional) file location of the client certificate
             clientkey: (optional) file location of the client key
             keypass: (optional) password of the client key (leave blank if unset)

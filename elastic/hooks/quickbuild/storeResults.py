@@ -8,7 +8,7 @@ import pprint
 import sys
 
 from qb_results_exporter.qb_results_exporter import QBResultsExporter
-from elastic.schema.BuildResults import BuildResults
+from elastic.schema.build_results import BuildResults
 from elastic.hooks.common.args import add_common_args
 
 
@@ -191,12 +191,12 @@ def main():
             buildId=args.buildid,
             buildDateTime=build_date,
             jobLink=build_url)
-        quickbuildResults.storeTests(
+        quickbuildResults.store_tests(
             quickbuild_xml_decode,
             build_info=build_info,
             qb_results_exporter=qb_results_exporter,
             logger=logger)
-        quickbuildResults.storeStatus(status, build_info=build_info)
+        quickbuildResults.store_status(status, build_info=build_info)
         quickbuildResults.save(
             args.logcollectaddr,
             args.logcollectport,

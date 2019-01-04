@@ -8,7 +8,7 @@ import argparse
 import requests
 
 
-from elastic.schema.BuildResults import BuildResults
+from elastic.schema.build_results import BuildResults
 from elastic.hooks.common.args import add_common_args
 
 
@@ -91,11 +91,11 @@ def main():
         buildId=args.buildid,
         buildDateTime=args.buildtime,
         jobLink=args.buildurl)
-    jenkins_build.storeTests(
+    jenkins_build.store_tests(
         jenkins_json_decode,
         args.buildurl +
         "testReport/api/json")
-    jenkins_build.storeStatus(status, args)
+    jenkins_build.store_status(status, args)
 
     jenkins_build.save(
         args.logcollectaddr,
