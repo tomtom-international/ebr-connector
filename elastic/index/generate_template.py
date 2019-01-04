@@ -18,6 +18,7 @@ def main():
     """
     parser = argparse.ArgumentParser(description="Script for generating an index template out of a document")
     parser.add_argument("INDEX_NAME", help="Name of index")
+    parser.add_argument("--OUTPUT_FILE", help="File to write schema to")
     args = parser.parse_args()
 
     document = BuildResults(jobName=None, jobLink=None, buildDateTime=None, buildId=None)
