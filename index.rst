@@ -1,5 +1,5 @@
-Welcome to ebr-connector's documentation!
-=================================================
+ebr-connector Documentation
+===================================
 
 .. toctree::
    :maxdepth: 1
