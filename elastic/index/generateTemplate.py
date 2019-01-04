@@ -13,7 +13,7 @@ def main():
     parser.add_argument("INDEX_NAME", help="Name of index")
     args = parser.parse_args()
 
-    document = BuildResults()
+    document = BuildResults(jobName=None, jobLink=None, buildDateTime=None, buildId=None)
     index = Index(args.INDEX_NAME)
     index.document(document)
     index_template = index.as_template(template_name="template")
