@@ -6,8 +6,9 @@ Welcome to ebr-connector's documentation!
    :caption: Overview:
    :titlesonly:
 
-   Modules <modules.rst>
+   Modules <temp_doc/modules.rst>
    Readme <README.rst>
+   Schema <schema.rst>
    
 
 

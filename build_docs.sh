@@ -1,4 +1,6 @@
 #!/bin/bash
 
-sphinx-apidoc --module-first elastic/ -o .
+mkdir temp_doc
+sphinx-apidoc --module-first elastic/ -o temp_doc
+es-generate-index-template build-results-schema > temp_doc/schema.json
 sphinx-build -b html . docs
