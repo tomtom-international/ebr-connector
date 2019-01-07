@@ -18,12 +18,5 @@ Terms
 Test and Suite Separation
 -------------------------
 
-Tests and suites have been separated into two arrays rather than having tests nested with suites in this schema in order to better support Grafana (which has limitations on accessing nested information in ElasticSearch).
-
-Examples
---------
-
-Some example usages are provided in the examples folder.
-These are subject to change, and may be removed in the future once actual production samples are available.
-
-* XunitResults - This provides the callback function to take an Xunit file (or set of files) and converts them into the schema.
+Tests and suites have been separated into two arrays rather than having tests nested with suites in this schema in order to better support Grafana 
+(which has limitations on accessing nested information in ElasticSearch).
