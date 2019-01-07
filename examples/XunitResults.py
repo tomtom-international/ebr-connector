@@ -3,7 +3,7 @@
 import requests
 
 from datetime import datetime
-from elastic.schema.build_results import build_results
+from elastic.schema.build_results import BuildResults
 from junitparser import JUnitXml
 
 def getXunitResultsAllfiles(testfiles):
@@ -74,7 +74,7 @@ def getXunitResults(filename):
 def status():
     return "passing"
 
-testBuild = build_results(jobName = "test", buildDateTime = datetime.now().isoformat(), jobLink = "https://***REMOVED***/")
+testBuild = BuildResults(jobName = "test", buildDateTime = datetime.now().isoformat(), jobLink = "https://***REMOVED***/")
 testBuild.storeTests(getXunitResultsAllfiles, {'testfiles': ["test/passed.xml"]})
 testBuild.storeStatus(status)
 

@@ -24,8 +24,8 @@ setup(
     entry_points="""
 [console_scripts]
 es-generate-index-template = elastic.index.generate_template:main
-es-store-quickbuild-results = elastic.hooks.quickbuild.storeResults:main
-es-store-jenkins-results = elastic.hooks.jenkins.storeResults:main
+es-store-quickbuild-results = elastic.hooks.quickbuild.store_results:main
+es-store-jenkins-results = elastic.hooks.jenkins.store_results:main
 """,
     dependency_links=[
         "http://***REMOVED***/artifactory/api/pypi/pypi-virtual/simple/qb-results-exporter"
