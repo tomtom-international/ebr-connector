@@ -99,7 +99,7 @@ def format_quickbuild_results(build_test_data, build_info):
 
             try:
                 suite_result['duration'] += int(duration)
-            except BaseException:
+            except ValueError:
                 pass
 
             suite_result['totalCount'] += 1
