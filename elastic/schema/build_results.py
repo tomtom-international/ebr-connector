@@ -172,7 +172,7 @@ class BuildResults(Document):
                 self.tests.append(Test(**test))
             for suite in results.get('suites', None):
                 self.suites.append(TestSuite(**suite))
-        except Exception:
+        except  (KeyError, TypeError):
             warnings.warn("Failed to retrieve test data.")
             traceback.print_exc()
 
@@ -185,7 +185,7 @@ class BuildResults(Document):
         """
         try:
             self.status = status_function(*args, **kwargs)
-        except Exception:
+        except (KeyError, TypeError):
             warnings.warn("Failed to retrieve status information.")
             traceback.print_exc()
 
