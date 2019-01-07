@@ -64,20 +64,10 @@ def jenkins_json_decode(url):
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description='Send results of a Jenkins build to a LogCollector instance over TCP.')
-    parser.add_argument(
-        '--buildurl',
-        required=True,
-        help='URL of build to send')
-    parser.add_argument(
-        '--buildtime',
-        required=True,
-        help="Build date-time string")
-    parser.add_argument(
-        '--buildstatus',
-        required=True,
-        help="Build status string")
+    parser = argparse.ArgumentParser(description='Send results of a Jenkins build to a LogCollector instance over TCP.')
+    parser.add_argument('--buildurl', required=True, help='URL of build to send')
+    parser.add_argument('--buildtime', required=True, help="Build date-time string")
+    parser.add_argument('--buildstatus', required=True, help="Build status string")
     add_common_args(parser)
     args = parser.parse_args()
 
@@ -86,24 +76,12 @@ def main():
         print("Either both '--clientcert' and '--clientkey' must be set or neither should be set.")
         exit()
 
-    jenkins_build = BuildResults(
-        jobName=args.jobname,
-        buildId=args.buildid,
-        buildDateTime=args.buildtime,
-        jobLink=args.buildurl)
-    jenkins_build.store_tests(
-        jenkins_json_decode,
-        args.buildurl +
-        "testReport/api/json")
+    jenkins_build = BuildResults(jobName=args.jobname, buildId=args.buildid, buildDateTime=args.buildtime, jobLink=args.buildurl)
+    jenkins_build.store_tests(jenkins_json_decode, args.buildurl + "testReport/api/json")
     jenkins_build.store_status(status, args)
 
-    jenkins_build.save_logcollect(
-        args.logcollectaddr,
-        args.logcollectport,
-        cafile=args.cacert,
-        clientcert=args.clientcert,
-        clientkey=args.clientkey,
-        keypass=args.clientpassword)
+    jenkins_build.save_logcollect(args.logcollectaddr, args.logcollectport, cafile=args.cacert, clientcert=args.clientcert, clientkey=args.clientkey,
+                                  keypass=args.clientpassword)
 
 
 if __name__ == '__main__':

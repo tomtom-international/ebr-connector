@@ -17,37 +17,13 @@ DEFAULT_LOG_LEVEL = "INFO"
 
 
 def parse_args(args=None):
-    parser = argparse.ArgumentParser(
-        description='Send results of a QuickBuild job to a LogCollector instance over TCP.')
-    parser.add_argument(
-        "-s",
-        "--stage",
-        type=str,
-        required=False,
-        help="Stage name")
-    parser.add_argument(
-        "--product",
-        type=str,
-        default=DEFAULT_PROJECT_NAME,
-        help="Product name (Default: %s)" %
-        DEFAULT_PROJECT_NAME)
-    parser.add_argument(
-        "--qbusername",
-        dest="qb_username",
-        help="Quickbuild username")
-    parser.add_argument(
-        "--qbpassword",
-        dest="qb_password",
-        help="Quickbuild password")
-    parser.add_argument(
-        "-l",
-        "--log",
-        action="store",
-        type=str,
-        dest="log_level",
-        default=DEFAULT_LOG_LEVEL,
-        help="Log level (Default: %s)" %
-        DEFAULT_LOG_LEVEL)
+    parser = argparse.ArgumentParser(description='Send results of a QuickBuild job to a LogCollector instance over TCP.')
+    parser.add_argument("-s", "--stage", type=str, required=False, help="Stage name")
+    parser.add_argument("--product", type=str, default=DEFAULT_PROJECT_NAME, help="Product name (Default: %s)" % DEFAULT_PROJECT_NAME)
+    parser.add_argument("--qbusername", dest="qb_username", help="Quickbuild username")
+    parser.add_argument("--qbpassword", dest="qb_password", help="Quickbuild password")
+    parser.add_argument("-l", "--log", action="store", type=str, dest="log_level", default=DEFAULT_LOG_LEVEL,
+                        help="Log level (Default: %s)" % DEFAULT_LOG_LEVEL)
     add_common_args(parser)
     return parser.parse_args(args)
 
@@ -186,25 +162,12 @@ def main():
             build_date = build_date.isoformat()
 
 
-        quick_build_results = BuildResults(
-            platform=args.platform,
-            jobName=args.jobname,
-            buildId=args.buildid,
-            buildDateTime=build_date,
-            jobLink=build_url)
-        quick_build_results.store_tests(
-            quickbuild_xml_decode,
-            build_info=build_info,
-            qb_results_exporter=qb_results_exporter,
-            logger=logger)
+        quick_build_results = BuildResults(platform=args.platform, jobName=args.jobname, buildId=args.buildid, buildDateTime=build_date,
+                                           jobLink=build_url)
+        quick_build_results.store_tests(quickbuild_xml_decode, build_info=build_info, qb_results_exporter=qb_results_exporter, logger=logger)
         quick_build_results.store_status(get_status, build_info=build_info)
-        quick_build_results.save_logcollect(
-            args.logcollectaddr,
-            args.logcollectport,
-            cafile=args.cacert,
-            clientcert=args.clientcert,
-            clientkey=args.clientkey,
-            keypass=args.clientpassword)
+        quick_build_results.save_logcollect(args.logcollectaddr, args.logcollectport, cafile=args.cacert, clientcert=args.clientcert,
+                                            clientkey=args.clientkey, keypass=args.clientpassword)
 
     except Exception as err:
         logger.error(err)
