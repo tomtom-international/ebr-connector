@@ -18,6 +18,7 @@ from elastic.hooks.common.args import add_common_args
 
 DEFAULT_PROJECT_NAME = "NavKit"
 DEFAULT_LOG_LEVEL = "INFO"
+SOCKET_TIMEOUT_SECS = 100
 
 
 def parse_args(args=None):
@@ -188,42 +189,37 @@ def main():
     logging.getLogger("urllib3").setLevel(logging.WARNING)
     logger = logging.getLogger('StoreQuickBuildResults')
 
-    try:
-        args = parse_args()
+    args = parse_args()
 
-        if (args.clientcert or args.clientkey) and not (
-                args.clientcert and args.clientkey):
-            raise ValueError(
-                "Either both '--clientcert' and '--clientkey' must be set or neither should be set.")
+    if (args.clientcert or args.clientkey) and not (
+            args.clientcert and args.clientkey):
+        raise ValueError(
+            "Either both '--clientcert' and '--clientkey' must be set or neither should be set.")
 
-        if not args.qb_password and args.qb_username:
-            args.qb_password = getpass.getpass(
-                "Password for " + args.qb_username + ": ")
+    if not args.qb_password and args.qb_username:
+        args.qb_password = getpass.getpass(
+            "Password for " + args.qb_username + ": ")
 
-        logging.basicConfig(level=args.log_level.upper())
-        qb_results_exporter = QBResultsExporter(
-            logger, args.qb_username, args.qb_password)
+    logging.basicConfig(level=args.log_level.upper())
+    qb_results_exporter = QBResultsExporter(
+        logger, args.qb_username, args.qb_password)
 
-        build_info = qb_results_exporter.get_build_info(
-            args.buildid, args.product, args.stage)
-        build_date = build_info.get(
-            QBResultsExporter.KEY_BUILD_DATE_TIME_UTC, None)
-        build_url = build_info.get(QBResultsExporter.KEY_BUILD_URL, None)
+    build_info = qb_results_exporter.get_build_info(
+        args.buildid, args.product, args.stage)
+    build_date = build_info.get(
+        QBResultsExporter.KEY_BUILD_DATE_TIME_UTC, None)
+    build_url = build_info.get(QBResultsExporter.KEY_BUILD_URL, None)
 
-        if build_date:
-            build_date = build_date.isoformat()
+    if build_date:
+        build_date = build_date.isoformat()
 
 
-        quick_build_results = BuildResults(platform=args.platform, jobName=args.jobname, buildId=args.buildid, buildDateTime=build_date,
-                                           jobLink=build_url)
-        quick_build_results.store_tests(quickbuild_xml_decode, build_info=build_info, qb_results_exporter=qb_results_exporter, logger=logger)
-        quick_build_results.store_status(get_status, build_info=build_info)
-        quick_build_results.save_logcollect(args.logcollectaddr, args.logcollectport, cafile=args.cacert, clientcert=args.clientcert,
-                                            clientkey=args.clientkey, keypass=args.clientpassword)
-
-    except Exception as err:
-        logger.error(err)
-        exit(1)
+    quick_build_results = BuildResults(platform=args.platform, jobName=args.jobname, buildId=args.buildid, buildDateTime=build_date,
+                                       jobLink=build_url)
+    quick_build_results.store_tests(quickbuild_xml_decode, build_info=build_info, qb_results_exporter=qb_results_exporter, logger=logger)
+    quick_build_results.store_status(get_status, build_info=build_info)
+    quick_build_results.save_logcollect(args.logcollectaddr, args.logcollectport, cafile=args.cacert, clientcert=args.clientcert,
+                                        clientkey=args.clientkey, keypass=args.clientpassword, timeout=SOCKET_TIMEOUT_SECS)
 
 
 if __name__ == '__main__':

@@ -79,9 +79,10 @@ class TestSuite(_InnerDocFrozen):
     package = Text(fields={'raw': Keyword()})
     product = Text(fields={'raw': Keyword()})
 
-    def __init__(self, name, failures, skipped, passed, total, duration, package=None, product=None):
-        _InnerDocFrozen.__init__(self, name=name, failures=failures, skipped=skipped, passed=passed,
-                                 total=total, duration=duration, package=package, product=product)
+    def __init__(self, name, failuresCount, skippedCount, passedCount, totalCount, duration, package=None, product=None):
+        _InnerDocFrozen.__init__(self, name=name, failuresCount=failuresCount, skippedCount=skippedCount,
+                                 passedCount=passedCount, totalCount=totalCount, duration=duration, package=package,
+                                 product=product)
 
 
 class BuildResults(Document):
@@ -105,7 +106,8 @@ class BuildResults(Document):
     suites = Nested(TestSuite)
 
     def __init__(self, jobName, jobLink, buildDateTime, buildId, platform=None):
-        Document.__init__(self, jobName=jobName, jobLink=jobLink, buildDateTime=buildDateTime, buildId=buildId, platform=platform)
+        Document.__init__(self, jobName=jobName, jobLink=jobLink, buildDateTime=buildDateTime, buildId=buildId,
+                          platform=platform, tests=[], suites=[])
 
     def __setattr__(self, key, value):
         if not hasattr(self, key):
@@ -143,7 +145,7 @@ class BuildResults(Document):
             warnings.warn("Failed to retrieve status information.")
             traceback.print_exc()
 
-    def save_logcollect(self, dest, port, cafile=None, clientcert=None, clientkey=None, keypass=""):
+    def save_logcollect(self, dest, port, cafile=None, clientcert=None, clientkey=None, keypass="", timeout=10):
         """
         Saves the BuildResults object to a LogCollector instance.
 
@@ -155,10 +157,11 @@ class BuildResults(Document):
             clientcert: (optional) file location of the client certificate
             clientkey: (optional) file location of the client key
             keypass: (optional) password of the client key (leave blank if unset)
+            timeout: (optional) socket timeout in seconds for the write operation (10 seconds if unset)
         """
         result = str.encode(json.dumps(self.to_dict()))
         bare_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        bare_socket.settimeout(10)
+        bare_socket.settimeout(timeout)
 
         context = ssl.create_default_context(cafile=cafile)
 
