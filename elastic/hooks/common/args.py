@@ -1,8 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""
+Module with common argparser configuration for hooks
+"""
 
 def add_common_args(parser):
+    """
+    Common argparser configuration for hooks
+    """
     parser.add_argument("-b", "--buildid", type=str, required=True, help="CI build ID")
     parser.add_argument("-j", "--jobname", type=str, default=None, help="CI Job name")
     parser.add_argument("-p", "--platform", type=str, default="linux", help="Platform name (default: linux)")
