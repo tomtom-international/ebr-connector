@@ -1,5 +1,5 @@
 """
-Generates a index template for ElasticSearch from the BuildResults document.
+Generates an index template for ElasticSearch from the BuildResults document.
 """
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-

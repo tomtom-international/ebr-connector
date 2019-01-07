@@ -163,7 +163,7 @@ class BuildResults(Document):
         Retrieves the test results of a build and adds them to the BuildResults object
 
         Args:
-            retrieveFunction: Callback function which provides test and suite data in dictionaries
+            retrieve_function: Callback function which provides test and suite data in dictionaries
             (see Test and TestSuite documentation for format)
         """
         try:
@@ -181,7 +181,7 @@ class BuildResults(Document):
         Retrieves the status of a build and adds it to the BuildResults object
 
         Args:
-            statusFunction: Callback function which provides status information
+            status_function: Callback function which provides status information
         """
         try:
             self.status = status_function(*args, **kwargs)
