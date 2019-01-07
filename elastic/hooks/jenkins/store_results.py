@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""
+Library for exporting Jenkins build results (including tests) to logstash
+"""
+
 import sys
 from json.decoder import JSONDecodeError
 import argparse
@@ -13,10 +17,18 @@ from elastic.hooks.common.args import add_common_args
 
 
 def status(args):
+    """
+    Callback function to provide the build status to BuildResults
+    """
     return args.buildstatus
 
-
 def jenkins_json_decode(url):
+    """
+    Transforms the test results stored by Jenkins into the BuildResults format
+
+    Args:
+        url: URL to Jenkins build to record
+    """
     results = {
         'tests': [],
         'suites': []
@@ -64,6 +76,9 @@ def jenkins_json_decode(url):
 
 
 def main():
+    """
+    Provides a CLI interface callable on Jenkins to send build results to logstash
+    """
     parser = argparse.ArgumentParser(description='Send results of a Jenkins build to a LogCollector instance over TCP.')
     parser.add_argument('--buildurl', required=True, help='URL of build to send')
     parser.add_argument('--buildtime', required=True, help="Build date-time string")
