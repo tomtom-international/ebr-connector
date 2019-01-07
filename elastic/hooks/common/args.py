@@ -15,6 +15,7 @@ def add_common_args(parser):
 
     parser.add_argument("--logcollectaddr", type=str, required=True, help="Address of LogCollector to send to")
     parser.add_argument("--logcollectport", type=int, required=True, help="Port on the LogCollector to send to")
+    parser.add_argument("--sockettimeout", type=int, default=10, help="Socket timeout in seconds for the write operation")
     parser.add_argument("--cacert", default=None, help="Location of CA cert to verify against.")
     parser.add_argument("--clientcert", default=None, help="Client certificate file. Must also provide client key.")
     parser.add_argument("--clientkey", default=None, help="Client key file. Must also provide client certificate.")

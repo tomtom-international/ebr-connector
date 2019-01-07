@@ -96,7 +96,7 @@ def main():
     jenkins_build.store_status(status, args)
 
     jenkins_build.save_logcollect(args.logcollectaddr, args.logcollectport, cafile=args.cacert, clientcert=args.clientcert, clientkey=args.clientkey,
-                                  keypass=args.clientpassword)
+                                  keypass=args.clientpassword, timeout=args.sockettimeout)
 
 
 if __name__ == '__main__':

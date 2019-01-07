@@ -18,7 +18,6 @@ from elastic.hooks.common.args import add_common_args
 
 DEFAULT_PROJECT_NAME = "NavKit"
 DEFAULT_LOG_LEVEL = "INFO"
-SOCKET_TIMEOUT_SECS = 100
 
 
 def parse_args(args=None):
@@ -219,7 +218,7 @@ def main():
     quick_build_results.store_tests(quickbuild_xml_decode, build_info=build_info, qb_results_exporter=qb_results_exporter, logger=logger)
     quick_build_results.store_status(get_status, build_info=build_info)
     quick_build_results.save_logcollect(args.logcollectaddr, args.logcollectport, cafile=args.cacert, clientcert=args.clientcert,
-                                        clientkey=args.clientkey, keypass=args.clientpassword, timeout=SOCKET_TIMEOUT_SECS)
+                                        clientkey=args.clientkey, keypass=args.clientpassword, timeout=args.sockettimeout)
 
 
 if __name__ == '__main__':
