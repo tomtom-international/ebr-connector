@@ -1,5 +1,9 @@
 #! /usr/bin/python3
 
+"""
+Library pushing XUnit results to logstash. Intended as a baseline for any CI systems that do not provide XUnit file ingestion that can be used instead.
+"""
+
 import sys
 import argparse
 
@@ -9,6 +13,12 @@ from elastic.schema.build_results import BuildResults
 from elastic.hooks.common.args import add_common_args
 
 def get_all_xunit_files(testfiles):
+    """
+    Takes a list of XUnit files and processes them into the BuildResults format
+
+    Args:
+        testfiles: A list of locations of XUnit XML files
+    """
     results = {
         'tests': [],
         'suites': []
@@ -24,6 +34,12 @@ def get_all_xunit_files(testfiles):
     return results
 
 def get_xunit_results(filename):
+    """
+    Takes a single XUnit file and returns suites and tests in BuildResults format
+
+    Args:
+        testfile: the location of a single XUnit XML file
+    """
     xml = JUnitXml.fromfile(filename)
 
     results = {
@@ -98,9 +114,15 @@ def get_xunit_results(filename):
     return results
 
 def status(args):
+    """
+    Callback function to provide the build status to BuildResults
+    """
     return args.buildstatus
 
 def main():
+     """
+    Provides a CLI interface that takes in XUnit files and returns the results to logstash
+    """
     parser = argparse.ArgumentParser(description='Sends the results of a build getting test results from XUnit files.')
     parser.add_argument('--buildurl', required=True, help='URL of build to send')
     parser.add_argument('--buildtime', required=True, help="Build date-time string")
