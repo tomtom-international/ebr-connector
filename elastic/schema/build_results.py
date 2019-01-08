@@ -107,7 +107,7 @@ class BuildResults(Document):
 
     def __init__(self, jobName, jobLink, buildDateTime, buildId, platform=None):
         Document.__init__(self, jobName=jobName, jobLink=jobLink, buildDateTime=buildDateTime, buildId=buildId,
-                          platform=platform, tests=[], suites=[])
+                          platform=platform, status=None, tests=[], suites=[])
 
     def __setattr__(self, key, value):
         if not hasattr(self, key):
