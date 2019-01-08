@@ -38,7 +38,7 @@ def add_build_args(parser):
 def validate_args(args):
     """
     Performs validation of common arguments provided to hooks.
-    Currently only checks if key and certificate are both provide if either are.
+    Currently only checks if key and certificate are both provided if either are.
 
     Args:
         args: arguments parsed from argparser object
