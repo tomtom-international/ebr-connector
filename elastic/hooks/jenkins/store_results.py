@@ -7,20 +7,10 @@ Library for exporting Jenkins build results (including tests) to logstash
 
 import sys
 from json.decoder import JSONDecodeError
-import argparse
 
 import requests
 
-
-from elastic.schema.build_results import BuildResults
-from elastic.hooks.common.args import add_common_args
-
-
-def status(args):
-    """
-    Callback function to provide the build status to :class:`elastic.schema.BuildResults`
-    """
-    return args.buildstatus
+from elastic.hooks.common.store_results import assemble_build, parse_args
 
 def jenkins_json_decode(url):
     """
@@ -79,21 +69,9 @@ def main():
     """
     Provides a CLI interface callable on Jenkins to send build results to logstash
     """
-    parser = argparse.ArgumentParser(description='Send results of a Jenkins build to a LogCollector instance over TCP.')
-    parser.add_argument('--buildurl', required=True, help='URL of build to send')
-    parser.add_argument('--buildtime', required=True, help="Build date-time string")
-    parser.add_argument('--buildstatus', required=True, help="Build status string")
-    add_common_args(parser)
-    args = parser.parse_args()
+    args = parse_args("Send results of a Jenkins build to a LogCollector instance over TCP.")
 
-    if (args.clientcert or args.clientkey) and not (
-            args.clientcert and args.clientkey):
-        print("Either both '--clientcert' and '--clientkey' must be set or neither should be set.")
-        exit()
-
-    jenkins_build = BuildResults(jobName=args.jobname, buildId=args.buildid, buildDateTime=args.buildtime, jobLink=args.buildurl)
-    jenkins_build.store_tests(jenkins_json_decode, args.buildurl + "testReport/api/json")
-    jenkins_build.store_status(status, args)
+    jenkins_build = assemble_build(args, jenkins_json_decode, [args.buildurl + "testReport/api/json"])
 
     jenkins_build.save_logcollect(args.logcollectaddr, args.logcollectport, cafile=args.cacert, clientcert=args.clientcert, clientkey=args.clientkey,
                                   keypass=args.clientpassword, timeout=args.sockettimeout)

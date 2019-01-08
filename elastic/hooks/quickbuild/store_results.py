@@ -13,7 +13,7 @@ import sys
 
 from qb_results_exporter.qb_results_exporter import QBResultsExporter
 from elastic.schema.build_results import BuildResults
-from elastic.hooks.common.args import add_common_args
+from elastic.hooks.common.args import add_common_args, validate_args
 
 
 DEFAULT_PROJECT_NAME = "NavKit"
@@ -190,10 +190,7 @@ def main():
 
     args = parse_args()
 
-    if (args.clientcert or args.clientkey) and not (
-            args.clientcert and args.clientkey):
-        raise ValueError(
-            "Either both '--clientcert' and '--clientkey' must be set or neither should be set.")
+    validate_args(args)
 
     if not args.qb_password and args.qb_username:
         args.qb_password = getpass.getpass(

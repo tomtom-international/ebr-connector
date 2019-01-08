@@ -5,12 +5,10 @@ Library pushing XUnit results to logstash. Intended as a baseline for any CI sys
 """
 
 import sys
-import argparse
 
 from junitparser import JUnitXml
 
-from elastic.schema.build_results import BuildResults
-from elastic.hooks.common.args import add_common_args
+from elastic.hooks.common.store_results import assemble_build, parse_args
 
 def get_all_xunit_files(testfiles):
     """
@@ -120,37 +118,15 @@ def status(args):
     return args.buildstatus
 
 def main():
-     """
+    """
     Provides a CLI interface that takes in XUnit files and returns the results to logstash
     """
-    parser = argparse.ArgumentParser(description='Sends the results of a build getting test results from XUnit files.')
-    parser.add_argument('--buildurl', required=True, help='URL of build to send')
-    parser.add_argument('--buildtime', required=True, help="Build date-time string")
-    parser.add_argument('--buildstatus', required=True, help="Build status string")
-<<<<<<< Updated upstream
-    parser.add_argument('--testfiles')
-=======
-    parser.add_argument('--testfiles', nargs='+', required=True, help="List of XML files to parse")
->>>>>>> Stashed changes
-    add_common_args(parser)
-    args = parser.parse_args()
+    args = parse_args("Send results of a Jenkins build to a LogCollector instance over TCP.")
 
-    if (args.clientcert or args.clientkey) and not (
-            args.clientcert and args.clientkey):
-        print("Either both '--clientcert' and '--clientkey' must be set or neither should be set.")
-        exit()
-
-    xunit_results = BuildResults(jobName=args.jobname, buildId=args.buildid, buildDateTime=args.buildtime, jobLink=args.buildurl)
-<<<<<<< Updated upstream
-    xunit_results.store_tests(get_all_xunit_files, {'testfiles': [args.testfiles]})
-=======
-    xunit_results.store_tests(get_all_xunit_files, args.testfiles)
->>>>>>> Stashed changes
-    xunit_results.store_status(status, args)
+    xunit_results = assemble_build(args, get_all_xunit_files, [args.testfiles])
 
     xunit_results.save_logcollect(args.logcollectaddr, args.logcollectport, cafile=args.cacert, clientcert=args.clientcert, clientkey=args.clientkey,
                                   keypass=args.clientpassword)
-
 
 if __name__ == '__main__':
     sys.exit(main())

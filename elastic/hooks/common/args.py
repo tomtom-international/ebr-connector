@@ -8,6 +8,9 @@ Module with common argparser configuration for hooks
 def add_common_args(parser):
     """
     Common argparser configuration for hooks
+
+    Args:
+        parser: Args parser object
     """
     parser.add_argument("-b", "--buildid", type=str, required=True, help="CI build ID")
     parser.add_argument("-j", "--jobname", type=str, default=None, help="CI Job name")
@@ -20,3 +23,26 @@ def add_common_args(parser):
     parser.add_argument("--clientcert", default=None, help="Client certificate file. Must also provide client key.")
     parser.add_argument("--clientkey", default=None, help="Client key file. Must also provide client certificate.")
     parser.add_argument("--clientpassword", default="", help="Client key file's password. Only use if there is a password on the keyfile.")
+
+def add_build_args(parser):
+    """
+    Common (not required) build arguments for hooks
+
+    Args:
+        parser: Args parser object
+    """
+    parser.add_argument('--buildurl', required=True, help='URL of build to send')
+    parser.add_argument('--buildtime', required=True, help="Build date-time string")
+    parser.add_argument('--buildstatus', required=True, help="Build status string")
+
+def validate_args(args):
+    """
+    Performs validation of common arguments provided to hooks.
+    Currently only checks if key and certificate are both provide if either are.
+
+    Args:
+        args: arguments parsed from argparser object
+    """
+    if (args.clientcert or args.clientkey) and not (args.clientcert and args.clientkey):
+        print("Either both '--clientcert' and '--clientkey' must be set or neither should be set.")
+        exit(1)
