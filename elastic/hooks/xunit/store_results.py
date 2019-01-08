@@ -25,10 +25,6 @@ def get_all_xunit_files(testfiles):
         temp_results = get_xunit_results(testfile)
         results['tests'].extend(temp_results['tests'])
         results['suites'].extend(temp_results['suites'])
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
     return results
 
 def get_xunit_results(filename):
@@ -46,32 +42,6 @@ def get_xunit_results(filename):
     }
 
     for suite in xml:
-<<<<<<< Updated upstream
-        time = 0
-        # Wrap time access in try except due to occasional string times
-        try:
-            time = suite.time
-        except:
-            pass
-
-        suite_result = {
-            'errors': suite.errors,
-            'failures': suite.failures,
-            'name': suite.name,
-            'test_count': suite.tests,
-            'duration': time
-
-        }
-        results['suites'].append(suite_result)
-        for case in suite:
-            time = 0
-            # Wrap time access in try except due to occasional string times
-            try:
-                time = case.time
-            except:
-                pass
-
-=======
         suite_result = {
             'failuresCount': suite.failures + suite.errors,
             'skippedCount': suite.skipped,
@@ -82,16 +52,11 @@ def get_xunit_results(filename):
         }
         results['suites'].append(suite_result)
         for case in suite:
->>>>>>> Stashed changes
             if case.result is None:
                 result = "passed"
                 message = ""
             else:
-<<<<<<< Updated upstream
-                result = case.result._tag
-=======
-                result = case.result.__name__
->>>>>>> Stashed changes
+                result = case.result.__class__.__name__
                 message = case.result.message
 
             test = {
@@ -100,11 +65,7 @@ def get_xunit_results(filename):
                 'test': case.name,
                 'result': result,
                 'message': message,
-<<<<<<< Updated upstream
-                'duration': time
-=======
                 'duration': case.time
->>>>>>> Stashed changes
             }
 
             results['tests'].append(test)
