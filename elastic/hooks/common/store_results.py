@@ -6,16 +6,19 @@ import argparse
 from elastic.schema.build_results import BuildResults
 from elastic.hooks.common.args import add_common_args, add_build_args, validate_args
 
-def parse_args(description):
+def parse_args(description, custom_args=None):
     """
     Performs default arg parsing for a hook
 
     Args:
         description: description to provide for the hook CLI
+        custom_args: (optional) callback with any arguments unique to the hook
     """
     parser = argparse.ArgumentParser(description=description)
     add_common_args(parser)
     add_build_args(parser)
+    if custom_args:
+        custom_args(parser)
     args = parser.parse_args()
     validate_args(args)
 

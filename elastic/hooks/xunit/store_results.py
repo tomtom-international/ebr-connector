@@ -111,17 +111,20 @@ def get_xunit_results(filename):
 
     return results
 
-def status(args):
+def add_options(parser):
     """
-    Callback function to provide the build status to BuildResults
+    Adds the testfiles option to the arg parser object
+
+    Args:
+        parser: argparser object
     """
-    return args.buildstatus
+    parser.add_argument('--testfiles', nargs='+', required=True, help="List of XML files to parse")
 
 def main():
     """
     Provides a CLI interface that takes in XUnit files and returns the results to logstash
     """
-    args = parse_args("Send results of a Jenkins build to a LogCollector instance over TCP.")
+    args = parse_args("Send results of a Jenkins build to a LogCollector instance over TCP.", add_options)
 
     xunit_results = assemble_build(args, get_all_xunit_files, [args.testfiles])
 
