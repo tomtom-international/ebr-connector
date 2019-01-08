@@ -18,13 +18,13 @@ from elastic.hooks.common.args import add_common_args
 
 def status(args):
     """
-    Callback function to provide the build status to BuildResults
+    Callback function to provide the build status to :class:`elastic.schema.BuildResults`
     """
     return args.buildstatus
 
 def jenkins_json_decode(url):
     """
-    Transforms the test results stored by Jenkins into the BuildResults format
+    Transforms the test results stored by Jenkins into the :class:`elastic.schema.BuildResults` format
 
     Args:
         url: URL to Jenkins build to record
@@ -36,7 +36,7 @@ def jenkins_json_decode(url):
     try:
         json_results = requests.get(url).json()
     except JSONDecodeError:
-        print("Recieved error when parsing test results, no results will be included in build.")
+        print("Received error when parsing test results, no results will be included in build.")
         return results
 
     for suite in json_results['suites']:
