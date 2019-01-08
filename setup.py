@@ -27,6 +27,7 @@ setup(
 es-generate-index-template = elastic.index.generate_template:main
 es-store-quickbuild-results = elastic.hooks.quickbuild.store_results:main
 es-store-jenkins-results = elastic.hooks.jenkins.store_results:main
+es-store-xunit-results = elastic.hooks.xunit.store_results:main
 """,
     dependency_links=[
         "https://***REMOVED***/artifactory/api/pypi/pypi-virtual/simple/qb-results-exporter"
