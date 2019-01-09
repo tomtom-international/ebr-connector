@@ -10,7 +10,7 @@ import sys
 from elasticsearch_dsl import Index
 from elastic.schema.build_results import BuildResults
 
-def generate_template(index_name, output_file = None):
+def generate_template(index_name, output_file=None):
     """
     Generates the index template associated with the structure of the BuildResults
     document, allowing it to be uploaded to an ElasticSearch instance.
