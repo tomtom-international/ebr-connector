@@ -7,7 +7,6 @@ ebr-connector Documentation
    :titlesonly:
 
    ReadMe <README.rst>
-   Modules <:ref:`modindex`>
    Schema <schema.rst>
    
 
