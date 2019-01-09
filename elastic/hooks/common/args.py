@@ -5,6 +5,8 @@
 Module with common argparser configuration for hooks
 """
 
+import elastic
+
 def add_common_args(parser):
     """
     Common argparser configuration for hooks
@@ -23,6 +25,7 @@ def add_common_args(parser):
     parser.add_argument("--clientcert", default=None, help="Client certificate file. Must also provide client key.")
     parser.add_argument("--clientkey", default=None, help="Client key file. Must also provide client certificate.")
     parser.add_argument("--clientpassword", default="", help="Client key file's password. Only use if there is a password on the keyfile.")
+    parser.add_argument("--version", action="version", version=elastic.__version__)
 
 def add_build_args(parser):
     """

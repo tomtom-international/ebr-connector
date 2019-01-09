@@ -2,12 +2,14 @@ from __future__ import with_statement
 
 from setuptools import setup, find_packages
 
+import elastic
+
 with open("README.rst", "r") as fh:
     readme = fh.read()
 
 setup(
     name="ebr-connector",
-    version="0.0.1-dev",
+    version=elastic.__version__,
     author="Eugene Davis",
     author_email="eugene.davis@tomtom.com",
     description="Library that defines the schema used for pushing test results into Elasticsearch",

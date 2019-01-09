@@ -13,6 +13,8 @@ import warnings
 
 from elasticsearch_dsl import Document, Text, InnerDoc, Float, Integer, Nested, Date, Keyword
 
+import elastic
+
 
 class _InnerDocFrozen(InnerDoc):
     """
@@ -104,10 +106,11 @@ class BuildResults(Document):
     status = Keyword()
     tests = Nested(Test)
     suites = Nested(TestSuite)
+    version = Keyword()
 
     def __init__(self, jobName, jobLink, buildDateTime, buildId, platform=None):
         Document.__init__(self, jobName=jobName, jobLink=jobLink, buildDateTime=buildDateTime, buildId=buildId,
-                          platform=platform, status=None, tests=[], suites=[])
+                          platform=platform, status=None, tests=[], suites=[], version=elastic.__version__)
 
     def __setattr__(self, key, value):
         if not hasattr(self, key):
