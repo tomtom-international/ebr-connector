@@ -6,8 +6,8 @@ ebr-connector Documentation
    :caption: Overview:
    :titlesonly:
 
-   Modules <temp_doc/modules.rst>
-   Readme <README.rst>
+   ReadMe <README.rst>
+   Modules <:ref:`modindex`>
    Schema <schema.rst>
    
 

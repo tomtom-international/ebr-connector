@@ -1,6 +1,6 @@
 Schema
 ======
 
-.. literalinclude:: temp_doc/schema.json
+.. literalinclude:: schema.json
     :language: json
     :linenos:

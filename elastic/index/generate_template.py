@@ -10,27 +10,32 @@ import sys
 from elasticsearch_dsl import Index
 from elastic.schema.build_results import BuildResults
 
-
-def main():
+def generate_template(index_name, output_file = None):
     """
     Generates the index template associated with the structure of the BuildResults
     document, allowing it to be uploaded to an ElasticSearch instance.
+    """
+
+    document = BuildResults(jobName=None, jobLink=None, buildDateTime=None, buildId=None)
+    index = Index(index_name)
+    index.document(document)
+    index_template = index.as_template(template_name="template")
+    if output_file:
+        with open(output_file, "w") as file:
+            json.dump(index_template.to_dict(), file, ensure_ascii=False, indent=4, sort_keys=True)
+    else:
+        print(json.dumps(index_template.to_dict(), ensure_ascii=False, indent=4, sort_keys=True))
+
+def main():
+    """
+    CLI interface to generate the index template for BuildResults
     """
     parser = argparse.ArgumentParser(description="Script for generating an index template out of a document")
     parser.add_argument("INDEX_NAME", help="Name of index")
     parser.add_argument("--output_file", help="File to write schema to")
     args = parser.parse_args()
 
-    document = BuildResults(jobName=None, jobLink=None, buildDateTime=None, buildId=None)
-    index = Index(args.INDEX_NAME)
-    index.document(document)
-    index_template = index.as_template(template_name="template")
-    print(
-        json.dumps(
-            index_template.to_dict(),
-            ensure_ascii=False,
-            indent=4,
-            sort_keys=True))
+    generate_template(args.INDEX_NAME, args.output_file)
 
 
 if __name__ == '__main__':

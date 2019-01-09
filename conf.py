@@ -14,6 +14,9 @@
 #
 import os
 import sys
+
+from elastic.index.generate_template import generate_template
+
 sys.path.insert(0, os.path.abspath('.'))
 
 
@@ -184,3 +187,5 @@ epub_exclude_files = ['search.html']
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
+
+generate_template("build-results-schema", output_file="schema.json")

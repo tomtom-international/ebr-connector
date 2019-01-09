@@ -3,4 +3,4 @@ build/
 dist/
 venv/
 docs/
-temp_doc/
+schema.json
