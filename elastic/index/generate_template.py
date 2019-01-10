@@ -14,6 +14,10 @@ def generate_template(index_name, output_file=None):
     """
     Generates the index template associated with the structure of the BuildResults
     document, allowing it to be uploaded to an ElasticSearch instance.
+
+    Args:
+        index_name: index name to generate the template with, should be the index the module will upload to
+        output_file: (optional) file path to write template to
     """
 
     document = BuildResults(jobName=None, jobLink=None, buildDateTime=None, buildId=None)
