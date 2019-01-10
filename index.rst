@@ -6,9 +6,9 @@ ebr-connector Documentation
    :caption: Overview:
    :titlesonly:
 
-   ReadMe <README.md>
-   Schema <schema.rst>
    Modules <modules.rst>
+   Schema <schema.rst>
+   ReadMe <README.md>
 
 
 Indices and tables
