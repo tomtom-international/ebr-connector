@@ -6,7 +6,7 @@ ebr-connector Documentation
    :caption: Overview:
    :titlesonly:
 
-   ReadMe <README.rst>
+   ReadMe <README.md>
    Schema <schema.rst>
    
 

@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 import elastic
 
-with open("README.rst", "r") as fh:
+with open("README.md", "r") as fh:
     readme = fh.read()
 
 setup(
