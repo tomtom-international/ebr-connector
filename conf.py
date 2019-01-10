@@ -16,6 +16,7 @@ import os
 import sys
 
 from elastic.index.generate_template import generate_template
+import elastic
 
 sys.path.insert(0, os.path.abspath('.'))
 
@@ -27,9 +28,9 @@ copyright = u'2019, TomTom N.V.'
 author = u'Eugene Davis, Martin Migasiewicz, James Mechen'
 
 # The short X.Y version
-version = u''
+version = str(elastic.__version__.split('.')[0])
 # The full version, including alpha/beta/rc tags
-release = u'0.0.1'
+release = str(elastic.__version__)
 
 
 # -- General configuration ---------------------------------------------------
