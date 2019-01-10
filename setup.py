@@ -21,7 +21,7 @@ setup(
     install_requires=[
         "elasticsearch-dsl>=6.2.1,<7",
         "requests>=2.18.4,<3",
-        "qb_results_exporter>=0.0.2",
+        "qb_results_exporter==0.0.2",
         "junitparser>=1.2.2,<2"
     ],
     entry_points="""
