@@ -1,9 +1,9 @@
+# -*- coding: utf-8 -*-
+
 """
 Serialization library to/from logstash (ElasticSearch) for build results
 """
 
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import socket
 import ssl

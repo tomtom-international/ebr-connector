@@ -1,7 +1,11 @@
+# -*- coding: utf-8 -*-
+
 """
 Library with convience functions for use in hooks
 """
+
 import argparse
+
 
 from elastic.schema.build_results import BuildResults
 from elastic.hooks.common.args import add_common_args, add_build_args, validate_args

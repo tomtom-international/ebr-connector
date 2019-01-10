@@ -1,9 +1,9 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 """
 Library for exporting QuickBuild build results to logstash (ElasticSearch).
 """
-
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import argparse
 import getpass

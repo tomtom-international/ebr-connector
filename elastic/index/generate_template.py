@@ -1,8 +1,9 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 """
 Generates an index template for ElasticSearch from the BuildResults document.
 """
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
 
 import argparse
 import json
