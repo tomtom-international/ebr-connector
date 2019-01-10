@@ -15,6 +15,8 @@
 import os
 import sys
 
+from sphinx.ext import apidoc
+
 from elastic.index.generate_template import generate_template
 import elastic
 
@@ -188,5 +190,7 @@ epub_exclude_files = ['search.html']
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
+
+apidoc.main(['--module-first', 'elastic', '-o', os.getcwd()])
 
 generate_template("build-results-schema", output_file="schema.json")

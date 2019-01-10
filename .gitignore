@@ -4,3 +4,4 @@ dist/
 venv/
 docs/
 schema.json
+*.rst
