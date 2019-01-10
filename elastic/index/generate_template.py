@@ -7,7 +7,9 @@ Generates an index template for ElasticSearch from the BuildResults document.
 import argparse
 import json
 import sys
+
 from elasticsearch_dsl import Index
+import elastic
 from elastic.schema.build_results import BuildResults
 
 def generate_template(index_name, output_file=None):
@@ -24,11 +26,17 @@ def generate_template(index_name, output_file=None):
     index = Index(index_name)
     index.document(document)
     index_template = index.as_template(template_name="template")
+
+    # Unfortunately there is no possibility to add the version via the elasticsearch_dsl library.
+    # We add the version of the index template as described
+    template_dict = index_template.to_dict()
+    template_dict["version"] = elastic.__version__
+
     if output_file:
         with open(output_file, "w") as file:
-            json.dump(index_template.to_dict(), file, ensure_ascii=False, indent=4, sort_keys=True)
+            json.dump(template_dict, file, ensure_ascii=False, indent=4, sort_keys=True)
     else:
-        print(json.dumps(index_template.to_dict(), ensure_ascii=False, indent=4, sort_keys=True))
+        print(json.dumps(template_dict, ensure_ascii=False, indent=4, sort_keys=True))
 
 def main():
     """
