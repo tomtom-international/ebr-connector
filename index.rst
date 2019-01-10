@@ -8,7 +8,7 @@ ebr-connector Documentation
 
    ReadMe <README.md>
    Schema <schema.rst>
-   
+   Modules <modules.rst>
 
 
 Indices and tables
