@@ -13,7 +13,7 @@ from elastic.hooks.common.store_results import assemble_build, parse_args
 
 def get_all_xunit_files(testfiles):
     """
-    Takes a list of XUnit files and processes them into the BuildResults format
+    Takes a list of XUnit files and processes them into the :class:`elastic.schema.BuildResults` format
 
     Args:
         testfiles: A list of locations of XUnit XML files
@@ -30,7 +30,7 @@ def get_all_xunit_files(testfiles):
 
 def get_xunit_results(filename):
     """
-    Takes a single XUnit file and returns suites and tests in BuildResults format
+    Takes a single XUnit file and returns suites and tests in :class:`elastic.schema.BuildResults` format
 
     Args:
         testfile: the location of a single XUnit XML file

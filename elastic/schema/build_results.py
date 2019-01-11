@@ -16,21 +16,7 @@ from elasticsearch_dsl import Document, Text, InnerDoc, Float, Integer, Nested, 
 import elastic
 
 
-class _InnerDocFrozen(InnerDoc):
-    """
-    Update the InnerDoc class to be frozen
-    """
-
-    def __setattr__(self, key, value):
-        """
-        Overridden to prevent accidential schema modifications
-        """
-        if not hasattr(self, key):
-            raise TypeError("%r is a frozen class" % self)
-        object.__setattr__(self, key, value)
-
-
-class Test(_InnerDocFrozen):
+class Test(InnerDoc):
     """
     Provides serialization for a single test
 
@@ -53,12 +39,27 @@ class Test(_InnerDocFrozen):
     reportset = Text()
     stage = Text(fields={'raw': Keyword()})
 
-    def __init__(self, suite, classname, test, result, message, duration, reportset=None, stage=None):
-        _InnerDocFrozen.__init__(self, suite=suite, classname=classname, test=test, result=result, message=message,
-                                 duration=duration, reportset=reportset, stage=stage)
+    @staticmethod
+    def create(suite, classname, test, result, message, duration, reportset=None, stage=None):
+        """
+        Factory method for creating a new instance of :class:`elastic.schema.Test`.
+
+        Args:
+            suite: Set (suite) the test is a part of
+            classname: Class that the test is from
+            test: Name of the test
+            result: Result of the test (e.g. passed)
+            message: Any output from the test
+            duration: Duration in milliseconds (float) of the test
+            reportset: (Optional) Report set the test is a part of
+            stage: (Optional) Stage during which the test was executed
+        """
+
+        return Test(suite=suite, classname=classname, test=test, result=result, message=message,
+                    duration=duration, reportset=reportset, stage=stage)
 
 
-class TestSuite(_InnerDocFrozen):
+class TestSuite(InnerDoc):
     """
     Provides serialization for Test Sets (test suites)
 
@@ -81,22 +82,30 @@ class TestSuite(_InnerDocFrozen):
     package = Text(fields={'raw': Keyword()})
     product = Text(fields={'raw': Keyword()})
 
-    def __init__(self, name, failuresCount, skippedCount, passedCount, totalCount, duration, package=None, product=None):
-        _InnerDocFrozen.__init__(self, name=name, failuresCount=failuresCount, skippedCount=skippedCount,
-                                 passedCount=passedCount, totalCount=totalCount, duration=duration, package=package,
-                                 product=product)
+    @staticmethod
+    def create(name, failuresCount, skippedCount, passedCount, totalCount, duration, package=None, product=None):
+        """
+        Factory method for creating a new instance of :class:`elastic.schema.TestSuite`.
+
+        Args:
+            name: Name of the suite
+            failuresCount: Number of failing tests
+            skippedCount: Number of skipped tests
+            passedCount: Number of passed tests
+            totalCount: Total number of tests
+            duration: Duration in milliseconds (float) of the entire test suite
+            package: (Optional) package the test set is associated with
+            product: (Optional) product the test set is associated with
+        """
+        return TestSuite(name=name, failuresCount=failuresCount, skippedCount=skippedCount,
+                         passedCount=passedCount, totalCount=totalCount, duration=duration, package=package,
+                         product=product)
+
 
 
 class BuildResults(Document):
     """
     Top level serialization for build results
-
-    Args:
-        jobName: Name of the job that owns the build being recorded
-        jobLink: Link to the job on the CI system that executed it
-        buildDateTime: Execution time of the build (ISO-8601 format recommended)
-        buildId: Unique ID of the build
-        platform: (Optional) Platform of the build
     """
     jobName = Text(fields={'raw': Keyword()})
     jobLink = Keyword()
@@ -108,14 +117,20 @@ class BuildResults(Document):
     suites = Nested(TestSuite)
     version = Keyword()
 
-    def __init__(self, jobName, jobLink, buildDateTime, buildId, platform=None):
-        Document.__init__(self, jobName=jobName, jobLink=jobLink, buildDateTime=buildDateTime, buildId=buildId,
-                          platform=platform, status=None, tests=[], suites=[], version=elastic.__version__)
 
-    def __setattr__(self, key, value):
-        if not hasattr(self, key):
-            raise TypeError("%r is a frozen class" % self)
-        object.__setattr__(self, key, value)
+    @staticmethod
+    def create(jobName, jobLink, buildDateTime, buildId, platform=None):
+        """Creates an immutable instance of :class:`elastic.schema.BuildResults`.
+
+        Args:
+            jobName: Name of the job that owns the build being recorded
+            jobLink: Link to the job on the CI system that executed it
+            buildDateTime: Execution time of the build (ISO-8601 format recommended)
+            buildId: Unique ID of the build
+            platform: (Optional) Platform of the build
+        """
+        return BuildResults(jobName=jobName, jobLink=jobLink, buildDateTime=buildDateTime, buildId=buildId,
+                            platform=platform, status=None, tests=[], suites=[], version=elastic.__version__)
 
     def store_tests(self, retrieve_function, *args, **kwargs):
         """
@@ -128,9 +143,9 @@ class BuildResults(Document):
         try:
             results = retrieve_function(*args, **kwargs)
             for test in results.get('tests', None):
-                self.tests.append(Test(**test))
+                self.tests.append(Test.create(**test))
             for suite in results.get('suites', None):
-                self.suites.append(TestSuite(**suite))
+                self.suites.append(TestSuite.create(**suite))
         except  (KeyError, TypeError):
             warnings.warn("Failed to retrieve test data.")
             traceback.print_exc()
