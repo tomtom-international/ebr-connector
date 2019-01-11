@@ -23,7 +23,7 @@ def generate_template(index_name, output_file=None):
         output_file: (optional) file path to write template to
     """
 
-    document = BuildResults(job_name=None, job_link=None, build_date_time=None, build_id=None)
+    document = BuildResults()
     index = Index(index_name)
     index.document(document)
     index_template = index.as_template(template_name="template")
