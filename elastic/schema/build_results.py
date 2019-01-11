@@ -21,23 +21,23 @@ class Test(InnerDoc):
     Provides serialization for a single test
 
     Args:
-        suite: Set (suite) the test is a part of
-        classname: Class that the test is from
-        test: Name of the test
-        result: Result of the test (e.g. passed)
-        message: Any output from the test
-        duration: Duration in milliseconds (float) of the test
-        reportset: (Optional) Report set the test is a part of
-        stage: (Optional) Stage during which the test was executed
+        br_suite: Set (suite) the test is a part of
+        br_classname: Class that the test is from
+        br_test: Name of the test
+        br_result: Result of the test (e.g. passed)
+        br_message: Any output from the test
+        br_duration: Duration in milliseconds (float) of the test
+        br_reportset: (Optional) Report set the test is a part of
+        br_stage: (Optional) Stage during which the test was executed
     """
-    suite = Text(fields={'raw': Keyword()})
-    classname = Text(fields={'raw': Keyword()})
-    test = Text(fields={'raw': Keyword()})
-    result = Text()
-    message = Text()
-    duration = Float()
-    reportset = Text()
-    stage = Text(fields={'raw': Keyword()})
+    br_suite = Text(fields={'raw': Keyword()})
+    br_classname = Text(fields={'raw': Keyword()})
+    br_test = Text(fields={'raw': Keyword()})
+    br_result = Text()
+    br_message = Text()
+    br_duration = Float()
+    br_reportset = Text()
+    br_stage = Text(fields={'raw': Keyword()})
 
     @staticmethod
     def create(suite, classname, test, result, message, duration, reportset=None, stage=None):
@@ -55,8 +55,8 @@ class Test(InnerDoc):
             stage: (Optional) Stage during which the test was executed
         """
 
-        return Test(suite=suite, classname=classname, test=test, result=result, message=message,
-                    duration=duration, reportset=reportset, stage=stage)
+        return Test(br_suite=suite, br_classname=classname, br_test=test, br_result=result, br_message=message,
+                    br_duration=duration, br_reportset=reportset, br_stage=stage)
 
 
 class TestSuite(InnerDoc):
@@ -64,23 +64,23 @@ class TestSuite(InnerDoc):
     Provides serialization for Test Sets (test suites)
 
     Args:
-        name: Name of the suite
-        failuresCount: Number of failing tests
-        skippedCount: Number of skipped tests
-        passedCount: Number of passed tests
-        totalCount: Total number of tests
-        duration: Duration in milliseconds (float) of the entire test suite
-        package: (Optional) package the test set is associated with
-        product: (Optional) product the test set is associated with
+        br_name: Name of the suite
+        br_failuresCount: Number of failing tests
+        br_skippedCount: Number of skipped tests
+        br_passedCount: Number of passed tests
+        br_totalCount: Total number of tests
+        br_duration: Duration in milliseconds (float) of the entire test suite
+        br_package: (Optional) package the test set is associated with
+        br_product: (Optional) product the test set is associated with
     """
-    name = Text(fields={'raw': Keyword()})
-    failuresCount = Integer()
-    skippedCount = Integer()
-    passedCount = Integer()
-    totalCount = Integer()
-    duration = Float()
-    package = Text(fields={'raw': Keyword()})
-    product = Text(fields={'raw': Keyword()})
+    br_name = Text(fields={'raw': Keyword()})
+    br_failuresCount = Integer()
+    br_skippedCount = Integer()
+    br_passedCount = Integer()
+    br_totalCount = Integer()
+    br_duration = Float()
+    br_package = Text(fields={'raw': Keyword()})
+    br_product = Text(fields={'raw': Keyword()})
 
     @staticmethod
     # pylint: disable=invalid-name
@@ -98,9 +98,9 @@ class TestSuite(InnerDoc):
             package: (Optional) package the test set is associated with
             product: (Optional) product the test set is associated with
         """
-        return TestSuite(name=name, failuresCount=failuresCount, skippedCount=skippedCount,
-                         passedCount=passedCount, totalCount=totalCount, duration=duration, package=package,
-                         product=product)
+        return TestSuite(br_name=name, br_failuresCount=failuresCount, sbr_kippedCount=skippedCount,
+                         br_passedCount=passedCount, br_totalCount=totalCount, br_duration=duration, br_package=package,
+                         br_product=product)
 
 
 
@@ -108,15 +108,15 @@ class BuildResults(Document):
     """
     Top level serialization for build results
     """
-    jobName = Text(fields={'raw': Keyword()})
-    jobLink = Keyword()
-    buildDateTime = Date()
-    buildId = Keyword()
-    platform = Text(fields={'raw': Keyword()})
-    status = Keyword()
-    tests = Nested(Test)
-    suites = Nested(TestSuite)
-    version = Keyword()
+    br_jobName = Text(fields={'raw': Keyword()})
+    br_jobLink = Keyword()
+    br_buildDateTime = Date()
+    br_buildId = Keyword()
+    br_platform = Text(fields={'raw': Keyword()})
+    br_status = Keyword()
+    br_tests = Nested(Test)
+    br_suites = Nested(TestSuite)
+    br_version = Keyword()
 
 
     @staticmethod
@@ -131,8 +131,8 @@ class BuildResults(Document):
             buildId: Unique ID of the build
             platform: (Optional) Platform of the build
         """
-        return BuildResults(jobName=jobName, jobLink=jobLink, buildDateTime=buildDateTime, buildId=buildId,
-                            platform=platform, status=None, tests=[], suites=[], version=elastic.__version__)
+        return BuildResults(br_jobName=jobName, br_jobLink=jobLink, br_buildDateTime=buildDateTime, br_buildId=buildId,
+                            br_platform=platform, br_status=None, br_tests=[], br_suites=[], br_version=elastic.__version__)
 
     def store_tests(self, retrieve_function, *args, **kwargs):
         """
@@ -145,9 +145,9 @@ class BuildResults(Document):
         try:
             results = retrieve_function(*args, **kwargs)
             for test in results.get('tests', None):
-                self.tests.append(Test.create(**test))
+                self.br_tests.append(Test.create(**test))
             for suite in results.get('suites', None):
-                self.suites.append(TestSuite.create(**suite))
+                self.br_suites.append(TestSuite.create(**suite))
         except  (KeyError, TypeError):
             warnings.warn("Failed to retrieve test data.")
             traceback.print_exc()
@@ -160,7 +160,7 @@ class BuildResults(Document):
             status_function: Callback function which provides status information
         """
         try:
-            self.status = status_function(*args, **kwargs)
+            self.br_status = status_function(*args, **kwargs)
         except (KeyError, TypeError):
             warnings.warn("Failed to retrieve status information.")
             traceback.print_exc()
