@@ -44,10 +44,10 @@ def get_xunit_results(filename):
 
     for suite in xml:
         suite_result = {
-            'failuresCount': suite.failures + suite.errors,
-            'skippedCount': suite.skipped,
-            'passedCount': suite.tests - (suite.failures + suite.errors),
-            'totalCount': suite.tests,
+            'failures_count': suite.failures + suite.errors,
+            'skipped_count': suite.skipped,
+            'passed_count': suite.tests - (suite.failures + suite.errors),
+            'total_count': suite.tests,
             'name': suite.name,
             'duration': suite.time
         }

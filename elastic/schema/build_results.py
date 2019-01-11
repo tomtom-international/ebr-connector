@@ -65,41 +65,40 @@ class TestSuite(InnerDoc):
 
     Args:
         br_name: Name of the suite
-        br_failuresCount: Number of failing tests
-        br_skippedCount: Number of skipped tests
-        br_passedCount: Number of passed tests
-        br_totalCount: Total number of tests
+        br_failures_count: Number of failing tests
+        br_skipped_count: Number of skipped tests
+        br_passed_count: Number of passed tests
+        br_total_count: Total number of tests
         br_duration: Duration in milliseconds (float) of the entire test suite
         br_package: (Optional) package the test set is associated with
         br_product: (Optional) product the test set is associated with
     """
     br_name = Text(fields={'raw': Keyword()})
-    br_failuresCount = Integer()
-    br_skippedCount = Integer()
-    br_passedCount = Integer()
-    br_totalCount = Integer()
+    br_failures_count = Integer()
+    br_skipped_count = Integer()
+    br_passed_count = Integer()
+    br_total_count = Integer()
     br_duration = Float()
     br_package = Text(fields={'raw': Keyword()})
     br_product = Text(fields={'raw': Keyword()})
 
     @staticmethod
-    # pylint: disable=invalid-name
-    def create(name, failuresCount, skippedCount, passedCount, totalCount, duration, package=None, product=None):
+    def create(name, failures_count, skipped_count, passed_count, total_count, duration, package=None, product=None):
         """
         Factory method for creating a new instance of :class:`elastic.schema.TestSuite`.
 
         Args:
             name: Name of the suite
-            failuresCount: Number of failing tests
-            skippedCount: Number of skipped tests
-            passedCount: Number of passed tests
-            totalCount: Total number of tests
+            failures_count: Number of failing tests
+            skipped_count: Number of skipped tests
+            passed_count: Number of passed tests
+            total_count: Total number of tests
             duration: Duration in milliseconds (float) of the entire test suite
             package: (Optional) package the test set is associated with
             product: (Optional) product the test set is associated with
         """
-        return TestSuite(br_name=name, br_failuresCount=failuresCount, sbr_kippedCount=skippedCount,
-                         br_passedCount=passedCount, br_totalCount=totalCount, br_duration=duration, br_package=package,
+        return TestSuite(br_name=name, br_failures_count=failures_count, br_skipped_count=skipped_count,
+                         br_passed_count=passed_count, br_total_count=total_count, br_duration=duration, br_package=package,
                          br_product=product)
 
 
@@ -108,10 +107,10 @@ class BuildResults(Document):
     """
     Top level serialization for build results
     """
-    br_jobName = Text(fields={'raw': Keyword()})
-    br_jobLink = Keyword()
-    br_buildDateTime = Date()
-    br_buildId = Keyword()
+    br_job_name = Text(fields={'raw': Keyword()})
+    br_job_link = Keyword()
+    br_build_date_time = Date()
+    br_build_id = Keyword()
     br_platform = Text(fields={'raw': Keyword()})
     br_status = Keyword()
     br_tests = Nested(Test)
@@ -120,18 +119,17 @@ class BuildResults(Document):
 
 
     @staticmethod
-    # pylint: disable=invalid-name
-    def create(jobName, jobLink, buildDateTime, buildId, platform=None):
+    def create(job_name, job_link, build_date_time, build_id, platform=None):
         """Creates an immutable instance of :class:`elastic.schema.BuildResults`.
 
         Args:
-            jobName: Name of the job that owns the build being recorded
-            jobLink: Link to the job on the CI system that executed it
-            buildDateTime: Execution time of the build (ISO-8601 format recommended)
-            buildId: Unique ID of the build
+            job_name: Name of the job that owns the build being recorded
+            job_link: Link to the job on the CI system that executed it
+            build_date_time: Execution time of the build (ISO-8601 format recommended)
+            build_id: Unique ID of the build
             platform: (Optional) Platform of the build
         """
-        return BuildResults(br_jobName=jobName, br_jobLink=jobLink, br_buildDateTime=buildDateTime, br_buildId=buildId,
+        return BuildResults(br_job_name=job_name, br_job_link=job_link, br_build_date_time=build_date_time, br_build_id=build_id,
                             br_platform=platform, br_status=None, br_tests=[], br_suites=[], br_version=elastic.__version__)
 
     def store_tests(self, retrieve_function, *args, **kwargs):

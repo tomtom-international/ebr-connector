@@ -66,7 +66,7 @@ def log_formatted_results(logger, results):
         pprint.pformat(
             list(
                 filter(
-                    lambda x: x['failuresCount'] > 0,
+                    lambda x: x['failures_count'] > 0,
                     suites))))
 
 
@@ -109,11 +109,11 @@ def format_quickbuild_results(build_test_data, build_info):
 
             if suite not in suites:
                 suites[suite] = {
-                    'failuresCount': 0,
-                    'skippedCount': 0,
-                    'passedCount': 0,
+                    'failures_count': 0,
+                    'skipped_count': 0,
+                    'passed_count': 0,
                     'name': suite,
-                    'totalCount': 0,
+                    'total_count': 0,
                     'duration': 0,
                     'package': None,
                     'product': None
@@ -132,14 +132,14 @@ def format_quickbuild_results(build_test_data, build_info):
             except ValueError:
                 pass
 
-            suite_result['totalCount'] += 1
+            suite_result['total_count'] += 1
 
             if status in QBResultsExporter.QB_PASS_STATUSES:
-                suite_result['passedCount'] += 1
+                suite_result['passed_count'] += 1
             elif status in QBResultsExporter.QB_FAILURE_STATUSES:
-                suite_result['failuresCount'] += 1
+                suite_result['failures_count'] += 1
             else:
-                suite_result['skippedCount'] += 1
+                suite_result['skipped_count'] += 1
 
     results = {
         'tests': tests,
