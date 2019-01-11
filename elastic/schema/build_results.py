@@ -83,6 +83,7 @@ class TestSuite(InnerDoc):
     product = Text(fields={'raw': Keyword()})
 
     @staticmethod
+    # pylint: disable=invalid-name
     def create(name, failuresCount, skippedCount, passedCount, totalCount, duration, package=None, product=None):
         """
         Factory method for creating a new instance of :class:`elastic.schema.TestSuite`.
@@ -119,6 +120,7 @@ class BuildResults(Document):
 
 
     @staticmethod
+    # pylint: disable=invalid-name
     def create(jobName, jobLink, buildDateTime, buildId, platform=None):
         """Creates an immutable instance of :class:`elastic.schema.BuildResults`.
 
