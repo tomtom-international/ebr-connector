@@ -1,7 +1,16 @@
 # -*- coding: utf-8 -*-
 
 """
-Serialization library to/from logstash (ElasticSearch) for build results
+Serialization library to/from logstash (ElasticSearch) for build results.
+
+The classes :class:`elastic.schema.Test`, :class:`elastic.schema.TestSuite` and :class:`elastic.schema.BuildResults`
+expose factory methods that create instances of these types.
+
+We cannot use Python constructors (`__init__`) since the underlying elasticsearch_dsl components make heavily usage
+of them, for example to add meta data attributes to document instances while using the search API.
+
+In order to still have protection against violations of the schema fields we make use of a
+factory method instead to create instances of these types.
 """
 
 
