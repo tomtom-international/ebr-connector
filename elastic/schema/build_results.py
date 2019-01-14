@@ -28,7 +28,6 @@ class Test(InnerDoc):
         br_message: Any output from the test
         br_duration: Duration in milliseconds (float) of the test
         br_reportset: (Optional) Report set the test is a part of
-        br_stage: (Optional) Stage during which the test was executed
     """
     br_suite = Text(fields={'raw': Keyword()})
     br_classname = Text(fields={'raw': Keyword()})
@@ -37,10 +36,9 @@ class Test(InnerDoc):
     br_message = Text()
     br_duration = Float()
     br_reportset = Text()
-    br_stage = Text(fields={'raw': Keyword()})
 
     @staticmethod
-    def create(suite, classname, test, result, message, duration, reportset=None, stage=None):
+    def create(suite, classname, test, result, message, duration, reportset=None):
         """
         Factory method for creating a new instance of :class:`elastic.schema.Test`.
 
@@ -52,11 +50,10 @@ class Test(InnerDoc):
             message: Any output from the test
             duration: Duration in milliseconds (float) of the test
             reportset: (Optional) Report set the test is a part of
-            stage: (Optional) Stage during which the test was executed
         """
 
         return Test(br_suite=suite, br_classname=classname, br_test=test, br_result=result, br_message=message,
-                    br_duration=duration, br_reportset=reportset, br_stage=stage)
+                    br_duration=duration, br_reportset=reportset)
 
 
 class TestSuite(InnerDoc):
@@ -80,7 +77,6 @@ class TestSuite(InnerDoc):
     br_total_count = Integer()
     br_duration = Float()
     br_package = Text(fields={'raw': Keyword()})
-    br_product = Text(fields={'raw': Keyword()})
 
     @staticmethod
     def create(name, failures_count, skipped_count, passed_count, total_count, duration, package=None, product=None):
@@ -95,7 +91,6 @@ class TestSuite(InnerDoc):
             total_count: Total number of tests
             duration: Duration in milliseconds (float) of the entire test suite
             package: (Optional) package the test set is associated with
-            product: (Optional) product the test set is associated with
         """
         return TestSuite(br_name=name, br_failures_count=failures_count, br_skipped_count=skipped_count,
                          br_passed_count=passed_count, br_total_count=total_count, br_duration=duration, br_package=package,
@@ -109,6 +104,8 @@ class BuildResults(Document):
     """
     br_job_name = Text(fields={'raw': Keyword()})
     br_job_link = Keyword()
+    br_job_info = Text(fields={'raw': Keyword()})
+    br_source = Text(fields={'raw': Keyword()})
     br_build_date_time = Date()
     br_build_id = Keyword()
     br_platform = Text(fields={'raw': Keyword()})
@@ -116,21 +113,24 @@ class BuildResults(Document):
     br_tests = Nested(Test)
     br_suites = Nested(TestSuite)
     br_version = Keyword()
+    br_product = Text(fields={'raw': Keyword()})
 
 
     @staticmethod
-    def create(job_name, job_link, build_date_time, build_id, platform=None):
+    def create(job_name, job_link, build_date_time, build_id, platform):
         """Creates an immutable instance of :class:`elastic.schema.BuildResults`.
 
         Args:
-            job_name: Name of the job that owns the build being recorded
+            job_name: Name of the job that owns the build being recorded (eg. Jenkins job name or QuickBuild configuration name)
             job_link: Link to the job on the CI system that executed it
+            job_info: Additional information about the job. (eg. 'B.1234.COMMIT-1234')
+            source: The source which caused the job to be triggered (eg. PR id, branch name)
             build_date_time: Execution time of the build (ISO-8601 format recommended)
-            build_id: Unique ID of the build
-            platform: (Optional) Platform of the build
+            build_id: ID of the build
+            platform: Platform of the build
         """
         return BuildResults(br_job_name=job_name, br_job_link=job_link, br_build_date_time=build_date_time, br_build_id=build_id,
-                            br_platform=platform, br_status=None, br_tests=[], br_suites=[], br_version=elastic.__version__)
+                            br_platform=platform, br_status=None, br_tests=[], br_suites=[], br_version=elastic.__version__, br_product=None)
 
     def store_tests(self, retrieve_function, *args, **kwargs):
         """
