@@ -72,15 +72,6 @@ class Test(InnerDoc):
     def create(suite, classname, test, result, message, duration, reportset=None):
         """
         Factory method for creating a new instance of :class:`elastic.schema.Test`.
-
-        Args:
-            suite: Set (suite) the test is a part of
-            classname: Class that the test is from
-            test: Name of the test
-            result: Result of the test (e.g. passed)
-            message: Any output from the test
-            duration: Duration in milliseconds (float) of the test
-            reportset: (Optional) Report set the test is a part of
         """
 
         return Test(br_suite=suite, br_classname=classname, br_test=test, br_result=result, br_message=message,
@@ -112,15 +103,6 @@ class TestSuite(InnerDoc):
     def create(name, failures_count, skipped_count, passed_count, total_count, duration, package=None):
         """
         Factory method for creating a new instance of :class:`elastic.schema.TestSuite`.
-
-        Args:
-            name: Name of the suite
-            failures_count: Number of failing tests
-            skipped_count: Number of skipped tests
-            passed_count: Number of passed tests
-            total_count: Total number of tests
-            duration: Duration in milliseconds (float) of the entire test suite
-            package: (Optional) package the test set is associated with
         """
         return TestSuite(br_name=name, br_failures_count=failures_count, br_skipped_count=skipped_count,
                          br_passed_count=passed_count, br_total_count=total_count, br_duration=duration, br_package=package)
@@ -130,6 +112,22 @@ class TestSuite(InnerDoc):
 class BuildResults(Document):
     """
     Top level serialization for build results
+
+    Args:
+        br_job_name: Name of the job that owns the build being recorded (eg. Jenkins job name or QuickBuild configuration name)
+        br_job_link: Link to the job on the CI system that executed it
+        br_job_info: Additional information about the job. (eg. 'B.1234.COMMIT-1234')
+        br_source: The source which caused the job to be triggered (eg. PR id or branch name)
+        br_build_date_time: Execution time of the build (ISO-8601 format recommended)
+        br_build_id: ID of the build
+        br_platform: Platform of the build
+        br_product: Product the build is associated with
+        br_status: Status of the build (eg. if one test failed the overall build status should as well be failed)
+        br_suites: Set of test suites
+        br_tests_passed: Set of passed test cases
+        br_tests_failed: Set of failed test cases
+        br_tests_skipped: Set of skipped test cases
+        br_version: Version of the BuildResults schema.
     """
     br_job_name = Text(fields={'raw': Keyword()})
     br_job_link = Keyword()
@@ -148,14 +146,16 @@ class BuildResults(Document):
 
 
     class BuildStatus(Enum):
-        """Status of a build
+        """
+        Status of a build
         """
         SUCCESS = 1
         FAILURE = 2
 
         @staticmethod
         def create(build_status_str):
-            """Creates a :class:`elastic.schema.BuildResults.BuildStatus` enum
+            """
+            Creates a :class:`elastic.schema.BuildResults.BuildStatus` enum
             based on passed build status string.
             """
             upper_build_status_str = build_status_str.upper()
@@ -168,16 +168,8 @@ class BuildResults(Document):
 
     @staticmethod
     def create(job_name, job_link, build_date_time, build_id, platform, product=None):
-        """Creates an immutable instance of :class:`elastic.schema.BuildResults`.
-
-        Args:
-            job_name: Name of the job that owns the build being recorded (eg. Jenkins job name or QuickBuild configuration name)
-            job_link: Link to the job on the CI system that executed it
-            job_info: Additional information about the job. (eg. 'B.1234.COMMIT-1234')
-            source: The source which caused the job to be triggered (eg. PR id, branch name)
-            build_date_time: Execution time of the build (ISO-8601 format recommended)
-            build_id: ID of the build
-            platform: Platform of the build
+        """
+        Creates an immutable instance of :class:`elastic.schema.BuildResults`.
         """
         return BuildResults(br_job_name=job_name, br_job_link=job_link, br_build_date_time=build_date_time, br_build_id=build_id,
                             br_platform=platform, br_product=product, br_status=None, br_suites=[], br_tests_passed=[], br_tests_failed=[], br_tests_skipped=[],
@@ -194,7 +186,6 @@ class BuildResults(Document):
         try:
             results = retrieve_function(*args, **kwargs)
             for test in results.get('tests', None):
-                print(test['result'])
                 if Test.Result[test['result']] == Test.Result.PASSED:
                     self.br_tests_passed.append(Test.create(**test))
                 elif Test.Result[test['result']] == Test.Result.FAILED:
