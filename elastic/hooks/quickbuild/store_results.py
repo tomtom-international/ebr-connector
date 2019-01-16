@@ -31,7 +31,6 @@ def parse_args(args=None):
         Arguments object.
     """
     parser = argparse.ArgumentParser(description='Send results of a QuickBuild job to a LogCollector instance over TCP.')
-    parser.add_argument("-s", "--stage", type=str, required=False, help="Stage name")
     parser.add_argument("--product", type=str, default=DEFAULT_PROJECT_NAME, help="Product name (Default: %s)" % DEFAULT_PROJECT_NAME)
     parser.add_argument("--qbusername", dest="qb_username", help="Quickbuild username")
     parser.add_argument("--qbpassword", dest="qb_password", help="Quickbuild password")
@@ -202,7 +201,7 @@ def main():
         logger, args.qb_username, args.qb_password)
 
     build_info = qb_results_exporter.get_build_info(
-        args.buildid, args.product, args.stage)
+        args.buildid, args.product)
     build_date = build_info.get(
         QBResultsExporter.KEY_BUILD_DATE_TIME_UTC, None)
     build_url = build_info.get(QBResultsExporter.KEY_BUILD_URL, None)
