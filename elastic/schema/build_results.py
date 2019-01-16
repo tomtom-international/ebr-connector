@@ -99,7 +99,6 @@ class TestSuite(InnerDoc):
         br_total_count: Total number of tests
         br_duration: Duration in milliseconds (float) of the entire test suite
         br_package: (Optional) package the test set is associated with
-        br_product: (Optional) product the test set is associated with
     """
     br_name = Text(fields={'raw': Keyword()})
     br_failures_count = Integer()
@@ -110,7 +109,7 @@ class TestSuite(InnerDoc):
     br_package = Text(fields={'raw': Keyword()})
 
     @staticmethod
-    def create(name, failures_count, skipped_count, passed_count, total_count, duration, package=None, product=None):
+    def create(name, failures_count, skipped_count, passed_count, total_count, duration, package=None):
         """
         Factory method for creating a new instance of :class:`elastic.schema.TestSuite`.
 
@@ -124,8 +123,7 @@ class TestSuite(InnerDoc):
             package: (Optional) package the test set is associated with
         """
         return TestSuite(br_name=name, br_failures_count=failures_count, br_skipped_count=skipped_count,
-                         br_passed_count=passed_count, br_total_count=total_count, br_duration=duration, br_package=package,
-                         br_product=product)
+                         br_passed_count=passed_count, br_total_count=total_count, br_duration=duration, br_package=package)
 
 
 
@@ -140,13 +138,13 @@ class BuildResults(Document):
     br_build_date_time = Date()
     br_build_id = Keyword()
     br_platform = Text(fields={'raw': Keyword()})
+    br_product = Text(fields={'raw': Keyword()})
     br_status = Keyword()
     br_suites = Nested(TestSuite)
     br_tests_passed = Nested(Test)
     br_tests_failed = Nested(Test)
     br_tests_skipped = Nested(Test)
     br_version = Keyword()
-    br_product = Text(fields={'raw': Keyword()})
 
 
     class BuildStatus(Enum):
@@ -169,7 +167,7 @@ class BuildResults(Document):
 
 
     @staticmethod
-    def create(job_name, job_link, build_date_time, build_id, platform):
+    def create(job_name, job_link, build_date_time, build_id, platform, product=None):
         """Creates an immutable instance of :class:`elastic.schema.BuildResults`.
 
         Args:
@@ -182,8 +180,8 @@ class BuildResults(Document):
             platform: Platform of the build
         """
         return BuildResults(br_job_name=job_name, br_job_link=job_link, br_build_date_time=build_date_time, br_build_id=build_id,
-                            br_platform=platform, br_status=None, br_suites=[], br_tests_passed=[], br_tests_failed=[], br_tests_skipped=[],
-                            br_version=elastic.__version__, br_product=None)
+                            br_platform=platform, br_product=product, br_status=None, br_suites=[], br_tests_passed=[], br_tests_failed=[], br_tests_skipped=[],
+                            br_version=elastic.__version__)
 
     def store_tests(self, retrieve_function, *args, **kwargs):
         """

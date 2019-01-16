@@ -69,13 +69,12 @@ def log_formatted_results(logger, results):
                     suites))))
 
 
-def format_quickbuild_results(build_test_data, build_info):
+def format_quickbuild_results(build_test_data):
     """
     Converts the raw results from QuickBuild into a format used by logstash.
 
     Args:
         build_test_data: Test results data from QuickBuild for a particular build.
-        build_info: Dictionary containing information about the QuickBuild build.
 
     Returns:
         logstash formatted results.
@@ -90,7 +89,6 @@ def format_quickbuild_results(build_test_data, build_info):
             suite = test_details[QBResultsExporter.KEY_CLASS_NAME]
             duration = test_details[QBResultsExporter.KEY_DURATION]
             package = test_details[QBResultsExporter.KEY_PACKAGE_NAME]
-            product = build_info[QBResultsExporter.KEY_PRODUCT]
 
             # Create Test.Result enum based on string
             test_result = Test.Result.create(test_details[QBResultsExporter.KEY_STATUS])
@@ -115,17 +113,13 @@ def format_quickbuild_results(build_test_data, build_info):
                     'name': suite,
                     'total_count': 0,
                     'duration': 0,
-                    'package': None,
-                    'product': None
+                    'package': None
                 }
 
             suite_result = suites[suite]
 
             if package and not suite_result['package']:
                 suite_result['package'] = package
-
-            if product and not suite_result['product']:
-                suite_result['product'] = product
 
             try:
                 suite_result['duration'] += int(duration)
@@ -164,7 +158,7 @@ def quickbuild_xml_decode(build_info, qb_results_exporter, logger):
     build_id = build_info.get(QBResultsExporter.KEY_BUILD_ID, None)
 
     build_test_data = qb_results_exporter.get_build_test_data(build_id)
-    results = format_quickbuild_results(build_test_data, build_info)
+    results = format_quickbuild_results(build_test_data)
     log_formatted_results(logger, results)
     return results
 
@@ -200,8 +194,7 @@ def main():
     qb_results_exporter = QBResultsExporter(
         logger, args.qb_username, args.qb_password)
 
-    build_info = qb_results_exporter.get_build_info(
-        args.buildid, args.product)
+    build_info = qb_results_exporter.get_build_info(args.buildid)
     build_date = build_info.get(
         QBResultsExporter.KEY_BUILD_DATE_TIME_UTC, None)
     build_url = build_info.get(QBResultsExporter.KEY_BUILD_URL, None)
@@ -211,7 +204,7 @@ def main():
 
 
     quick_build_results = BuildResults.create(platform=args.platform, job_name=args.jobname, build_id=args.buildid, build_date_time=build_date,
-                                              job_link=build_url)
+                                              job_link=build_url, product=args.product)
     quick_build_results.store_tests(quickbuild_xml_decode, build_info=build_info, qb_results_exporter=qb_results_exporter, logger=logger)
     quick_build_results.store_status(get_status, build_info=build_info)
     quick_build_results.save_logcollect(args.logcollectaddr, args.logcollectport, cafile=args.cacert, clientcert=args.clientcert,
