@@ -180,7 +180,7 @@ def main():
     Exports QuickBuild build results to logstash.
     """
     logging.getLogger("urllib3").setLevel(logging.WARNING)
-    logger = logging.getLogger('StoreQuickBuildResults')
+    logger = logging.getLogger('elastic.hook.quickbuild.store_results')
 
     args = parse_args()
 
