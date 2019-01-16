@@ -177,7 +177,7 @@ class BuildResults(Document):
 
     def store_tests(self, retrieve_function, *args, **kwargs):
         """
-        Retrieves the test results of a build and adds them to the BuildResults object
+        Retrieves the test results of a build and adds them to the :class:`elastic.schema.BuildResults` object
 
         Args:
             retrieve_function: Callback function which provides test and suite data in dictionaries
@@ -194,13 +194,14 @@ class BuildResults(Document):
                     self.br_tests_skipped.append(Test.create(**test))
             for suite in results.get('suites', None):
                 self.br_suites.append(TestSuite.create(**suite))
+
         except  (KeyError, TypeError):
             warnings.warn("Failed to retrieve test data.")
             traceback.print_exc()
 
     def store_status(self, status_function, *args, **kwargs):
         """
-        Retrieves the status of a build and adds it to the BuildResults object
+        Retrieves the status of a build and adds it to the :class:`elastic.schema.BuildResults` object
 
         Args:
             status_function: Callback function which provides status information
@@ -213,7 +214,7 @@ class BuildResults(Document):
 
     def save_logcollect(self, dest, port, cafile=None, clientcert=None, clientkey=None, keypass="", timeout=10):
         """
-        Saves the BuildResults object to a LogCollector instance.
+        Saves the :class:`elastic.schema.BuildResults` object to a LogCollector instance.
 
         Args:
             dest: URL/IP of the LogCollector server
