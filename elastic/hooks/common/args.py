@@ -14,7 +14,7 @@ def add_common_args(parser):
         parser: Args parser object
     """
     parser.add_argument("-b", "--buildid", type=str, required=True, help="CI build ID")
-    parser.add_argument("-j", "--jobname", type=str, default=None, help="CI Job name")
+    parser.add_argument("-j", "--jobname", type=str, required=True, help="CI job name")
     parser.add_argument("-p", "--platform", type=str, default="Linux-x86_64", help="Platform name (default: Linux-x86_64)")
 
     parser.add_argument("--logcollectaddr", type=str, required=True, help="Address of LogCollector to send to")
