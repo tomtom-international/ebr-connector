@@ -10,6 +10,7 @@ import sys
 from junitparser import JUnitXml
 
 from elastic.hooks.common.store_results import assemble_build, parse_args
+from elastic.schema.build_results import Test
 
 def get_all_xunit_files(testfiles):
     """
@@ -54,10 +55,10 @@ def get_xunit_results(filename):
         results['suites'].append(suite_result)
         for case in suite:
             if case.result is None:
-                result = "passed"
+                result = Test.Result.create(case.result).name
                 message = ""
             else:
-                result = case.result.__class__.__name__
+                result = Test.Result.create(case.result.__class__.__name__).name
                 message = case.result.message
 
             test = {

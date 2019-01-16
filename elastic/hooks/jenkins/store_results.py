@@ -11,6 +11,8 @@ from json.decoder import JSONDecodeError
 import requests
 
 from elastic.hooks.common.store_results import assemble_build, parse_args
+from elastic.schema.build_results import Test
+
 
 def jenkins_json_decode(url):
     """
@@ -34,18 +36,21 @@ def jenkins_json_decode(url):
         passed_case_no = 0
         skipped_case_no = 0
         for case in suite['cases']:
+            # Create Test.Result enum based on string
+            test_result = Test.Result.create(case['status'])
+
             test = {
                 'suite': suite['name'],
                 'classname': case['className'],
                 'test': case['name'],
-                'result': case['status'],
+                'result': test_result.name,
                 'message': case['errorDetails'],
                 'duration': case['duration']
             }
 
-            if case['status'] in ["FAILED", "REGRESSION"]:
+            if test_result == Test.Result.FAILED:
                 failed_case_no += 1
-            elif case['status'] == "SKIPPED":
+            elif test_result == Test.Result.SKIPPED:
                 skipped_case_no += 1
             else:
                 passed_case_no += 1

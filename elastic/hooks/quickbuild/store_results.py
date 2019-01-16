@@ -12,7 +12,7 @@ import pprint
 import sys
 
 from qb_results_exporter.qb_results_exporter import QBResultsExporter
-from elastic.schema.build_results import BuildResults
+from elastic.schema.build_results import BuildResults, Test
 from elastic.hooks.common.args import add_common_args, validate_args
 
 
@@ -88,21 +88,22 @@ def format_quickbuild_results(build_test_data, build_info):
         test_data = build_test_data[report_set]
 
         for test_details in test_data:
-            status = test_details[QBResultsExporter.KEY_STATUS]
             suite = test_details[QBResultsExporter.KEY_CLASS_NAME]
             duration = test_details[QBResultsExporter.KEY_DURATION]
             package = test_details[QBResultsExporter.KEY_PACKAGE_NAME]
             product = build_info[QBResultsExporter.KEY_PRODUCT]
 
+            # Create Test.Result enum based on string
+            test_result = Test.Result.create(test_details[QBResultsExporter.KEY_STATUS])
+
             test = {
                 'suite': suite,
                 'classname': test_details[QBResultsExporter.KEY_CLASS_NAME],
                 'test': test_details[QBResultsExporter.KEY_TEST_NAME],
-                'result': status,
+                'result': test_result.name,
                 'message': test_details[QBResultsExporter.KEY_ERROR_MESSAGE],
                 'duration': duration,
-                'reportset': test_details[QBResultsExporter.KEY_REPORT_SET],
-                'stage': build_info[QBResultsExporter.KEY_STAGE]
+                'reportset': test_details[QBResultsExporter.KEY_REPORT_SET]
             }
 
             tests.append(test)
@@ -134,9 +135,9 @@ def format_quickbuild_results(build_test_data, build_info):
 
             suite_result['total_count'] += 1
 
-            if status in QBResultsExporter.QB_PASS_STATUSES:
+            if test_result == Test.Result.PASSED:
                 suite_result['passed_count'] += 1
-            elif status in QBResultsExporter.QB_FAILURE_STATUSES:
+            elif test_result == Test.Result.FAILED:
                 suite_result['failures_count'] += 1
             else:
                 suite_result['skipped_count'] += 1
@@ -178,7 +179,7 @@ def status(build_info):
     Returns:
         Status string of the QuickBuild build.
     """
-    return build_info.get(QBResultsExporter.KEY_BUILD_STATUS, None)
+    return BuildResults.BuildStatus.create(build_info.get(QBResultsExporter.KEY_BUILD_STATUS, None)).name
 
 
 def main():

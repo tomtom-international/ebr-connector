@@ -20,6 +20,7 @@ import json
 import traceback
 import warnings
 
+from enum import Enum
 from elasticsearch_dsl import Document, Text, InnerDoc, Float, Integer, Nested, Date, Keyword
 
 import elastic
@@ -45,6 +46,27 @@ class Test(InnerDoc):
     br_message = Text()
     br_duration = Float()
     br_reportset = Text()
+
+
+    class Result(Enum):
+        """Enum for keeping the results in sync across CI hooks.
+        """
+        PASSED = 1
+        FAILED = 2
+        SKIPPED = 3
+
+        @staticmethod
+        def create(result_str):
+            """Creates a :class:`elastic.schema.Test.Result` enum based on the received test result string.
+            """
+            upper_result_str = result_str.upper()
+            if upper_result_str in ["PASS", "PASSED", "SUCCESS"]:
+                return Test.Result.PASSED
+            if upper_result_str in ["FAILURE", "ERROR", "REGRESSION", "FAILED"]:
+                return Test.Result.FAILED
+            if upper_result_str in ["SKIP", "SKIPPED"]:
+                return Test.Result.SKIPPED
+            raise ValueError("Unknown test result value '%s'" % result_str)
 
     @staticmethod
     def create(suite, classname, test, result, message, duration, reportset=None):
@@ -119,10 +141,31 @@ class BuildResults(Document):
     br_build_id = Keyword()
     br_platform = Text(fields={'raw': Keyword()})
     br_status = Keyword()
-    br_tests = Nested(Test)
     br_suites = Nested(TestSuite)
+    br_tests_passed = Nested(Test)
+    br_tests_failed = Nested(Test)
+    br_tests_skipped = Nested(Test)
     br_version = Keyword()
     br_product = Text(fields={'raw': Keyword()})
+
+
+    class BuildStatus(Enum):
+        """Status of a build
+        """
+        SUCCESS = 1
+        FAILURE = 2
+
+        @staticmethod
+        def create(build_status_str):
+            """Creates a :class:`elastic.schema.BuildResults.BuildStatus` enum
+            based on passed build status string.
+            """
+            upper_build_status_str = build_status_str.upper()
+            if upper_build_status_str in ["SUCCESS"]:
+                return BuildResults.BuildStatus.SUCCESS
+            if upper_build_status_str in ["FAILURE", "FAILED"]:
+                return BuildResults.BuildStatus.FAILURE
+            raise ValueError("Unknown build status string '%s'" % build_status_str)
 
 
     @staticmethod
@@ -139,7 +182,8 @@ class BuildResults(Document):
             platform: Platform of the build
         """
         return BuildResults(br_job_name=job_name, br_job_link=job_link, br_build_date_time=build_date_time, br_build_id=build_id,
-                            br_platform=platform, br_status=None, br_tests=[], br_suites=[], br_version=elastic.__version__, br_product=None)
+                            br_platform=platform, br_status=None, br_suites=[], br_tests_passed=[], br_tests_failed=[], br_tests_skipped=[],
+                            br_version=elastic.__version__, br_product=None)
 
     def store_tests(self, retrieve_function, *args, **kwargs):
         """
@@ -152,7 +196,13 @@ class BuildResults(Document):
         try:
             results = retrieve_function(*args, **kwargs)
             for test in results.get('tests', None):
-                self.br_tests.append(Test.create(**test))
+                print(test['result'])
+                if Test.Result[test['result']] == Test.Result.PASSED:
+                    self.br_tests_passed.append(Test.create(**test))
+                elif Test.Result[test['result']] == Test.Result.FAILED:
+                    self.br_tests_failed.append(Test.create(**test))
+                else:
+                    self.br_tests_skipped.append(Test.create(**test))
             for suite in results.get('suites', None):
                 self.br_suites.append(TestSuite.create(**suite))
         except  (KeyError, TypeError):

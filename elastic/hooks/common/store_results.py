@@ -35,7 +35,7 @@ def status_args(args):
     Args:
         args: argparse'd arguments that include the build status
     """
-    return args.buildstatus
+    return BuildResults.BuildStatus.create(args.buildstatus).name
 
 def assemble_build(args, retrieve_function, retrieve_args):
     """
