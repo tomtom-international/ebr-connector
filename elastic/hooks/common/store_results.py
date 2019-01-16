@@ -47,7 +47,8 @@ def assemble_build(args, retrieve_function, retrieve_args):
         retrieve_function: call back argument to decode retrieve and decode tests
         retrieve_args: arguments to the retrieve_function callback
     """
-    build_results = BuildResults.create(job_name=args.jobname, build_id=args.buildid, build_date_time=args.buildtime, job_link=args.buildurl)
+    build_results = BuildResults.create(job_name=args.jobname, build_id=args.buildid, build_date_time=args.buildtime,
+                                        job_link=args.buildurl, platform=args.platform)
     build_results.store_tests(retrieve_function, *retrieve_args)
     build_results.store_status(status_args, args)
 
