@@ -166,20 +166,22 @@ class BuildResults(Document):
             """
             upper_build_status_str = build_status_str.upper()
             if upper_build_status_str in ["SUCCESS"]:
-                return BuildResults.BuildStatus.SUCCESS
-            if upper_build_status_str in ["FAILURE", "FAILED"]:
-                return BuildResults.BuildStatus.FAILURE
-            if upper_build_status_str in ["ABORT", "ABORTED", "CANCEL", "CANCELLED"]:
-                return BuildResults.BuildStatus.ABORTED
-            if upper_build_status_str in ["NOT_BUILT", "SKIPPED"]:
-                return BuildResults.BuildStatus.NOT_BUILT
-            if upper_build_status_str in ["UNSTABLE"]:
-                return BuildResults.BuildStatus.UNSTABLE
-            if upper_build_status_str in ["TIMEOUT", "TIMEDOUT"]:
-                return BuildResults.BuildStatus.TIMEOUT
-            if upper_build_status_str in ["RUNNING", "BUILDING"]:
-                return BuildResults.BuildStatus.RUNNING
-            raise ValueError("Unknown build status string '%s'" % build_status_str)
+                status = BuildResults.BuildStatus.SUCCESS
+            elif upper_build_status_str in ["FAILURE", "FAILED"]:
+                status = BuildResults.BuildStatus.FAILURE
+            elif upper_build_status_str in ["ABORT", "ABORTED", "CANCEL", "CANCELLED"]:
+                status = BuildResults.BuildStatus.ABORTED
+            elif upper_build_status_str in ["NOT_BUILT", "SKIPPED"]:
+                status = BuildResults.BuildStatus.NOT_BUILT
+            elif upper_build_status_str in ["UNSTABLE"]:
+                status = BuildResults.BuildStatus.UNSTABLE
+            elif upper_build_status_str in ["TIMEOUT", "TIMEDOUT"]:
+                status = BuildResults.BuildStatus.TIMEOUT
+            elif upper_build_status_str in ["RUNNING", "BUILDING"]:
+                status = BuildResults.BuildStatus.RUNNING
+            else:
+                raise ValueError("Unknown build status string '%s'" % build_status_str)
+            return status
 
 
     @staticmethod
