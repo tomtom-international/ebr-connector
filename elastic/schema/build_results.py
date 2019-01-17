@@ -49,15 +49,16 @@ class Test(InnerDoc):
 
 
     class Result(Enum):
-        """Enum for keeping the results in sync across CI hooks.
+        """Enum for keeping the test results in sync across CI hooks.
         """
-        PASSED = 1
-        FAILED = 2
+
+        FAILED = 1
+        PASSED = 2
         SKIPPED = 3
 
         @staticmethod
         def create(result_str):
-            """Creates a :class:`elastic.schema.Test.Result` enum based on the received test result string.
+            """Converts a test result string into a :class:`elastic.schema.Test.Result` enum.
             """
             upper_result_str = result_str.upper()
             if upper_result_str in ["PASS", "PASSED", "SUCCESS"]:
@@ -149,19 +150,19 @@ class BuildResults(Document):
         """
         Status of a build
         """
-        SUCCESS = 1
+        ABORTED = 1
         FAILURE = 2
-        ABORTED = 3
-        NOT_BUILT = 4
-        UNSTABLE = 5
+        NOT_BUILT = 3
+        RUNNING = 4
+        SUCCESS = 5
         TIMEOUT = 6
-        RUNNING = 7
+        UNSTABLE = 7
+
 
         @staticmethod
         def create(build_status_str):
             """
-            Creates a :class:`elastic.schema.BuildResults.BuildStatus` enum
-            based on passed build status string.
+            Converts a build status string into a :class:`elastic.schema.BuildResults.BuildStatus` enum.
             """
             upper_build_status_str = build_status_str.upper()
             if upper_build_status_str in ["SUCCESS"]:
