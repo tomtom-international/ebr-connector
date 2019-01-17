@@ -151,6 +151,11 @@ class BuildResults(Document):
         """
         SUCCESS = 1
         FAILURE = 2
+        ABORTED = 3
+        NOT_BUILT = 4
+        UNSTABLE = 5
+        TIMEOUT = 6
+        RUNNING = 7
 
         @staticmethod
         def create(build_status_str):
@@ -163,6 +168,16 @@ class BuildResults(Document):
                 return BuildResults.BuildStatus.SUCCESS
             if upper_build_status_str in ["FAILURE", "FAILED"]:
                 return BuildResults.BuildStatus.FAILURE
+            if upper_build_status_str in ["ABORT", "ABORTED", "CANCEL", "CANCELLED"]:
+                return BuildResults.BuildStatus.ABORTED
+            if upper_build_status_str in ["NOT_BUILT", "SKIPPED"]:
+                return BuildResults.BuildStatus.NOT_BUILT
+            if upper_build_status_str in ["UNSTABLE"]:
+                return BuildResults.BuildStatus.UNSTABLE
+            if upper_build_status_str in ["TIMEOUT", "TIMEDOUT"]:
+                return BuildResults.BuildStatus.TIMEOUT
+            if upper_build_status_str in ["RUNNING", "BUILDING"]:
+                return BuildResults.BuildStatus.RUNNING
             raise ValueError("Unknown build status string '%s'" % build_status_str)
 
 
