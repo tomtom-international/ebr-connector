@@ -6,14 +6,12 @@ Simple Python package to define a schema for build and test results to be stored
 Terms
 -----
 
-|Term|Description|Example|
-|------|-----|-----|
-|Build| A single instance of a CI systems build/test execution. It should map to a single URL/URI/UID on a CI system.||
-|Build ID| The ID associated with a given *build*|1078929|
-|Job| A collection of tasks that describe how a *build* should be run. Running a *job* should result in a *build*. In Jenkins this maps to a job/project, in Quickbuild this maps to a configuration.| *cpp-reflection-tests*, *root/greenfield/prod/main*|
-|Product|Product that a given build is associated with|Michi, NavKit|
-|Test Case| Individual tests (sometimes aggregrations of closely related tests in C++) with result information||
-|Test Set| An aggregated collection of test cases, i.e. a suite||
+* **Build**: A single instance of a CI systems build/test execution. It should map to a single URL/URI/UID on a CI system.
+* **Build ID**: The ID associated with a given *build* (eg. *1078929*).
+* **Job**: A collection of tasks that describe how a *build* should be run. Running a *job* should result in a *build*. In Jenkins this maps to a job/project, in Quickbuild this maps to a configuration (eg. *cpp-reflection-tests*, *root/greenfield/prod/main*).
+* **Product**: Product that a given build is associated with (eg. *Michi*, *NavKit*)
+* **Test Case**:  Individual tests (sometimes aggregrations of closely related tests in C++) with result information
+* **Test Set**: An aggregated collection of test cases, i.e. a suite
 
 Test and Suite Separation
 -------------------------
