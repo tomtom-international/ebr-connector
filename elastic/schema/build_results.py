@@ -21,7 +21,7 @@ import traceback
 import warnings
 
 from enum import Enum
-from elasticsearch_dsl import Document, Text, InnerDoc, Float, Integer, Nested, Date, Keyword
+from elasticsearch_dsl import Document, Text, InnerDoc, Float, Integer, Nested, Date, Keyword, MetaField
 
 import elastic
 
@@ -145,6 +145,14 @@ class BuildResults(Document):
     br_tests_skipped = Nested(Test)
     br_version = Keyword()
 
+
+    class Meta:
+        """Stores the plain template version in the generated index template. We cannot use the builtin `version` field
+        since it is of type `integer` and we use semantic versioning.
+        This data is for pure information purposes and won't be used at all by Elasticsearch.
+        See as well https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-meta-field.html#mapping-meta-field.
+        """
+        meta = MetaField(template_version=elastic.__version__)
 
     class BuildStatus(Enum):
         """

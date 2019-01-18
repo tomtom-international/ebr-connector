@@ -10,7 +10,6 @@ import json
 import sys
 
 from elasticsearch_dsl import Index
-import elastic
 from elastic.schema.build_results import BuildResults
 
 def generate_template(index_name, output_file=None):
@@ -28,11 +27,7 @@ def generate_template(index_name, output_file=None):
     index.document(document)
     index_template = index.as_template(template_name="template")
 
-    # Unfortunately there is no possibility to add the version via the elasticsearch_dsl library.
-    # We add the version of the index template as described in
-    # https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html#versioning-templates
     template_dict = index_template.to_dict()
-    template_dict["version"] = elastic.__version__
 
     if output_file:
         with open(output_file, "w") as file:
