@@ -255,8 +255,6 @@ class BuildResults(Document):
             timeout: (optional) socket timeout in seconds for the write operation (10 seconds if unset)
         """
 
-        self._verify()
-
         result = str.encode(json.dumps(self.to_dict()))
         bare_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         bare_socket.settimeout(timeout)
@@ -272,14 +270,3 @@ class BuildResults(Document):
         secure_socket.connect((dest, port))
         secure_socket.send(result)
         secure_socket.close()
-
-    def _verify(self):
-        """Verify the :class:`elastic.schema.BuildResults` object.
-        """
-        build_status = BuildResults.BuildStatus[self.br_status]
-
-        if build_status is BuildResults.BuildStatus.FAILURE:
-            assert self.br_tests_failed is not None, "Build failed. br_tests_failed should not be empty!"
-        if build_status is BuildResults.BuildStatus.SUCCESS:
-            assert self.br_tests_passed is not None, "Build succeeded. br_tests_passed should not be empty!"
-            assert self.br_tests_failed is None, "Build succeeded. br_tests_failed should be empty!"
