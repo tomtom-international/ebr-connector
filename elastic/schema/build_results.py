@@ -146,6 +146,7 @@ class BuildResults(Document):
     br_version = Keyword()
 
 
+    # pylint: disable=too-few-public-methods
     class Meta:
         """Stores the plain template version in the generated index template. We cannot use the builtin `version` field
         since it is of type `integer` and we use semantic versioning.
@@ -153,6 +154,7 @@ class BuildResults(Document):
         See as well https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-meta-field.html#mapping-meta-field.
         """
         meta = MetaField(template_version=elastic.__version__)
+
 
     class BuildStatus(Enum):
         """
