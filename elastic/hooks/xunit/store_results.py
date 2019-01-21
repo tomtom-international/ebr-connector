@@ -9,7 +9,7 @@ import sys
 
 from junitparser import JUnitXml
 
-from elastic.hooks.common.store_results import assemble_build, parse_args
+from elastic.hooks.common.store_results import assemble_build, parse_args, normalize_string
 from elastic.schema.build_results import Test
 
 def get_all_xunit_files(testfiles):
@@ -49,8 +49,8 @@ def get_xunit_results(filename):
             'skipped_count': suite.skipped,
             'passed_count': suite.tests - (suite.failures + suite.errors),
             'total_count': suite.tests,
-            'name': suite.name,
-            'duration': suite.time
+            'name': normalize_string(suite.name),
+            'duration': float(suite.time)
         }
         results['suites'].append(suite_result)
         for case in suite:
@@ -62,12 +62,12 @@ def get_xunit_results(filename):
                 message = case.result.message
 
             test = {
-                'suite': suite.name,
-                'classname': case.classname,
-                'test': case.name,
+                'suite': normalize_string(suite.name),
+                'classname': normalize_string(case.classname),
+                'test': normalize_string(case.name),
                 'result': result,
                 'message': message,
-                'duration': case.time
+                'duration': float(case.time)
             }
 
             results['tests'].append(test)

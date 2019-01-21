@@ -53,3 +53,22 @@ def assemble_build(args, retrieve_function, retrieve_args):
     build_results.store_status(status_args, args)
 
     return build_results
+
+def normalize_string(value):
+    """Some parameterized tests encode the parameter objects into the test case name. For classes that have a
+    proper output operator << implemented this is not an issue but classes without one produce a large test
+    case with some byte object representation.
+
+    Some examples how such test case names look like:
+
+      > ShapePointsTest/0 (lat = 51.8983, lon = 19.5026)
+      > GatewayTwinLinksQuantityTest/0 (16-byte object <60-A5 DE-03 00-00 00-00 02-00 02-00 00-00 00-00>)
+      > TestPassageRestrictions/0 (TestData: testPoint(44.6553, 7.38968)   Handle:               0\n   [...]
+
+    We do not allow this and clean this up by removing everything after ` (`) and store only the real test case
+    name and the index of the parameterized test.
+    """
+    if value is None:
+        return ""
+    head, _, _ = value.partition(" (")
+    return head.strip()

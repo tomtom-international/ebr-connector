@@ -10,7 +10,7 @@ from json.decoder import JSONDecodeError
 
 import requests
 
-from elastic.hooks.common.store_results import assemble_build, parse_args
+from elastic.hooks.common.store_results import assemble_build, parse_args, normalize_string
 from elastic.schema.build_results import Test
 
 
@@ -37,15 +37,15 @@ def jenkins_json_decode(url):
         skipped_case_no = 0
         for case in suite['cases']:
             # Create Test.Result enum based on string
-            test_result = Test.Result.create(case['status'])
+            test_result = Test.Result.create(normalize_string(case['status']))
 
             test = {
-                'suite': suite['name'],
-                'classname': case['className'],
-                'test': case['name'],
+                'suite': normalize_string(suite['name']),
+                'classname': normalize_string(case['className']),
+                'test': normalize_string(case['name']),
                 'result': test_result.name,
-                'message': case['errorDetails'],
-                'duration': case['duration']
+                'message': normalize_string(case['errorDetails']),
+                'duration': float(case['duration'])
             }
 
             if test_result == Test.Result.FAILED:
@@ -61,13 +61,14 @@ def jenkins_json_decode(url):
             'skipped_count': skipped_case_no,
             'passed_count': passed_case_no,
             'total_count': len(suite['cases']),
-            'name': suite['name'],
-            'duration': suite['duration']
+            'name': normalize_string(suite['name']),
+            'duration': float(suite['duration'])
         }
 
         results['suites'].append(suite_result)
 
     return results
+
 
 
 def main():
