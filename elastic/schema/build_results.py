@@ -116,34 +116,34 @@ class BuildResults(Document):
 
     Args:
         br_job_name: Name of the job that owns the build being recorded (eg. Jenkins job name or QuickBuild configuration name)
-        br_job_link: Link to the job on the CI system that executed it
+        br_job_url_key: Link to the job on the CI system that executed it
         br_job_info: Additional information about the job. (eg. 'B.1234.COMMIT-1234')
         br_source: The source which caused the job to be triggered (eg. PR id or branch name)
         br_build_date_time: Execution time of the build (ISO-8601 format recommended)
-        br_build_id: ID of the build
+        br_build_id_key: ID of the build
         br_platform: Platform of the build
         br_product: Product the build is associated with
-        br_status: Status of the build (eg. if one test failed the overall build status should as well be failed)
-        br_suites: Set of test suites
-        br_tests_passed: Set of passed test cases
-        br_tests_failed: Set of failed test cases
-        br_tests_skipped: Set of skipped test cases
-        br_version: Version of the BuildResults schema.
+        br_status_key: Status of the build (eg. if one test failed the overall build status should as well be failed)
+        br_suites_nested: Set of test suites
+        br_tests_passed_nested: Set of passed test cases
+        br_tests_failed_nested: Set of failed test cases
+        br_tests_skipped_nested: Set of skipped test cases
+        br_version_key: Version of the BuildResults schema.
     """
     br_job_name = Text(fields={'raw': Keyword()})
-    br_job_link = Keyword()
+    br_job_url_key = Keyword()
     br_job_info = Text(fields={'raw': Keyword()})
     br_source = Text(fields={'raw': Keyword()})
     br_build_date_time = Date()
-    br_build_id = Keyword()
+    br_build_id_key = Keyword()
     br_platform = Text(fields={'raw': Keyword()})
     br_product = Text(fields={'raw': Keyword()})
-    br_status = Keyword()
-    br_suites = Nested(TestSuite)
-    br_tests_passed = Nested(Test)
-    br_tests_failed = Nested(Test)
-    br_tests_skipped = Nested(Test)
-    br_version = Keyword()
+    br_status_key = Keyword()
+    br_suites_nested = Nested(TestSuite)
+    br_tests_passed_nested = Nested(Test)
+    br_tests_failed_nested = Nested(Test)
+    br_tests_skipped_nested = Nested(Test)
+    br_version_key = Keyword()
 
 
     # pylint: disable=too-few-public-methods
@@ -199,9 +199,10 @@ class BuildResults(Document):
         """
         Creates an immutable instance of :class:`elastic.schema.BuildResults`.
         """
-        return BuildResults(br_job_name=job_name, br_job_link=job_link, br_build_date_time=build_date_time, br_build_id=build_id,
-                            br_platform=platform, br_product=product, br_status=None, br_suites=[], br_tests_passed=[], br_tests_failed=[], br_tests_skipped=[],
-                            br_version=elastic.__version__)
+        return BuildResults(br_job_name=job_name, br_job_url_key=job_link, br_build_date_time=build_date_time, br_build_id_key=build_id,
+                            br_platform=platform, br_product=product, br_status_key=None,
+                            br_suites_nested=[], br_tests_passed_nested=[], br_tests_failed_nested=[], br_tests_skipped_nested=[],
+                            br_version_key=elastic.__version__)
 
     def store_tests(self, retrieve_function, *args, **kwargs):
         """
@@ -215,13 +216,13 @@ class BuildResults(Document):
             results = retrieve_function(*args, **kwargs)
             for test in results.get('tests', None):
                 if Test.Result[test['result']] == Test.Result.PASSED:
-                    self.br_tests_passed.append(Test.create(**test))
+                    self.br_tests_passed_nested.append(Test.create(**test))
                 elif Test.Result[test['result']] == Test.Result.FAILED:
-                    self.br_tests_failed.append(Test.create(**test))
+                    self.br_tests_failed_nested.append(Test.create(**test))
                 else:
-                    self.br_tests_skipped.append(Test.create(**test))
+                    self.br_tests_skipped_nested.append(Test.create(**test))
             for suite in results.get('suites', None):
-                self.br_suites.append(TestSuite.create(**suite))
+                self.br_suites_nested.append(TestSuite.create(**suite))
 
         except  (KeyError, TypeError):
             warnings.warn("Failed to retrieve test data.")
@@ -235,7 +236,7 @@ class BuildResults(Document):
             status_function: Callback function which provides status information
         """
         try:
-            self.br_status = status_function(*args, **kwargs)
+            self.br_status_key = status_function(*args, **kwargs)
         except (KeyError, TypeError):
             warnings.warn("Failed to retrieve status information.")
             traceback.print_exc()

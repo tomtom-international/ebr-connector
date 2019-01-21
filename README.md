@@ -23,3 +23,20 @@ Since the build results are stored in one document it is not possible to filter 
 documents with failing tests only but the response received will as well contain the successful test cases.
 
 In order to reduce the amount of received data tests have been therefore separated into passed, failed and skipped arrays.
+
+Schema conventions
+------------------
+
+Due to the usage of nested types in the schema the Elasticsearch indexer needs to be informed about this. This is achieved by defining a so called [index
+template](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html).
+
+To avoid modifiying the [navpipeline index template](https://gitlab.flatns.net/automation/puppet-lhi/blob/master/templates/elasticsearch/templates/navpipeline_template.erb) whenever the schema is modified
+we decided to use [dynamic templates](https://www.elastic.co/guide/en/elasticsearch/reference/current/dynamic-templates.html) which map the types dynamically
+based on some rules which are the following (applied in this order):
+
+* Each field has to be prefixed with `br_`
+* Fields that should be not available for full text search (*keyword*) are suffixed with `_key` and will be mapped to type *keyword*.
+* Fields that are nested are suffixed with `_nested` and will be mapped to type *nested*.
+* Fields that are counters are suffixed with `_count` and will be mapped to type *integer*.
+* Fields containing `duration` in their name will be mapped to type *float*.
+* Fields of type *string* get a raw field (except they are suffixed with `_key`) that can be used for non-full-text-searches and are limited to 256 characters.
