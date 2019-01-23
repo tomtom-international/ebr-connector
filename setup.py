@@ -24,6 +24,12 @@ setup(
         "qb_results_exporter==0.0.2",
         "junitparser>=1.2.2,<2"
     ],
+    setup_requires=["pytest-runner>=4.2,<5"],
+    tests_require=[
+        "coverage>=4.5,<5"
+        "pytest>=4.1,<5",
+        "pytest-cov>=2.6,<3"
+    ],
     entry_points="""
 [console_scripts]
 es-generate-index-template = elastic.index.generate_template:main
