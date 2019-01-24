@@ -198,13 +198,14 @@ def main():
     build_date = build_info.get(
         QBResultsExporter.KEY_BUILD_DATE_TIME_UTC, None)
     build_url = build_info.get(QBResultsExporter.KEY_BUILD_URL, None)
+    build_version = build_info.get(QBResultsExporter.KEY_BUILD_VERSION, None)
 
     if build_date:
         build_date = build_date.isoformat()
 
 
     quick_build_results = BuildResults.create(platform=args.platform, job_name=args.jobname, build_id=args.buildid, build_date_time=build_date,
-                                              job_link=build_url, product=args.product)
+                                              job_link=build_url, product=args.product, job_info=build_version)
     quick_build_results.store_tests(quickbuild_xml_decode, build_info=build_info, qb_results_exporter=qb_results_exporter, logger=logger)
     quick_build_results.store_status(get_status, build_info=build_info)
     quick_build_results.save_logcollect(args.logcollectaddr, args.logcollectport, cafile=args.cacert, clientcert=args.clientcert,

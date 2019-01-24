@@ -195,12 +195,12 @@ class BuildResults(Document):
 
 
     @staticmethod
-    def create(job_name, job_link, build_date_time, build_id, platform, product=None):
+    def create(job_name, job_link, build_date_time, build_id, platform, product=None, job_info=None):
         """
         Creates an immutable instance of :class:`elastic.schema.BuildResults`.
         """
         return BuildResults(br_job_name=job_name, br_job_url_key=job_link, br_build_date_time=build_date_time, br_build_id_key=build_id,
-                            br_platform=platform, br_product=product, br_status_key=None,
+                            br_platform=platform, br_product=product, br_job_info=job_info, br_status_key=None,
                             br_suites_nested=[], br_tests_passed_nested=[], br_tests_failed_nested=[], br_tests_skipped_nested=[],
                             br_version_key=elastic.__version__)
 
