@@ -175,7 +175,7 @@ class BuildResults(Document):
             Converts a build status string into a :class:`elastic.schema.BuildResults.BuildStatus` enum.
             """
             upper_build_status_str = build_status_str.upper()
-            if upper_build_status_str in ["SUCCESS"]:
+            if upper_build_status_str in ["SUCCESS", "SUCCESSFUL"]:
                 status = BuildResults.BuildStatus.SUCCESS
             elif upper_build_status_str in ["FAILURE", "FAILED"]:
                 status = BuildResults.BuildStatus.FAILURE

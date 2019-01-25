@@ -55,7 +55,7 @@ def log_formatted_results(logger, results):
         pprint.pformat(
             list(
                 filter(
-                    lambda x: x['result'] in QBResultsExporter.QB_FAILURE_STATUSES,
+                    lambda x: x['result'] == Test.Result.FAILED,
                     tests))))
 
     suites = results.get('suites', [])
@@ -81,6 +81,7 @@ def format_quickbuild_results(build_test_data):
     """
     tests = []
     suites = {}
+    build_status = None
 
     for report_set in build_test_data:
         test_data = build_test_data[report_set]
@@ -130,8 +131,11 @@ def format_quickbuild_results(build_test_data):
 
             if test_result == Test.Result.PASSED:
                 suite_result['passed_count'] += 1
+                if build_status is None:
+                    build_status = BuildResults.BuildStatus.SUCCESS
             elif test_result == Test.Result.FAILED:
                 suite_result['failures_count'] += 1
+                build_status = BuildResults.BuildStatus.FAILURE
             else:
                 suite_result['skipped_count'] += 1
 
@@ -140,7 +144,7 @@ def format_quickbuild_results(build_test_data):
         'suites': list(suites.values())
     }
 
-    return results
+    return results, build_status
 
 
 def quickbuild_xml_decode(build_info, qb_results_exporter, logger):
@@ -158,7 +162,13 @@ def quickbuild_xml_decode(build_info, qb_results_exporter, logger):
     build_id = build_info.get(QBResultsExporter.KEY_BUILD_ID, None)
 
     build_test_data = qb_results_exporter.get_build_test_data(build_id)
-    results = format_quickbuild_results(build_test_data)
+    results, tests_build_status = format_quickbuild_results(build_test_data)
+    build_status = BuildResults.BuildStatus.create(build_info.get(QBResultsExporter.KEY_BUILD_STATUS, None))
+
+    # If the build is still running, we look at the test results to determine status
+    if build_status == BuildResults.BuildStatus.RUNNING and tests_build_status is not None:
+        build_info[QBResultsExporter.KEY_BUILD_STATUS] = tests_build_status.name
+
     log_formatted_results(logger, results)
     return results
 
