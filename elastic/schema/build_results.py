@@ -61,7 +61,7 @@ class Test(InnerDoc):
             """Converts a test result string into a :class:`elastic.schema.Test.Result` enum.
             """
             upper_result_str = result_str.upper()
-            if upper_result_str in ["PASS", "PASSED", "SUCCESS"]:
+            if upper_result_str in ["PASS", "PASSED", "SUCCESS", "FIXED"]:
                 return Test.Result.PASSED
             if upper_result_str in ["FAILURE", "ERROR", "REGRESSION", "FAILED"]:
                 return Test.Result.FAILED
