@@ -5,6 +5,8 @@ Library with convience functions for use in hooks
 """
 
 import argparse
+from datetime import datetime
+import requests
 
 
 from elastic.schema.build_results import BuildResults
@@ -28,14 +30,14 @@ def parse_args(description, custom_args=None):
 
     return args
 
-def status_args(args):
+def status_args(build_status):
     """
     Callback function to provide the build status from parsed commandline args to :class:`elastic.schema.BuildResults`
 
     Args:
         args: argparse'd arguments that include the build status
     """
-    return BuildResults.BuildStatus.create(args.buildstatus).name
+    return BuildResults.BuildStatus.create(build_status).name
 
 def assemble_build(args, retrieve_function, retrieve_args):
     """
@@ -47,10 +49,16 @@ def assemble_build(args, retrieve_function, retrieve_args):
         retrieve_function: call back argument to decode retrieve and decode tests
         retrieve_args: arguments to the retrieve_function callback
     """
-    build_results = BuildResults.create(job_name=args.jobname, build_id=args.buildid, build_date_time=args.buildtime,
+    job_info = get_json_job_details(args.buildurl)
+    job_name = job_info["fullName"]
+
+    build_info = get_json_job_details(args.buildurl + "/" + args.buildid)
+    build_date_time = datetime.utcfromtimestamp(int(build_info["timestamp"])/1000).isoformat()
+
+    build_results = BuildResults.create(job_name=job_name, build_id=args.buildid, build_date_time=build_date_time,
                                         job_link=args.buildurl, platform=args.platform)
     build_results.store_tests(retrieve_function, *retrieve_args)
-    build_results.store_status(status_args, args)
+    build_results.store_status(status_args, build_info["result"])
 
     return build_results
 
@@ -72,3 +80,8 @@ def normalize_string(value):
         return ""
     head, _, _ = value.partition(" (")
     return head.strip()
+
+def get_json_job_details(buildurl):
+    """Returns detailed information in JSON about a job/build/etc. depending on the passed URL.
+    """
+    return requests.get(buildurl + "/api/json").json()

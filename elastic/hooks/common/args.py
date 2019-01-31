@@ -14,7 +14,7 @@ def add_common_args(parser):
         parser: Args parser object
     """
     parser.add_argument("-b", "--buildid", type=str, required=True, help="CI build ID")
-    parser.add_argument("-j", "--jobname", type=str, required=True, help="CI job name")
+    parser.add_argument("-j", "--jobname", type=str, help="CI job name")
     parser.add_argument("-p", "--platform", type=str, default="Linux-x86_64", help="Platform name (default: Linux-x86_64)")
 
     parser.add_argument("--logcollectaddr", type=str, required=True, help="Address of LogCollector to send to")
@@ -34,8 +34,6 @@ def add_build_args(parser):
         parser: Args parser object
     """
     parser.add_argument('--buildurl', required=True, help='URL of build to send')
-    parser.add_argument('--buildtime', required=True, help="Build date-time string")
-    parser.add_argument('--buildstatus', required=True, help="Build status string")
 
 def validate_args(args):
     """
