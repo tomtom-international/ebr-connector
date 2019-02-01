@@ -41,7 +41,7 @@ def test_default_ctor():
     """Test default constructor
     """
     test = Test()
-    assert test.meta == {}
+    assert test.__dict__ == {'_d_': {}, 'meta': {}}
 
 
 def test_create_factory_method():

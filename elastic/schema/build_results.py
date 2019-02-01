@@ -13,7 +13,6 @@ In order to still have protection against violations of the schema fields we mak
 factory method instead to create instances of these types.
 """
 
-
 import socket
 import ssl
 import json
@@ -21,7 +20,7 @@ import traceback
 import warnings
 
 from enum import Enum
-from elasticsearch_dsl import Document, Text, InnerDoc, Float, Integer, Nested, Date, Keyword, MetaField
+from elasticsearch_dsl import Document, Text, InnerDoc, Float, Integer, Nested, Date, Keyword, MetaField, Object
 
 import elastic
 
@@ -109,6 +108,56 @@ class TestSuite(InnerDoc):
                          br_passed_count=passed_count, br_total_count=total_count, br_duration=duration, br_package=package)
 
 
+class TestSummary(InnerDoc):
+    """
+    Class summarizing all passed/failed/skipped tests across all test sets.
+
+    Args:
+        br_total_passed_count: Total number of all passed test cases
+        br_total_failed_count: Total number of all failed test cases
+        br_total_skipped_count: Total number of all skipped test cases
+        br_total_count: Total number of all passed/failed/skipped test cases
+    """
+    br_total_passed_count = Integer()
+    br_total_failed_count = Integer()
+    br_total_skipped_count = Integer()
+    br_total_count = Integer()
+
+    @staticmethod
+    def create(total_passed_count, total_failed_count, total_skipped_count, total_count):
+        """
+        Factory method for creating a new instance of :class:`elastic.schema.TestSummary`.
+        """
+        return TestSummary(br_total_passed_count=total_passed_count, br_total_failed_count=total_failed_count,
+                           br_total_skipped_count=total_skipped_count, br_total_count=total_count)
+
+
+class Tests(InnerDoc):
+    """
+    Class used to group nested objects of failed/passed/skipped tests, suites, etc
+
+    Args:
+        br_suites_object: Set of test suites
+        br_tests_passed_object: Set of passed test cases
+        br_tests_failed_object: Set of failed test cases
+        br_tests_skipped_object: Set of skipped test cases
+        br_summary_object: Summary over all tests
+    """
+    br_suites_object = Nested(TestSuite)
+    br_tests_passed_object = Nested(Test)
+    br_tests_failed_object = Nested(Test)
+    br_tests_skipped_object = Nested(Test)
+    br_summary_object = Object(TestSummary)
+
+    @staticmethod
+    def create(suites, tests_passed, tests_failed, tests_skipped, summary):
+        """
+        Factory method for creating a new instance of :class:`elastic.schema.Tests`.
+        """
+        return Tests(br_suites_object=suites, br_tests_passed_object=tests_passed, br_tests_failed_object=tests_failed,
+                     br_tests_skipped_object=tests_skipped, br_summary_object=summary)
+
+
 
 class BuildResults(Document):
     """
@@ -124,11 +173,8 @@ class BuildResults(Document):
         br_platform: Platform of the build
         br_product: Product the build is associated with
         br_status_key: Status of the build (eg. if one test failed the overall build status should as well be failed)
-        br_suites_nested: Set of test suites
-        br_tests_passed_nested: Set of passed test cases
-        br_tests_failed_nested: Set of failed test cases
-        br_tests_skipped_nested: Set of skipped test cases
-        br_version_key: Version of the BuildResults schema.
+        br_tests_object: A container for storing failed/passed/skipped tests, total summary, etc. See :class:`elastic.schema.Tests` for more details
+        br_version_key: Version of the BuildResults schema
     """
     br_job_name = Text(fields={'raw': Keyword()})
     br_job_url_key = Keyword()
@@ -139,10 +185,7 @@ class BuildResults(Document):
     br_platform = Text(fields={'raw': Keyword()})
     br_product = Text(fields={'raw': Keyword()})
     br_status_key = Keyword()
-    br_suites_nested = Nested(TestSuite)
-    br_tests_passed_nested = Nested(Test)
-    br_tests_failed_nested = Nested(Test)
-    br_tests_skipped_nested = Nested(Test)
+    br_tests_object = Object(Tests)
     br_version_key = Keyword()
 
 
@@ -201,8 +244,7 @@ class BuildResults(Document):
         """
         return BuildResults(br_job_name=job_name, br_job_url_key=job_link, br_build_date_time=build_date_time, br_build_id_key=build_id,
                             br_platform=platform, br_product=product, br_job_info=job_info, br_status_key=None,
-                            br_suites_nested=[], br_tests_passed_nested=[], br_tests_failed_nested=[], br_tests_skipped_nested=[],
-                            br_version_key=elastic.__version__)
+                            br_tests_object={}, br_version_key=elastic.__version__)
 
     def store_tests(self, retrieve_function, *args, **kwargs):
         """
@@ -214,15 +256,26 @@ class BuildResults(Document):
         """
         try:
             results = retrieve_function(*args, **kwargs)
+            self.br_tests_object = Tests()
+
             for test in results.get('tests', None):
                 if Test.Result[test['result']] == Test.Result.PASSED:
-                    self.br_tests_passed_nested.append(Test.create(**test))
+                    self.br_tests_object.br_tests_passed_object.append(Test.create(**test))
                 elif Test.Result[test['result']] == Test.Result.FAILED:
-                    self.br_tests_failed_nested.append(Test.create(**test))
+                    self.br_tests_object.br_tests_failed_object.append(Test.create(**test))
                 else:
-                    self.br_tests_skipped_nested.append(Test.create(**test))
+                    self.br_tests_object.br_tests_skipped_object.append(Test.create(**test))
+
+            total_passed_count = len(self.br_tests_object.br_tests_passed_object)
+            total_failed_count = len(self.br_tests_object.br_tests_failed_object)
+            total_skipped_count = len(self.br_tests_object.br_tests_skipped_object)
+            self.br_tests_object.br_summary_object = TestSummary.create(total_passed_count=total_passed_count,
+                                                                        total_failed_count=total_failed_count,
+                                                                        total_skipped_count=total_skipped_count,
+                                                                        total_count=total_passed_count + total_failed_count + total_skipped_count)
+
             for suite in results.get('suites', None):
-                self.br_suites_nested.append(TestSuite.create(**suite))
+                self.br_tests_object.br_suites_object.append(TestSuite.create(**suite))
 
         except  (KeyError, TypeError):
             warnings.warn("Failed to retrieve test data.")

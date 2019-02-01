@@ -100,7 +100,7 @@ def format_quickbuild_results(build_test_data):
                 'test': test_details[QBResultsExporter.KEY_TEST_NAME],
                 'result': test_result.name,
                 'message': test_details[QBResultsExporter.KEY_ERROR_MESSAGE],
-                'duration': duration,
+                'duration': float(duration),
                 'reportset': test_details[QBResultsExporter.KEY_REPORT_SET]
             }
 
@@ -123,7 +123,7 @@ def format_quickbuild_results(build_test_data):
                 suite_result['package'] = package
 
             try:
-                suite_result['duration'] += int(duration)
+                suite_result['duration'] += float(duration)
             except ValueError:
                 pass
 

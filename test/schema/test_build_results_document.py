@@ -3,8 +3,10 @@ Tests for the BuildResults module.
 """
 
 from datetime import datetime
+from unittest.mock import MagicMock
 import pytest
 
+import elastic
 from elastic.schema.build_results import BuildResults
 
 
@@ -50,7 +52,7 @@ def test_default_constructor():
     """Test default constructor
     """
     build_results = BuildResults()
-    assert build_results.meta == {}
+    assert build_results.__dict__ == {'_d_': {}, 'meta': {}}
 
 
 def test_create_factory_method():
@@ -67,3 +69,56 @@ def test_create_factory_method():
     assert build_results.br_build_id_key == "1234"
     assert build_results.br_platform == "Linux-x86_64"
     assert build_results.br_product == "MyProduct"
+    assert build_results.br_version_key == elastic.__version__
+
+    assert build_results.to_dict() == {
+        'br_build_date_time': str(date_time),
+        'br_build_id_key': '1234',
+        'br_job_name': 'my_jobname',
+        'br_job_url_key': 'my_joburl',
+        'br_platform': 'Linux-x86_64',
+        'br_product': 'MyProduct',
+        'br_version_key': elastic.__version__
+        }
+
+
+def create_dummy_build_result():
+    """Creates a dummy build results object
+    """
+
+    date_time = datetime.utcnow()
+    return BuildResults.create(job_name="my_jobname", job_link="my_joburl",
+                               build_date_time=str(date_time), build_id="1234",
+                               platform="Linux-x86_64", product="MyProduct")
+
+
+def test_store_tests_with_empty_tests_and_suites():
+    """Test with no tests and suites.
+    """
+
+    build_results = create_dummy_build_result()
+
+    retrieve_mock = MagicMock()
+    retrieve_mock.return_value = {
+        'tests': [],
+        'suites': []
+    }
+
+    build_results.store_tests(retrieve_mock)
+
+    assert build_results.br_tests_object == {'br_tests_passed_object': [], 'br_tests_failed_object': [], 'br_tests_skipped_object': [],
+                                             'br_summary_object': {'br_total_count': 0, 'br_total_failed_count': 0,
+                                                                   'br_total_passed_count': 0, 'br_total_skipped_count': 0}}
+
+def test_store_tests_with_empty_results():
+    """Test with no tests and suites.
+    """
+
+    build_results = create_dummy_build_result()
+
+    retrieve_mock = MagicMock()
+    retrieve_mock.return_value = {}
+
+    build_results.store_tests(retrieve_mock)
+
+    assert build_results.br_tests_object == {}
