@@ -23,6 +23,7 @@ from enum import Enum
 from elasticsearch_dsl import Document, Text, InnerDoc, Float, Integer, Nested, Date, Keyword, MetaField, Object
 
 import elastic
+from elastic.schema.dynamic_template import DYNAMIC_TEMPLATES
 
 
 class Test(InnerDoc):
@@ -158,8 +159,22 @@ class Tests(InnerDoc):
                      br_tests_skipped_object=tests_skipped, br_summary_object=summary)
 
 
+class _BuildResultsMetaDocument(Document):
+    """Base class for the BuildResults document describing the index structure.
+    """
 
-class BuildResults(Document):
+    # pylint: disable=too-few-public-methods
+    class Meta:
+        """Stores the plain template version in the generated index template. We cannot use the builtin `version` field
+        since it is of type `integer` and we use semantic versioning.
+        This data is for pure information purposes and won't be used at all by Elasticsearch.
+        See as well https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-meta-field.html#mapping-meta-field.
+        """
+        meta = MetaField(template_version=elastic.__version__)
+        dynamic_templates = MetaField(DYNAMIC_TEMPLATES)
+
+
+class BuildResults(_BuildResultsMetaDocument):
     """
     Top level serialization for build results
 
@@ -187,17 +202,6 @@ class BuildResults(Document):
     br_status_key = Keyword()
     br_tests_object = Object(Tests)
     br_version_key = Keyword()
-
-
-    # pylint: disable=too-few-public-methods
-    class Meta:
-        """Stores the plain template version in the generated index template. We cannot use the builtin `version` field
-        since it is of type `integer` and we use semantic versioning.
-        This data is for pure information purposes and won't be used at all by Elasticsearch.
-        See as well https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-meta-field.html#mapping-meta-field.
-        """
-        meta = MetaField(template_version=elastic.__version__)
-
 
     class BuildStatus(Enum):
         """
@@ -319,8 +323,6 @@ class BuildResults(Document):
             context.verify_mode = ssl.CERT_REQUIRED
             context.load_cert_chain(clientcert, clientkey, keypass)
 
-        secure_socket = context.wrap_socket(bare_socket, server_hostname=dest)
-
-        secure_socket.connect((dest, port))
-        secure_socket.send(result)
-        secure_socket.close()
+        with context.wrap_socket(bare_socket, server_hostname=dest) as secure_socket:
+            secure_socket.connect((dest, port))
+            secure_socket.send(result)

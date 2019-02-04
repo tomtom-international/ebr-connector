@@ -10,7 +10,8 @@ import json
 import sys
 
 from elasticsearch_dsl import Index
-from elastic.schema.build_results import BuildResults
+from elastic.schema.build_results import _BuildResultsMetaDocument
+
 
 def generate_template(index_name, output_file=None):
     """
@@ -22,10 +23,17 @@ def generate_template(index_name, output_file=None):
         output_file: (optional) file path to write template to
     """
 
-    document = BuildResults()
-    index = Index(index_name)
+    document = _BuildResultsMetaDocument()
+    index = Index(name=index_name)
     index.document(document)
-    index_template = index.as_template(template_name="template")
+    index.settings(
+        refresh_interval="30s",
+        number_of_shards="1",
+        number_of_replicas="1"
+    )
+    index.aliases(**{index_name: {}})
+
+    index_template = index.as_template(template_name="template_" + index_name, pattern="%s-*" % index_name)
 
     template_dict = index_template.to_dict()
 

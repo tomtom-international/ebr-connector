@@ -17,7 +17,6 @@ import sys
 
 from sphinx.ext import apidoc
 
-from elastic.index.generate_template import generate_template
 import elastic
 
 sys.path.insert(0, os.path.abspath('.'))
@@ -26,11 +25,11 @@ sys.path.insert(0, os.path.abspath('.'))
 # -- Project information -----------------------------------------------------
 
 project = u'ebr-connector'
-copyright = u'2019, TomTom N.V.'
+copyright = u'2019, TomTom International B.V.'
 author = u'Eugene Davis, Martin Migasiewicz, James Mechen'
 
 # The short X.Y version
-version = str(elastic.__version__.split('.')[0])
+version = str(elastic.__version__)
 # The full version, including alpha/beta/rc tags
 release = str(elastic.__version__)
 
@@ -189,7 +188,3 @@ epub_exclude_files = ['search.html']
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
-
-apidoc.main(['--module-first', 'elastic', '-o', os.getcwd()])
-
-generate_template("build-results-schema", output_file="schema.json")

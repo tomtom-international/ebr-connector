@@ -7,7 +7,6 @@ ebr-connector Documentation
    :titlesonly:
 
    Modules <modules.rst>
-   Schema <schema.rst>
    ReadMe <README.md>
 
 
