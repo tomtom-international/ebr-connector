@@ -46,6 +46,7 @@ class Test(InnerDoc):
     br_message = Text()
     br_duration = Float()
     br_reportset = Text()
+    br_fullname = Text(fields={'raw': Keyword()})
 
 
     class Result(Enum):
@@ -76,7 +77,7 @@ class Test(InnerDoc):
         """
 
         return Test(br_suite=suite, br_classname=classname, br_test=test, br_result=result, br_message=message,
-                    br_duration=duration, br_reportset=reportset)
+                    br_duration=duration, br_reportset=reportset, br_fullname=suite + "." + test)
 
 
 class TestSuite(InnerDoc):

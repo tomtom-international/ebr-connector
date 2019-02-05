@@ -56,3 +56,4 @@ def test_create_factory_method():
     assert test.br_message == "my_message"
     assert test.br_duration == 100.12
     assert test.br_reportset == "my_unittests"
+    assert test.br_fullname == "my_suitename.my_testname"
