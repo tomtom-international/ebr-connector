@@ -32,6 +32,7 @@ def parse_args(args=None):
     """
     parser = argparse.ArgumentParser(description='Send results of a QuickBuild job to a LogCollector instance over TCP.')
     parser.add_argument("--product", type=str, default=DEFAULT_PROJECT_NAME, help="Product name (Default: %s)" % DEFAULT_PROJECT_NAME)
+    parser.add_argument('--reportset', type=str, nargs='+', default=None, help='Report Set names. (Default: None, for all report sets)')
     parser.add_argument("--qbusername", dest="qb_username", help="Quickbuild username")
     parser.add_argument("--qbpassword", dest="qb_password", help="Quickbuild password")
     parser.add_argument("-l", "--log", action="store", type=str, dest="log_level", default=DEFAULT_LOG_LEVEL,
@@ -147,12 +148,13 @@ def format_quickbuild_results(build_test_data):
     return results, build_status
 
 
-def quickbuild_xml_decode(build_info, qb_results_exporter, logger):
+def quickbuild_xml_decode(build_info, report_sets, qb_results_exporter, logger):
     """
     Exports the raw results from QuickBuild for a particular build and formats them for use by logstash.
 
     Args:
         build_info: Dictionary containing information about the QuickBuild build.
+        report_sets: List of report sets to get results from (or None for all report sets).
         qb_results_exporter: QBResultsExporter object.
         logger: Logger object.
 
@@ -161,7 +163,7 @@ def quickbuild_xml_decode(build_info, qb_results_exporter, logger):
     """
     build_id = build_info.get(QBResultsExporter.KEY_BUILD_ID, None)
 
-    build_test_data = qb_results_exporter.get_build_test_data(build_id)
+    build_test_data = qb_results_exporter.get_build_test_data(build_id, report_sets)
     results, tests_build_status = format_quickbuild_results(build_test_data)
     build_status = BuildResults.BuildStatus.create(build_info.get(QBResultsExporter.KEY_BUILD_STATUS, None))
 
@@ -209,6 +211,7 @@ def main():
         QBResultsExporter.KEY_BUILD_DATE_TIME_UTC, None)
     build_url = build_info.get(QBResultsExporter.KEY_BUILD_URL, None)
     build_version = build_info.get(QBResultsExporter.KEY_BUILD_VERSION, None)
+    report_sets = args.reportset
 
     if build_date:
         build_date = build_date.isoformat()
@@ -216,7 +219,7 @@ def main():
 
     quick_build_results = BuildResults.create(platform=args.platform, job_name=args.jobname, build_id=args.buildid, build_date_time=build_date,
                                               job_link=build_url, product=args.product, job_info=build_version)
-    quick_build_results.store_tests(quickbuild_xml_decode, build_info=build_info, qb_results_exporter=qb_results_exporter, logger=logger)
+    quick_build_results.store_tests(quickbuild_xml_decode, report_sets=report_sets, build_info=build_info, qb_results_exporter=qb_results_exporter, logger=logger)
     quick_build_results.store_status(get_status, build_info=build_info)
     quick_build_results.save_logcollect(args.logcollectaddr, args.logcollectport, cafile=args.cacert, clientcert=args.clientcert,
                                         clientkey=args.clientkey, keypass=args.clientpassword, timeout=args.sockettimeout)
