@@ -50,7 +50,7 @@ def log_formatted_results(logger, results):
         results: Results to be uploaded to logstash.
     """
     tests = results.get('tests', [])
-    logger.debug("NUMBER OF FORMATTED TEST RESULTS: %d" % len(tests))
+    logger.info("NUMBER OF FORMATTED TEST RESULTS: %d" % len(tests))
     logger.debug(
         "FAILING TESTS:\n" +
         pprint.pformat(
@@ -60,7 +60,7 @@ def log_formatted_results(logger, results):
                     tests))))
 
     suites = results.get('suites', [])
-    logger.debug("NUMBER OF FORMATTED SUITE RESULTS: %d" % len(suites))
+    logger.info("NUMBER OF FORMATTED SUITE RESULTS: %d" % len(suites))
     logger.debug(
         "FAILING SUITES:\n" +
         pprint.pformat(
@@ -88,21 +88,21 @@ def format_quickbuild_results(build_test_data):
         test_data = build_test_data[report_set]
 
         for test_details in test_data:
-            suite = test_details[QBResultsExporter.KEY_CLASS_NAME]
-            duration = test_details[QBResultsExporter.KEY_DURATION]
-            package = test_details[QBResultsExporter.KEY_PACKAGE_NAME]
+            suite = test_details[QBResultsExporter.KEY_CLASS_NAME] or ""
+            duration = test_details[QBResultsExporter.KEY_DURATION] or 0
+            package = test_details[QBResultsExporter.KEY_PACKAGE_NAME] or ""
 
             # Create Test.Result enum based on string
             test_result = Test.Result.create(test_details[QBResultsExporter.KEY_STATUS])
 
             test = {
                 'suite': suite,
-                'classname': test_details[QBResultsExporter.KEY_CLASS_NAME],
+                'classname': suite,
                 'test': test_details[QBResultsExporter.KEY_TEST_NAME],
                 'result': test_result.name,
-                'message': test_details[QBResultsExporter.KEY_ERROR_MESSAGE],
+                'message': test_details[QBResultsExporter.KEY_ERROR_MESSAGE] or "",
                 'duration': float(duration),
-                'reportset': test_details[QBResultsExporter.KEY_REPORT_SET]
+                'reportset': test_details[QBResultsExporter.KEY_REPORT_SET] or ""
             }
 
             tests.append(test)
@@ -144,6 +144,9 @@ def format_quickbuild_results(build_test_data):
         'tests': tests,
         'suites': list(suites.values())
     }
+
+    if not tests:
+        raise ValueError("There are no test results in the QuickBuild data")
 
     return results, build_status
 

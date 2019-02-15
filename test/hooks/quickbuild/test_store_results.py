@@ -155,9 +155,9 @@ def verify_results_success(results):
     """
     tests = results['tests']
     assert len(tests) == 3
-    verify_test(tests[0], 'Test 1', 'Class 1', 'Class 1', Test.Result.PASSED, None, 123, 'Report Set 1')
-    verify_test(tests[1], 'Test 2', 'Class 2', 'Class 2', Test.Result.PASSED, None, 456, 'Report Set 1')
-    verify_test(tests[2], 'Test 3', 'Class 1', 'Class 1', Test.Result.PASSED, None, 321, 'Report Set 2')
+    verify_test(tests[0], 'Test 1', 'Class 1', 'Class 1', Test.Result.PASSED, '', 123, 'Report Set 1')
+    verify_test(tests[1], 'Test 2', 'Class 2', 'Class 2', Test.Result.PASSED, '', 456, 'Report Set 1')
+    verify_test(tests[2], 'Test 3', 'Class 1', 'Class 1', Test.Result.PASSED, '', 321, 'Report Set 2')
 
     suites = results['suites']
     assert len(suites) == 2
@@ -169,9 +169,9 @@ def verify_results_failure(results):
     """
     tests = results['tests']
     assert len(tests) == 3
-    verify_test(tests[0], 'Test 1', 'Class 1', 'Class 1', Test.Result.PASSED, None, 123, 'Report Set 1')
+    verify_test(tests[0], 'Test 1', 'Class 1', 'Class 1', Test.Result.PASSED, '', 123, 'Report Set 1')
     verify_test(tests[1], 'Test 2', 'Class 2', 'Class 2', Test.Result.FAILED, 'Error 3', 456, 'Report Set 1')
-    verify_test(tests[2], 'Test 3', 'Class 1', 'Class 1', Test.Result.SKIPPED, None, 321, 'Report Set 2')
+    verify_test(tests[2], 'Test 3', 'Class 1', 'Class 1', Test.Result.SKIPPED, '', 321, 'Report Set 2')
 
     suites = results['suites']
     assert len(suites) == 2
