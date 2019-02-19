@@ -264,9 +264,10 @@ class BuildResults(_BuildResultsMetaDocument):
             self.br_tests_object = Tests()
 
             for test in results.get('tests', None):
-                if Test.Result[test['result']] == Test.Result.PASSED:
+                test_result = Test.Result[test.get('result', Test.Result.FAILED)]
+                if test_result == Test.Result.PASSED:
                     self.br_tests_object.br_tests_passed_object.append(Test.create(**test))
-                elif Test.Result[test['result']] == Test.Result.FAILED:
+                elif test_result == Test.Result.FAILED:
                     self.br_tests_object.br_tests_failed_object.append(Test.create(**test))
                 else:
                     self.br_tests_object.br_tests_skipped_object.append(Test.create(**test))
@@ -282,7 +283,7 @@ class BuildResults(_BuildResultsMetaDocument):
             for suite in results.get('suites', None):
                 self.br_tests_object.br_suites_object.append(TestSuite.create(**suite))
 
-        except  (KeyError, TypeError):
+        except (KeyError, TypeError):
             warnings.warn("Failed to retrieve test data.")
             traceback.print_exc()
 
@@ -315,9 +316,9 @@ class BuildResults(_BuildResultsMetaDocument):
         """
 
         result = str.encode(json.dumps(self.to_dict()))
+
         bare_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         bare_socket.settimeout(timeout)
-
         context = ssl.create_default_context(cafile=cafile)
 
         if clientcert:

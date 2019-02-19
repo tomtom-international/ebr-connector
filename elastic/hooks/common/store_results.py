@@ -12,6 +12,7 @@ import requests
 from elastic.schema.build_results import BuildResults
 from elastic.hooks.common.args import add_common_args, add_build_args, validate_args
 
+
 def parse_args(description, custom_args=None):
     """
     Performs default arg parsing for a hook
@@ -30,6 +31,7 @@ def parse_args(description, custom_args=None):
 
     return args
 
+
 def status_args(build_status):
     """
     Callback function to provide the build status from parsed commandline args to :class:`elastic.schema.BuildResults`
@@ -38,6 +40,7 @@ def status_args(build_status):
         args: argparse'd arguments that include the build status
     """
     return BuildResults.BuildStatus.create(build_status).name
+
 
 def assemble_build(args, retrieve_function, retrieve_args):
     """
@@ -63,6 +66,7 @@ def assemble_build(args, retrieve_function, retrieve_args):
 
     return build_results
 
+
 def normalize_string(value):
     """Some parameterized tests encode the parameter objects into the test case name. For classes that have a
     proper output operator << implemented this is not an issue but classes without one produce a large test
@@ -81,6 +85,7 @@ def normalize_string(value):
         return ""
     head, _, _ = value.partition(" (")
     return head.strip()
+
 
 def get_json_job_details(buildurl):
     """Returns detailed information in JSON about a job/build/etc. depending on the passed URL.

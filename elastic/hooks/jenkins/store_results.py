@@ -8,7 +8,8 @@ Library for exporting Jenkins build results (including tests) to logstash
 import sys
 from json.decoder import JSONDecodeError
 
-from elastic.hooks.common.store_results import assemble_build, parse_args, normalize_string, get_json_job_details
+import elastic
+from elastic.hooks.common.store_results import assemble_build, parse_args, normalize_string
 from elastic.schema.build_results import Test
 
 
@@ -24,7 +25,7 @@ def jenkins_json_decode(url):
         'suites': []
     }
     try:
-        json_results = get_json_job_details(url)
+        json_results = elastic.hooks.common.store_results.get_json_job_details(url)
     except JSONDecodeError:
         print("Received error when parsing test results, no results will be included in build.")
         return results
@@ -67,15 +68,21 @@ def jenkins_json_decode(url):
 
     return results
 
+def store(args):
+    """Fetches the test report from Jenkins and stores the data into logstash.
+    """
+    jenkins_build = assemble_build(args, jenkins_json_decode, [args.buildurl + "/" + args.buildid + "/testReport/api/json"])
+    jenkins_build.save_logcollect(args.logcollectaddr, args.logcollectport, cafile=args.cacert, clientcert=args.clientcert, clientkey=args.clientkey,
+                                  keypass=args.clientpassword, timeout=args.sockettimeout)
+    return jenkins_build
+
 
 def main():
     """
     Provides a CLI interface callable on Jenkins to send build results to logstash
     """
     args = parse_args("Send results of a Jenkins build to a LogCollector instance over TCP.")
-    jenkins_build = assemble_build(args, jenkins_json_decode, [args.buildurl + "/" + args.buildid + "/testReport/api/json"])
-    jenkins_build.save_logcollect(args.logcollectaddr, args.logcollectport, cafile=args.cacert, clientcert=args.clientcert, clientkey=args.clientkey,
-                                  keypass=args.clientpassword, timeout=args.sockettimeout)
+    store(args)
 
 
 if __name__ == '__main__':
