@@ -3,6 +3,10 @@
 
 """
 Library pushing XUnit results to logstash. Intended as a baseline for any CI systems that do not provide XUnit file ingestion that can be used instead.
+
+REMARK:
+This hook is not used anywhere in production and serves only as an example. Due to that no unit tests exist for this module.
+If you decide to use this hook in production *please* add as well some unit tests and remove the folder from the coverage omit configuration in setup.cfg.
 """
 
 import sys
