@@ -11,7 +11,7 @@ import pytest
 
 import elastic
 from elastic.schema.build_results import BuildResults
-from tests import get_test_data
+from tests import get_test_data_for_failed_build
 
 
 @pytest.mark.parametrize("test_input,expected", [
@@ -154,7 +154,7 @@ def test_save_logcollect(
 
     ## build results under test with some test data
     build_results = create_dummy_build_result()
-    build_results.store_tests(get_test_data)
+    build_results.store_tests(get_test_data_for_failed_build)
 
     # When
     build_results.save_logcollect(dest="localhost", port="10000", cafile=cafile_input)
@@ -190,7 +190,7 @@ def test_save_logcollect_should_use_client_authentication(
 
     ## build results under test with some test data
     build_results = create_dummy_build_result()
-    build_results.store_tests(get_test_data)
+    build_results.store_tests(get_test_data_for_failed_build)
 
     # When
     build_results.save_logcollect(dest="localhost", port="10000", clientcert="myclientcert")
@@ -209,7 +209,7 @@ def test_store_tests_returns_a_properly_translated_document():
     build_results = create_dummy_build_result()
 
     # When
-    build_results.store_tests(get_test_data)
+    build_results.store_tests(get_test_data_for_failed_build)
 
     # Then
     assert len(build_results.br_tests_object.br_tests_failed_object) == 5

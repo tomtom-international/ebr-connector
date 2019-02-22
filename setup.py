@@ -28,7 +28,8 @@ setup(
     tests_require=[
         "coverage>=4.5,<5"
         "pytest>=4.1,<5",
-        "pytest-cov>=2.6,<3"
+        "pytest-cov>=2.6,<3",
+        "docker>=3.7.0,<4"
     ],
     entry_points="""
 [console_scripts]

@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 from json.decoder import JSONDecodeError
 
 from elastic.hooks.jenkins.store_results import store
-from tests.hooks.jenkins import get_jenkins_test_report_response
+from . import get_jenkins_test_report_response
 
 
 @patch("socket.socket")

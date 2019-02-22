@@ -13,7 +13,7 @@ from elasticsearch_dsl import Index
 from elastic.schema.build_results import _BuildResultsMetaDocument
 
 
-def generate_template(index_name, output_file=None):
+def generate_template(index_name):
     """
     Generates the index template associated with the structure of the BuildResults
     document, allowing it to be uploaded to an ElasticSearch instance.
@@ -32,16 +32,10 @@ def generate_template(index_name, output_file=None):
         number_of_replicas="1"
     )
     index.aliases(**{index_name: {}})
-
     index_template = index.as_template(template_name="template_" + index_name, pattern="%s-*" % index_name)
+    return index_template.to_dict()
 
-    template_dict = index_template.to_dict()
 
-    if output_file:
-        with open(output_file, "w") as file:
-            json.dump(template_dict, file, ensure_ascii=False, indent=4, sort_keys=True)
-    else:
-        print(json.dumps(template_dict, ensure_ascii=False, indent=4, sort_keys=True))
 
 def main():
     """
@@ -52,8 +46,12 @@ def main():
     parser.add_argument("--output_file", help="File to write schema to")
     args = parser.parse_args()
 
-    generate_template(args.INDEX_NAME, args.output_file)
-
+    output = generate_template(args.INDEX_NAME)
+    if args.output_file:
+        with open(args.output_file, "w") as file:
+            json.dump(output, file, ensure_ascii=False, indent=4, sort_keys=True)
+    else:
+        print(json.dumps(output, ensure_ascii=False, indent=4, sort_keys=True))
 
 if __name__ == '__main__':
     sys.exit(main())
