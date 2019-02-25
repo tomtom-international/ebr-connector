@@ -55,8 +55,8 @@ def log_formatted_results(logger, results):
         "FAILING TESTS:\n" +
         pprint.pformat(
             list(
-                filter(
-                    lambda x: x['result'] == Test.Result.FAILED,
+                "%s.%s" % (str(t['classname']), str(t['test'])) for t in filter(
+                    lambda x: Test.Result.create(x['result']) == Test.Result.FAILED,
                     tests))))
 
     suites = results.get('suites', [])
@@ -92,6 +92,11 @@ def format_quickbuild_results(build_test_data):
             duration = test_details[QBResultsExporter.KEY_DURATION] or 0
             package = test_details[QBResultsExporter.KEY_PACKAGE_NAME] or ""
 
+            try:
+                duration = float(duration)
+            except ValueError:
+                duration = 0
+
             # Create Test.Result enum based on string
             test_result = Test.Result.create(test_details[QBResultsExporter.KEY_STATUS])
 
@@ -101,7 +106,7 @@ def format_quickbuild_results(build_test_data):
                 'test': test_details[QBResultsExporter.KEY_TEST_NAME],
                 'result': test_result.name,
                 'message': test_details[QBResultsExporter.KEY_ERROR_MESSAGE] or "",
-                'duration': float(duration),
+                'duration': duration,
                 'reportset': test_details[QBResultsExporter.KEY_REPORT_SET] or ""
             }
 
@@ -123,11 +128,7 @@ def format_quickbuild_results(build_test_data):
             if package and not suite_result['package']:
                 suite_result['package'] = package
 
-            try:
-                suite_result['duration'] += float(duration)
-            except ValueError:
-                pass
-
+            suite_result['duration'] += duration
             suite_result['total_count'] += 1
 
             if test_result == Test.Result.PASSED:
@@ -190,23 +191,29 @@ def status(build_info):
     return BuildResults.BuildStatus.create(build_info.get(QBResultsExporter.KEY_BUILD_STATUS, None)).name
 
 
-def main():
+def main(args=None, qb_results_exporter_class=QBResultsExporter,
+         build_results_class=BuildResults, getpass_class=getpass):
     """
     Exports QuickBuild build results to logstash.
+
+    Args:
+        qb_results_exporter_class: Optional QBResultsExporter class.
+        build_results_class: Optional BuildResults class.
+        getpass_class: Optional getpass class.
     """
     logging.getLogger("urllib3").setLevel(logging.WARNING)
     logger = logging.getLogger('elastic.hook.quickbuild.store_results')
 
-    args = parse_args()
+    args = parse_args(args)
 
     validate_args(args)
 
     if not args.qb_password and args.qb_username:
-        args.qb_password = getpass.getpass(
+        args.qb_password = getpass_class.getpass(
             "Password for " + args.qb_username + ": ")
 
     logging.basicConfig(level=args.log_level.upper())
-    qb_results_exporter = QBResultsExporter(
+    qb_results_exporter = qb_results_exporter_class(
         logger, args.qb_username, args.qb_password)
 
     build_info = qb_results_exporter.get_build_info(args.buildid)
@@ -220,8 +227,8 @@ def main():
         build_date = build_date.isoformat()
 
 
-    quick_build_results = BuildResults.create(platform=args.platform, job_name=args.jobname, build_id=args.buildid, build_date_time=build_date,
-                                              job_link=build_url, product=args.product, job_info=build_version)
+    quick_build_results = build_results_class.create(platform=args.platform, job_name=args.jobname, build_id=args.buildid, build_date_time=build_date,
+                                                     job_link=build_url, product=args.product, job_info=build_version)
     quick_build_results.store_tests(quickbuild_xml_decode, report_sets=report_sets, build_info=build_info, qb_results_exporter=qb_results_exporter, logger=logger)
     quick_build_results.store_status(get_status, build_info=build_info)
     quick_build_results.save_logcollect(args.logcollectaddr, args.logcollectport, cafile=args.cacert, clientcert=args.clientcert,
