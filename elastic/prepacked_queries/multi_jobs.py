@@ -1,7 +1,7 @@
 """
 A collection of queries that provide multiple results as an array of dicts
 """
-from elasticsearch_dsl import Q
+from elasticsearch_dsl import Q, A
 
 from elastic.schema.build_results import BuildResults
 from elastic.prepacked_queries.query import make_query, DETAILED_JOB
@@ -30,7 +30,7 @@ def successful_jobs(index, job_name_regex, size=10, start_date="now-7d", end_dat
     result = make_query(index, combined_filter, includes=DETAILED_JOB['includes'], excludes=DETAILED_JOB['excludes'], size=size)
     return result
 
-def failed_tests(index, job_name, size=10, fail_count=5, duration_low=162.38, duration_high=320, start_date="now-7d", end_date="now"):
+def failed_tests(index, job_name, size=10, fail_count=5, duration_low=162.38, duration_high=320, start_date="now-7d", end_date="now", agg=False): #pylint: disable=too-many-locals
     """
     Get jobs with failed tests matching certain parameters
     Args:
@@ -42,6 +42,7 @@ def failed_tests(index, job_name, size=10, fail_count=5, duration_low=162.38, du
         duration_high: [Optional] Maximum test duration for inclusion in results. Default is 320.
         start_date: [Optional] Specify start date (string in elastic search format). Default is 7 days ago.
         end_data: [Optional] Specify end date (string in elastic search format). Default is now.
+        agg: [Optional] Converts the query to an aggregation query over the tests.
     Returns:
         An array of dicts of the matching jobs
     """
@@ -61,5 +62,10 @@ def failed_tests(index, job_name, size=10, fail_count=5, duration_low=162.38, du
     # Combine them
     combined_filter = match_status & match_jobname & range_time & more_than_one_failures & duration_between
 
-    result = make_query(index, combined_filter, includes=DETAILED_JOB['includes'], excludes=DETAILED_JOB['excludes'], size=size)
+    # Setup aggregation
+    test_agg = None
+    if agg:
+        test_agg = A('terms', field='br_tests_object.br_tests_failed_object.br_fullname.raw')
+
+    result = make_query(index, combined_filter, includes=DETAILED_JOB['includes'], excludes=DETAILED_JOB['excludes'], size=size, agg=test_agg)
     return result

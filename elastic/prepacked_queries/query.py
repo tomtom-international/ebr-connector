@@ -25,7 +25,7 @@ DETAILED_JOB = {
     ]
 }
 
-def make_query(index, combined_filter, includes, excludes, size=1):
+def make_query(index, combined_filter, includes, excludes, agg=None, size=1):
     """
     Simplifies the execution and usage of a typical query, including cleaning up the results.
     Args:
@@ -39,10 +39,16 @@ def make_query(index, combined_filter, includes, excludes, size=1):
     """
     search = BuildResults().search(index=index)
     search = search.source(includes=includes, excludes=excludes)
+    if agg:
+        search = search.aggs.metric('fail_count', agg)
     search = search.query("bool", filter=[combined_filter])[0:1] # pylint: disable=no-member
     search = search[0:size]
     response = search.execute()
     results = []
-    for hit in response['hits']['hits']:
-        results.append(hit['_source'])
+
+    if agg:
+        results = response['aggregations']['fail_count']['buckets']
+    else:
+        for hit in response['hits']['hits']:
+            results.append(hit['_source'])
     return results
