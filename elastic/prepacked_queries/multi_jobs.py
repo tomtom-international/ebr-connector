@@ -4,7 +4,7 @@ A collection of queries that provide multiple results as an array of dicts
 from elasticsearch_dsl import Q, A
 
 from elastic.schema.build_results import BuildResults
-from elastic.prepacked_queries.query import make_query, DETAILED_JOB
+from elastic.prepacked_queries.query import make_query, DETAILED_JOB, JOB_NAME_AND_KEY_ONLY
 
 def successful_jobs(index, job_name_regex, size=10, start_date="now-7d", end_date="now"):
     """
@@ -69,3 +69,30 @@ def failed_tests(index, job_name, size=10, fail_count=5, duration_low=162.38, du
 
     result = make_query(index, combined_filter, includes=DETAILED_JOB['includes'], excludes=DETAILED_JOB['excludes'], size=size, agg=test_agg)
     return result
+
+def job_matching_failed_test(index, test_name, job_name=None, size=10, start_date="now-7d", end_date="now"):
+    """
+    Get information on a given test
+    Args:
+        index: Elastic search index to use
+        test_name: Test name to look up, can include wildcards
+        job_name: Job name to evaluate
+        size: [Optional] Number of results to return. Default is 10.
+        start_date: [Optional] Specify start date (string in elastic search format). Default is 7 days ago.
+        end_data: [Optional] Specify end date (string in elastic search format). Default is now.
+    Returns:
+        An array of dicts of the matching information
+    """
+    # Query for test with a wildcard in it
+    match_testname = Q("wildcard", br_tests_object__br_tests_failed_object__br_fullname__raw=test_name)
+    # Over the specified time
+    range_time = Q("range", **{"br_build_date_time": {"gte": start_date, "lt": end_date}})
+
+    combined_filter = match_testname & range_time
+
+    # Add job_name restriction of set
+    if job_name:
+        match_jobname = Q("term", br_job_name__raw=job_name)
+        combined_filter += match_jobname
+
+    return make_query(index, combined_filter, includes=JOB_NAME_AND_KEY_ONLY['includes'], excludes=JOB_NAME_AND_KEY_ONLY['excludes'], size=size)

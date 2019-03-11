@@ -25,6 +25,15 @@ DETAILED_JOB = {
     ]
 }
 
+JOB_NAME_AND_KEY_ONLY = {
+    "includes": [
+        "br_job_name",
+        "br_job_url_key"
+    ],
+    "excludes": [
+    ]
+}
+
 def make_query(index, combined_filter, includes, excludes, agg=None, size=1):
     """
     Simplifies the execution and usage of a typical query, including cleaning up the results.
