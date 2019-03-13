@@ -25,10 +25,12 @@ DETAILED_JOB = {
     ]
 }
 
-JOB_NAME_AND_KEY_ONLY = {
+JOB_MINIMAL = {
     "includes": [
         "br_job_name",
-        "br_job_url_key"
+        "br_build_id_key",
+        "br_status_key",
+        "br_build_date_time"
     ],
     "excludes": [
     ]

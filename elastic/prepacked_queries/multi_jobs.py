@@ -4,7 +4,7 @@ A collection of queries that provide multiple results as an array of dicts
 from elasticsearch_dsl import Q, A
 
 from elastic.schema.build_results import BuildResults
-from elastic.prepacked_queries.query import make_query, DETAILED_JOB, JOB_NAME_AND_KEY_ONLY
+from elastic.prepacked_queries.query import make_query, DETAILED_JOB, JOB_MINIMAL
 
 def successful_jobs(index, job_name_regex, size=10, start_date="now-7d", end_date="now"):
     """
@@ -46,9 +46,6 @@ def failed_tests(index, job_name, size=10, fail_count=5, duration_low=162.38, du
     Returns:
         An array of dicts of the matching jobs
     """
-     ## Search for the exact job name
-    match_jobname = Q("term",
-                      br_job_name__raw=job_name)
     ## Search for "failure", "FAILURE", "unstable", "UNSTABLE"
     match_status = Q("match", br_status_key=BuildResults.BuildStatus.FAILURE.name) | Q("match", br_status_key=BuildResults.BuildStatus.UNSTABLE.name)
     ## Search for documents within the last 7 days
@@ -60,39 +57,77 @@ def failed_tests(index, job_name, size=10, fail_count=5, duration_low=162.38, du
     duration_between = Q("range", **{"br_tests_object.br_tests_failed_object.br_duration": {"gte": duration_low, "lte": duration_high}})
 
     # Combine them
-    combined_filter = match_status & match_jobname & range_time & more_than_one_failures & duration_between
+    combined_filter = match_status & range_time & more_than_one_failures & duration_between
+
+    if job_name:
+        ## Search for the exact job name
+        combined_filter &= Q("term", br_job_name__raw=job_name)
 
     # Setup aggregation
     test_agg = None
     if agg:
         test_agg = A('terms', field='br_tests_object.br_tests_failed_object.br_fullname.raw')
 
-    result = make_query(index, combined_filter, includes=DETAILED_JOB['includes'], excludes=DETAILED_JOB['excludes'], size=size, agg=test_agg)
-    return result
+    return make_query(index, combined_filter, includes=DETAILED_JOB['includes'], excludes=DETAILED_JOB['excludes'], size=size, agg=test_agg)
 
-def job_matching_failed_test(index, test_name, job_name=None, size=10, start_date="now-7d", end_date="now"):
+def job_matching_test(index, test_name, passed=True, failed=True, skipped=False, job_name=None, size=10, start_date="now-7d", end_date="now"):
     """
     Get information on a given test
     Args:
         index: Elastic search index to use
         test_name: Test name to look up, can include wildcards
+        passed: Set to true to include passed tests while searching
+        failed: Set to true to include failed tests while searching
+        skipped: Set to true to include skipped tests while searching
         job_name: Job name to evaluate
         size: [Optional] Number of results to return. Default is 10.
         start_date: [Optional] Specify start date (string in elastic search format). Default is 7 days ago.
-        end_data: [Optional] Specify end date (string in elastic search format). Default is now.
+        end_date: [Optional] Specify end date (string in elastic search format). Default is now.
     Returns:
         An array of dicts of the matching information
     """
-    # Query for test with a wildcard in it
-    match_testname = Q("wildcard", br_tests_object__br_tests_failed_object__br_fullname__raw=test_name)
     # Over the specified time
-    range_time = Q("range", **{"br_build_date_time": {"gte": start_date, "lt": end_date}})
+    combined_filter = Q("range", **{"br_build_date_time": {"gte": start_date, "lt": end_date}})
+    test_status_filter = None
 
-    combined_filter = match_testname & range_time
+    if passed:
+        match_testname_passed = Q("wildcard", br_tests_object__br_tests_passed_object__br_fullname__raw=test_name)
+        test_status_filter = match_testname_passed
+
+    if failed:
+        match_testname_failed = Q("wildcard", br_tests_object__br_tests_failed_object__br_fullname__raw=test_name)
+        test_status_filter = match_testname_failed if not test_status_filter else test_status_filter | match_testname_failed
+
+    if skipped:
+        match_testname_skipped = Q("wildcard", br_tests_object__br_tests_skipped_object__br_fullname__raw=test_name)
+        test_status_filter = match_testname_skipped if not test_status_filter else test_status_filter | match_testname_skipped
+
+    if test_status_filter:
+        combined_filter &= test_status_filter
 
     # Add job_name restriction of set
     if job_name:
         match_jobname = Q("term", br_job_name__raw=job_name)
-        combined_filter += match_jobname
+        combined_filter &= match_jobname
 
-    return make_query(index, combined_filter, includes=JOB_NAME_AND_KEY_ONLY['includes'], excludes=JOB_NAME_AND_KEY_ONLY['excludes'], size=size)
+    return make_query(index, combined_filter, includes=JOB_MINIMAL['includes'], excludes=JOB_MINIMAL['excludes'], size=size)
+
+def get_job(index, job_name, wildcard=False, size=10, start_date="now-7d", end_date="now"):
+    """
+    Get a list of all the builds recorded for a given job
+    Args:
+        index: Elastic search index to use
+        job_name: Name of job to search within
+        wildcard: When true, search with wildcard instead of exact match
+    Returns:
+        A list of the results from the job requested
+    """
+    search_type = "term"
+    if wildcard:
+        search_type = "wildcard"
+    match_job_name = Q(search_type, br_job_name__raw=job_name)
+    range_time = Q("range", **{"br_build_date_time": {"gte": start_date, "lt": end_date}})
+
+    combined_filters = match_job_name & range_time
+
+    return make_query(index, combined_filters, includes=DETAILED_JOB['includes'], excludes=DETAILED_JOB['excludes'], size=size)
