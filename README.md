@@ -8,9 +8,10 @@ Terms
 
 * **Build**: A single instance of a CI systems build/test execution. It should map to a single URL/URI/UID on a CI system.
 * **Build ID**: The ID associated with a given *build* (eg. *1078929*).
-* **Job**: A collection of tasks that describe how a *build* should be run. Running a *job* should result in a *build*. In Jenkins this maps to a job/project, in Quickbuild this maps to a configuration (eg. *cpp-reflection-tests*, *root/greenfield/prod/main*).
-* **Product**: Product that a given build is associated with (eg. *Michi*, *NavKit*)
-* **Test Case**:  Individual tests (sometimes aggregrations of closely related tests in C++) with result information
+* **Job**: A collection of tasks that describe how a *build* should be run. Running a *job* should result in a *build*. In Jenkins this maps to a job/project,
+in Quickbuild this maps to a configuration (eg. *cpp-tests*, *root/prod/main*).
+* **Product**: Name of product that a given build is associated with.
+* **Test Case**: Individual tests (sometimes aggregrations of closely related tests in C++) with result information
 * **Test Set**: An aggregated collection of test cases, i.e. a suite
 
 Test and Suite Separation
@@ -30,9 +31,9 @@ Schema conventions
 Due to the usage of nested types in the schema the Elasticsearch indexer needs to be informed about this. This is achieved by defining a so called [index
 template](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html).
 
-To avoid modifiying the [navpipeline index template](https://gitlab.flatns.net/automation/puppet-lhi/blob/master/templates/elasticsearch/templates/navpipeline_template.erb) whenever the schema is modified
-we decided to use [dynamic templates](https://www.elastic.co/guide/en/elasticsearch/reference/current/dynamic-templates.html) which map the types dynamically
-based on some rules which are the following (applied in this order):
+To avoid modifiying the index template whenever the schema is modified we decided to use
+[dynamic templates](https://www.elastic.co/guide/en/elasticsearch/reference/current/dynamic-templates.html) to map the types dynamically
+based on the following rules (applied in this order):
 
 * Each field has to be prefixed with `br_`
 * Fields that should be not available for full text search (*keyword*) are suffixed with `_key` and will be mapped to type *keyword*.

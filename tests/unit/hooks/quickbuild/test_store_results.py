@@ -6,9 +6,9 @@ import datetime
 from unittest.mock import MagicMock
 import pytest
 
+from qb_results_exporter.qb_results_exporter import QBResultsExporter
 import elastic.hooks.quickbuild.store_results as store_results
 from elastic.schema.build_results import BuildResults, Test
-from qb_results_exporter.qb_results_exporter import QBResultsExporter
 
 
 BUILD_ID = "123456"

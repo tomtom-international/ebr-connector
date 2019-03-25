@@ -14,6 +14,7 @@ setup(
     author_email="eugene.davis@tomtom.com",
     description="Library that defines the schema used for pushing test results into Elasticsearch",
     long_description=readme,
+    long_description_content_type='text/markdown',
     url=("https://***REMOVED***/projects/nav/repos/"
          "ebr-connector/browse"),
     packages=find_packages(),

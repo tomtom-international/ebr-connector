@@ -1,2 +1,4 @@
-@Library(value = "jsl@master") _
-pythonPipeline pypiCredentials: "artifactory-pypi", sshAgentUser: "ssh_svc_ci"
+pythonSetupPyPipeline \
+  pypiRepo: "https://***REMOVED***/artifactory/api/pypi/pypi-local", \
+  pypiCredentials: "artifactory-pypi", \
+  sshAgentUser: "ssh_svc_ci"
