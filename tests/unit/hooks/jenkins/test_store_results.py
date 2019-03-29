@@ -28,6 +28,7 @@ def test_store_tests_returns_valid_build_results_document(
     mock_args.buildurl = "abc"
     mock_args.buildid = "123"
     mock_args.platform = "platform"
+    mock_args.productversion = "1234abc"
 
     ## Mock the JSON response from Jenkins REST APIs
     mock_get_json_job_details.side_effect = [
@@ -70,6 +71,7 @@ def test_store_tests_should_return_empty_results_if_json_decoder_exception_throw
     mock_args.buildurl = "abc"
     mock_args.buildid = "123"
     mock_args.platform = "platform"
+    mock_args.productversion = "1234abc"
 
     ## Mock the JSON response from Jenkins REST APIs
     mock_get_json_job_details.side_effect = [

@@ -191,6 +191,7 @@ class BuildResults(_BuildResultsMetaDocument):
         br_status_key: Status of the build (eg. if one test failed the overall build status should as well be failed)
         br_tests_object: A container for storing failed/passed/skipped tests, total summary, etc. See :class:`elastic.schema.Tests` for more details
         br_version_key: Version of the BuildResults schema
+        br_product_version_key: Version of the product (eg. Commit hash or semantic version)
     """
     br_job_name = Text(fields={'raw': Keyword()})
     br_job_url_key = Keyword()
@@ -203,6 +204,7 @@ class BuildResults(_BuildResultsMetaDocument):
     br_status_key = Keyword()
     br_tests_object = Object(Tests)
     br_version_key = Keyword()
+    br_product_version_key = Keyword()
 
     class BuildStatus(Enum):
         """
@@ -243,13 +245,13 @@ class BuildResults(_BuildResultsMetaDocument):
 
 
     @staticmethod
-    def create(job_name, job_link, build_date_time, build_id, platform, product=None, job_info=None):
+    def create(job_name, job_link, build_date_time, build_id, platform, product=None, job_info=None, product_version=None):
         """
         Creates an immutable instance of :class:`elastic.schema.BuildResults`.
         """
         return BuildResults(br_job_name=job_name, br_job_url_key=job_link, br_build_date_time=build_date_time, br_build_id_key=build_id,
                             br_platform=platform, br_product=product, br_job_info=job_info, br_status_key=None,
-                            br_tests_object={}, br_version_key=elastic.__version__)
+                            br_tests_object={}, br_version_key=elastic.__version__, br_product_version_key=product_version)
 
     def store_tests(self, retrieve_function, *args, **kwargs):
         """

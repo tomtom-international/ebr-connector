@@ -167,6 +167,9 @@ class MockedBuildResults():
     """
     Mocked BuildResults object.
     """
+
+    # pylint: disable=too-many-instance-attributes
+
     instances = []
 
     def __init__(self):
@@ -177,9 +180,10 @@ class MockedBuildResults():
         self.platform = None
         self.product = None
         self.job_info = None
+        self.product_version = None
 
     @staticmethod
-    def create(job_name, job_link, build_date_time, build_id, platform, product=None, job_info=None):
+    def create(job_name, job_link, build_date_time, build_id, platform, product=None, job_info=None, product_version=None):
         """Create an instance.
         """
         quick_build_results = MockedBuildResults()
@@ -191,6 +195,7 @@ class MockedBuildResults():
         quick_build_results.platform = platform
         quick_build_results.product = product
         quick_build_results.job_info = job_info
+        quick_build_results.product_version = product_version
 
         MockedBuildResults.instances.append(quick_build_results)
 

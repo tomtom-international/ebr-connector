@@ -228,7 +228,7 @@ def main(args=None, qb_results_exporter_class=QBResultsExporter,
 
 
     quick_build_results = build_results_class.create(platform=args.platform, job_name=args.jobname, build_id=args.buildid, build_date_time=build_date,
-                                                     job_link=build_url, product=args.product, job_info=build_version)
+                                                     job_link=build_url, product=args.product, job_info=build_version, product_version=args.productversion)
     quick_build_results.store_tests(quickbuild_xml_decode, report_sets=report_sets, build_info=build_info, qb_results_exporter=qb_results_exporter, logger=logger)
     quick_build_results.store_status(get_status, build_info=build_info)
     quick_build_results.save_logcollect(args.logcollectaddr, args.logcollectport, cafile=args.cacert, clientcert=args.clientcert,

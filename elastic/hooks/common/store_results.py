@@ -60,7 +60,8 @@ def assemble_build(args, retrieve_function, retrieve_args):
     build_job_url = build_info["url"]
 
     build_results = BuildResults.create(job_name=job_name, build_id=args.buildid, build_date_time=build_date_time,
-                                        job_link=build_job_url, platform=args.platform)
+                                        job_link=build_job_url, platform=args.platform,
+                                        product_version=args.productversion)
     build_results.store_tests(retrieve_function, *retrieve_args)
     build_results.store_status(status_args, build_info["result"])
 
