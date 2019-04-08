@@ -22,7 +22,6 @@ setup(
     install_requires=[
         "elasticsearch-dsl>=6.2.1,<7",
         "requests>=2.18.4,<3",
-        "qb_results_exporter==0.0.3",
         "junitparser>=1.2.2,<2"
     ],
     setup_requires=["pytest-runner>=4.2,<5"],
@@ -35,13 +34,9 @@ setup(
     entry_points="""
 [console_scripts]
 es-generate-index-template = elastic.index.generate_template:main
-es-store-quickbuild-results = elastic.hooks.quickbuild.store_results:main
 es-store-jenkins-results = elastic.hooks.jenkins.store_results:main
 es-store-xunit-results = elastic.hooks.xunit.store_results:main
 """,
-    dependency_links=[
-        "https://***REMOVED***/artifactory/api/pypi/pypi-virtual/simple/qb-results-exporter"
-    ],
     classifiers=[
         "Programming Language :: Python :: 3",
         "Intended Audience :: Developers",
