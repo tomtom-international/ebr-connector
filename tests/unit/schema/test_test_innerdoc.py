@@ -47,7 +47,7 @@ def test_default_ctor():
 def test_create_factory_method():
     """Test create factory method
     """
-    test = Test.create(suite="my_suitename", classname="***REMOVED***",
+    test = Test.create(suite="my_suitename", classname="my_classname", test="my_testname",
                        result="SUCCESS", message="my_message", duration=100.12, reportset="my_unittests")
     assert test.br_suite == "my_suitename"
     assert test.br_classname == "my_classname"

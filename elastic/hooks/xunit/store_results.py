@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Library pushing XUnit results to logstash. Intended as a baseline for any CI systems that do not provide XUnit file ingestion that can be used instead.
+Library pushing XUnit results to Elasticsearch. Intended as a baseline for any CI systems that do not provide XUnit file ingestion that can be used instead.
 
 REMARK:
 This hook is not used anywhere in production and serves only as an example. Due to that no unit tests exist for this module.
@@ -89,7 +89,7 @@ def add_options(parser):
 
 def main():
     """
-    Provides a CLI interface that takes in XUnit files and returns the results to logstash
+    Provides a CLI interface that takes in XUnit files and returns the results to Elasticsearch
     """
     args = parse_args("Send results of a Jenkins build to a LogCollector instance over TCP.", add_options)
 

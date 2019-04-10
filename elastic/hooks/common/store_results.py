@@ -44,7 +44,7 @@ def status_args(build_status):
 
 def assemble_build(args, retrieve_function, retrieve_args):
     """
-    Provides a CLI interface to send build results to logstash
+    Provides a CLI interface to send build results to Elasticsearch
     Requires a callback function for retrieving tests, but gets the status from command line arguments.
 
     Args:
@@ -75,12 +75,17 @@ def normalize_string(value):
 
     Some examples how such test case names look like:
 
-      > ShapePointsTest/0 (lat = 51.8983, lon = 19.5026)
-      > GatewayTwinLinksQuantityTest/0 (16-byte object <60-A5 DE-03 00-00 00-00 02-00 02-00 00-00 00-00>)
-      > TestPassageRestrictions/0 (TestData: testPoint(44.6553, 7.38968)   Handle:               0\n   [...]
+    .. code-block:: none
+
+        ShapePointsTest/0 (lat = 51.8983, lon = 19.5026)
+        GatewayTwinLinksQuantityTest/0 (16-byte object <60-A5 DE-03 00-00 00-00 02-00 02-00 00-00 00-00>)
+        TestPassageRestrictions/0 (TestData: testPoint(44.6553, 7.38968)   Handle:               0\n
 
     We do not allow this and clean this up by removing everything after ` (`) and store only the real test case
     name and the index of the parameterized test.
+
+    Args:
+        value: String to be normalized
     """
     if value is None:
         return ""

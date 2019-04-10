@@ -1,2 +1,8 @@
-"""Version of the ebr-connector package"""
-__version__ = "1.0.0-dev"
+# -*- coding: utf-8 -*-
+
+"""Top-level package for ebr-connector."""
+
+__project__ = "ebr-connector"
+__author__ = "Eugene Davis"
+__email__ = "eugene.davis@tomtom.com"
+__version__ = "0.1.0-dev"

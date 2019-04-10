@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Serialization library to/from logstash (ElasticSearch) for build results.
+Serialization library to/from ElasticSearch for build results.
 
 The classes :class:`elastic.schema.Test`, :class:`elastic.schema.TestSuite` and :class:`elastic.schema.BuildResults`
 expose factory methods that create instances of these types.

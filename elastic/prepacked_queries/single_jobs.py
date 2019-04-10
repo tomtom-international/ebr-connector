@@ -9,6 +9,7 @@ from elastic.prepacked_queries.query import make_query, DETAILED_JOB
 def get_build(index, job_name, build_id, wildcard=False):
     """
     Get result of a single build from the elastic search database by its ID and the name of the job it belongs to.
+
     Args:
         index: Elastic search index to use
         job_name: Name of job to search within

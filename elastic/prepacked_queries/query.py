@@ -39,6 +39,7 @@ JOB_MINIMAL = {
 def make_query(index, combined_filter, includes, excludes, agg=None, size=1):
     """
     Simplifies the execution and usage of a typical query, including cleaning up the results.
+
     Args:
         index: index to search on
         combined_filter: combined set of filters to run the query with

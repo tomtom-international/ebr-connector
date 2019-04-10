@@ -9,6 +9,7 @@ from elastic.prepacked_queries.query import make_query, DETAILED_JOB, JOB_MINIMA
 def successful_jobs(index, job_name_regex, size=10, start_date="now-7d", end_date="now"):
     """
     Get the results of jobs matching the job name regex provided.
+
     Args:
         index: Elastic search index to use
         job_name_regex: Regex for elastic search to match against
@@ -33,6 +34,7 @@ def successful_jobs(index, job_name_regex, size=10, start_date="now-7d", end_dat
 def failed_tests(index, job_name, size=10, fail_count=5, duration_low=162.38, duration_high=320, start_date="now-7d", end_date="now", agg=False): #pylint: disable=too-many-locals
     """
     Get jobs with failed tests matching certain parameters
+
     Args:
         index: Elastic search index to use
         job_name: Job name to evaluate
@@ -73,6 +75,7 @@ def failed_tests(index, job_name, size=10, fail_count=5, duration_low=162.38, du
 def job_matching_test(index, test_name, passed=True, failed=True, skipped=False, job_name=None, size=10, start_date="now-7d", end_date="now"):
     """
     Get information on a given test
+
     Args:
         index: Elastic search index to use
         test_name: Test name to look up, can include wildcards
@@ -115,6 +118,7 @@ def job_matching_test(index, test_name, passed=True, failed=True, skipped=False,
 def get_job(index, job_name, wildcard=False, size=10, start_date="now-7d", end_date="now"):
     """
     Get a list of all the builds recorded for a given job
+
     Args:
         index: Elastic search index to use
         job_name: Name of job to search within

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Library for exporting Jenkins build results (including tests) to logstash
+Library for exporting Jenkins build results (including tests) to Elasticsearch
 """
 
 import sys
@@ -79,7 +79,7 @@ def store(args):
 
 def main():
     """
-    Provides a CLI interface callable on Jenkins to send build results to logstash
+    Provides a CLI interface callable on Jenkins to send build results to Elasticsearch.
     """
     args = parse_args("Send results of a Jenkins build to a LogCollector instance over TCP.")
     store(args)

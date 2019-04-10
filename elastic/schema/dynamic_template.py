@@ -1,5 +1,5 @@
 """The dynamic template configuration used when creating index templates.
-We prefer dynamic templates over fixed ones to avoid updating the logstash elasticsearch cluster.
+We prefer dynamic templates over fixed ones to avoid updating the Elasticsearch cluster.
 """
 
 DYNAMIC_TEMPLATES = [
