@@ -51,7 +51,7 @@ setup(
     include_package_data=True,
     keywords="ebr_connector",
     name=ebr_connector.__project__,
-    packages=find_packages(include=["ebr_connector"]),
+    packages=find_packages(),
     setup_requires=setup_requirements,
     test_suite="tests",
     tests_require=test_requirements,
