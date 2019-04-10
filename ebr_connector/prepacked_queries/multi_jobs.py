@@ -1,10 +1,14 @@
 """
 A collection of queries that provide multiple results as an array of dicts
 """
+
+import warnings
 from elasticsearch_dsl import Q, A
 
 from ebr_connector.schema.build_results import BuildResults
 from ebr_connector.prepacked_queries.query import make_query, DETAILED_JOB, JOB_MINIMAL
+
+warnings.warn("prepacked_queries: the multi_jobs module is deprecated", DeprecationWarning, stacklevel=2)
 
 def successful_jobs(index, job_name_regex, size=10, start_date="now-7d", end_date="now"):
     """

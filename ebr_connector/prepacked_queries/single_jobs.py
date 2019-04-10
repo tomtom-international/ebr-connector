@@ -2,9 +2,12 @@
 Collection of queries that return a single result (in dictionary form)
 """
 
+import warnings
 from elasticsearch_dsl import Q
 
 from ebr_connector.prepacked_queries.query import make_query, DETAILED_JOB
+
+warnings.warn("prepacked_queries: the single_jobs module is deprecated", DeprecationWarning, stacklevel=2)
 
 def get_build(index, job_name, build_id, wildcard=False):
     """

@@ -1,7 +1,11 @@
 """
 Module with basic wrapper for making a query to elastic search, as well as default field lists for including/excluding in results
 """
+
+import warnings
 from ebr_connector.schema.build_results import BuildResults
+
+warnings.warn("prepacked_queries: the query module is deprecated", DeprecationWarning, stacklevel=2)
 
 # Provides common job details, without all passing and skipped tests
 DETAILED_JOB = {
