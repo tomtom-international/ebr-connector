@@ -11,8 +11,8 @@ from elasticsearch.helpers import bulk
 from elasticsearch.helpers.test import get_test_client
 import docker
 
-from elastic.schema.build_results import BuildResults
-from elastic.index.generate_template import generate_template
+from ebr_connector.schema.build_results import BuildResults
+from ebr_connector.index.generate_template import generate_template
 from tests import get_test_data_for_failed_build, get_test_data_for_successful_build
 
 

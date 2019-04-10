@@ -10,7 +10,7 @@ import json
 import sys
 
 from elasticsearch_dsl import Index
-from elastic.schema.build_results import _BuildResultsMetaDocument
+from ebr_connector.schema.build_results import _BuildResultsMetaDocument
 
 
 def generate_template(index_name):

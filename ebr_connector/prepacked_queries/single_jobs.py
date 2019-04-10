@@ -4,7 +4,7 @@ Collection of queries that return a single result (in dictionary form)
 
 from elasticsearch_dsl import Q
 
-from elastic.prepacked_queries.query import make_query, DETAILED_JOB
+from ebr_connector.prepacked_queries.query import make_query, DETAILED_JOB
 
 def get_build(index, job_name, build_id, wildcard=False):
     """

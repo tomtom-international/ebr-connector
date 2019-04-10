@@ -5,13 +5,13 @@ Tests for the Jenkins hook.
 from unittest.mock import MagicMock, patch
 from json.decoder import JSONDecodeError
 
-from elastic.hooks.jenkins.store_results import store
+from ebr_connector.hooks.jenkins.store_results import store
 from . import get_jenkins_test_report_response
 
 
 @patch("socket.socket")
 @patch("ssl.create_default_context")
-@patch("elastic.hooks.common.store_results.get_json_job_details")
+@patch("ebr_connector.hooks.common.store_results.get_json_job_details")
 def test_store_tests_returns_valid_build_results_document(
         mock_get_json_job_details,
         mock_ssl_create_default_context,
@@ -54,7 +54,7 @@ def test_store_tests_returns_valid_build_results_document(
 
 @patch("socket.socket")
 @patch("ssl.create_default_context")
-@patch("elastic.hooks.common.store_results.get_json_job_details")
+@patch("ebr_connector.hooks.common.store_results.get_json_job_details")
 def test_store_tests_should_return_empty_results_if_json_decoder_exception_thrown(
         mock_get_json_job_details,
         mock_ssl_create_default_context,

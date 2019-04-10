@@ -11,7 +11,7 @@ import json
 import sys
 import urllib
 from elasticsearch_dsl import connections
-from elastic.prepacked_queries.multi_jobs import successful_jobs, failed_tests
+from ebr_connector.prepacked_queries.multi_jobs import successful_jobs, failed_tests
 
 
 def main():

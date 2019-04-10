@@ -9,7 +9,7 @@ if "%SPHINXBUILD%" == "" (
 )
 set SOURCEDIR=.
 set BUILDDIR=_build
-set SPHINXPROJ=elastic
+set SPHINXPROJ=ebr_connector
 
 if "%1" == "" goto help
 

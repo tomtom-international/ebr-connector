@@ -4,7 +4,7 @@ Tests for the Test innerdoc class.
 
 import pytest
 
-from elastic.schema.build_results import Test
+from ebr_connector.schema.build_results import Test
 
 
 @pytest.mark.parametrize("test_input,expected", [
@@ -23,7 +23,7 @@ from elastic.schema.build_results import Test
 ])
 def test_create_valid_test_result(test_input, expected):
     """Test various valid test result strings that can be converted
-    to proper :class:`elastic.schema.Test.Result` objects.
+    to proper :class:`ebr_connector.schema.Test.Result` objects.
     """
     assert Test.Result.create(test_input) == expected
     assert Test.Result.create(test_input.lower()) == expected

@@ -3,7 +3,7 @@
 """
 Serialization library to/from ElasticSearch for build results.
 
-The classes :class:`elastic.schema.Test`, :class:`elastic.schema.TestSuite` and :class:`elastic.schema.BuildResults`
+The classes :class:`ebr_connector.schema.Test`, :class:`ebr_connector.schema.TestSuite` and :class:`ebr_connector.schema.BuildResults`
 expose factory methods that create instances of these types.
 
 We cannot use Python constructors (`__init__`) since the underlying elasticsearch_dsl components make heavily usage
@@ -22,8 +22,8 @@ import warnings
 from enum import Enum
 from elasticsearch_dsl import Document, Text, InnerDoc, Float, Integer, Nested, Date, Keyword, MetaField, Object
 
-import elastic
-from elastic.schema.dynamic_template import DYNAMIC_TEMPLATES
+import ebr_connector
+from ebr_connector.schema.dynamic_template import DYNAMIC_TEMPLATES
 
 
 class Test(InnerDoc):
@@ -59,7 +59,7 @@ class Test(InnerDoc):
 
         @staticmethod
         def create(result_str):
-            """Converts a test result string into a :class:`elastic.schema.Test.Result` enum.
+            """Converts a test result string into a :class:`ebr_connector.schema.Test.Result` enum.
             """
             upper_result_str = result_str.upper()
             if upper_result_str in ["PASS", "PASSED", "SUCCESS", "FIXED"]:
@@ -73,7 +73,7 @@ class Test(InnerDoc):
     @staticmethod
     def create(suite, classname, test, result, message, duration, reportset=None):
         """
-        Factory method for creating a new instance of :class:`elastic.schema.Test`.
+        Factory method for creating a new instance of :class:`ebr_connector.schema.Test`.
         """
 
         return Test(br_suite=suite, br_classname=classname, br_test=test, br_result=result, br_message=message,
@@ -104,7 +104,7 @@ class TestSuite(InnerDoc):
     @staticmethod
     def create(name, failures_count, skipped_count, passed_count, total_count, duration, package=None):
         """
-        Factory method for creating a new instance of :class:`elastic.schema.TestSuite`.
+        Factory method for creating a new instance of :class:`ebr_connector.schema.TestSuite`.
         """
         return TestSuite(br_name=name, br_failures_count=failures_count, br_skipped_count=skipped_count,
                          br_passed_count=passed_count, br_total_count=total_count, br_duration=duration, br_package=package)
@@ -128,7 +128,7 @@ class TestSummary(InnerDoc):
     @staticmethod
     def create(total_passed_count, total_failed_count, total_skipped_count, total_count):
         """
-        Factory method for creating a new instance of :class:`elastic.schema.TestSummary`.
+        Factory method for creating a new instance of :class:`ebr_connector.schema.TestSummary`.
         """
         return TestSummary(br_total_passed_count=total_passed_count, br_total_failed_count=total_failed_count,
                            br_total_skipped_count=total_skipped_count, br_total_count=total_count)
@@ -154,7 +154,7 @@ class Tests(InnerDoc):
     @staticmethod
     def create(suites, tests_passed, tests_failed, tests_skipped, summary):
         """
-        Factory method for creating a new instance of :class:`elastic.schema.Tests`.
+        Factory method for creating a new instance of :class:`ebr_connector.schema.Tests`.
         """
         return Tests(br_suites_object=suites, br_tests_passed_object=tests_passed, br_tests_failed_object=tests_failed,
                      br_tests_skipped_object=tests_skipped, br_summary_object=summary)
@@ -169,9 +169,9 @@ class _BuildResultsMetaDocument(Document):
         """Stores the plain template version in the generated index template. We cannot use the builtin `version` field
         since it is of type `integer` and we use semantic versioning.
         This data is for pure information purposes and won't be used at all by Elasticsearch.
-        See as well https://www.elastic.co/guide/en/elasticsearch/reference/current/mapping-meta-field.html#mapping-meta-field.
+        See as well https://www.ebr_connector.co/guide/en/elasticsearch/reference/current/mapping-meta-field.html#mapping-meta-field.
         """
-        meta = MetaField(template_version=elastic.__version__)
+        meta = MetaField(template_version=ebr_connector.__version__)
         dynamic_templates = MetaField(DYNAMIC_TEMPLATES)
 
 
@@ -189,7 +189,7 @@ class BuildResults(_BuildResultsMetaDocument):
         br_platform: Platform of the build
         br_product: Product the build is associated with
         br_status_key: Status of the build (eg. if one test failed the overall build status should as well be failed)
-        br_tests_object: A container for storing failed/passed/skipped tests, total summary, etc. See :class:`elastic.schema.Tests` for more details
+        br_tests_object: A container for storing failed/passed/skipped tests, total summary, etc. See :class:`ebr_connector.schema.Tests` for more details
         br_version_key: Version of the BuildResults schema
         br_product_version_key: Version of the product (eg. Commit hash or semantic version)
     """
@@ -222,7 +222,7 @@ class BuildResults(_BuildResultsMetaDocument):
         @staticmethod
         def create(build_status_str):
             """
-            Converts a build status string into a :class:`elastic.schema.BuildResults.BuildStatus` enum.
+            Converts a build status string into a :class:`ebr_connector.schema.BuildResults.BuildStatus` enum.
             """
             upper_build_status_str = build_status_str.upper()
             if upper_build_status_str in ["SUCCESS", "SUCCESSFUL"]:
@@ -247,15 +247,15 @@ class BuildResults(_BuildResultsMetaDocument):
     @staticmethod
     def create(job_name, job_link, build_date_time, build_id, platform, product=None, job_info=None, product_version=None):
         """
-        Creates an immutable instance of :class:`elastic.schema.BuildResults`.
+        Creates an immutable instance of :class:`ebr_connector.schema.BuildResults`.
         """
         return BuildResults(br_job_name=job_name, br_job_url_key=job_link, br_build_date_time=build_date_time, br_build_id_key=build_id,
                             br_platform=platform, br_product=product, br_job_info=job_info, br_status_key=None,
-                            br_tests_object={}, br_version_key=elastic.__version__, br_product_version_key=product_version)
+                            br_tests_object={}, br_version_key=ebr_connector.__version__, br_product_version_key=product_version)
 
     def store_tests(self, retrieve_function, *args, **kwargs):
         """
-        Retrieves the test results of a build and adds them to the :class:`elastic.schema.BuildResults` object
+        Retrieves the test results of a build and adds them to the :class:`ebr_connector.schema.BuildResults` object
 
         Args:
             retrieve_function: Callback function which provides test and suite data in dictionaries
@@ -291,7 +291,7 @@ class BuildResults(_BuildResultsMetaDocument):
 
     def store_status(self, status_function, *args, **kwargs):
         """
-        Retrieves the status of a build and adds it to the :class:`elastic.schema.BuildResults` object
+        Retrieves the status of a build and adds it to the :class:`ebr_connector.schema.BuildResults` object
 
         Args:
             status_function: Callback function which provides status information
@@ -304,7 +304,7 @@ class BuildResults(_BuildResultsMetaDocument):
 
     def save_logcollect(self, dest, port, cafile=None, clientcert=None, clientkey=None, keypass="", timeout=10):
         """
-        Saves the :class:`elastic.schema.BuildResults` object to a LogCollector instance.
+        Saves the :class:`ebr_connector.schema.BuildResults` object to a LogCollector instance.
 
         Args:
             dest: URL/IP of the LogCollector server

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-# elastic documentation build configuration file, created by
+# ebr_connector documentation build configuration file, created by
 # sphinx-quickstart on Fri Jun  9 13:47:02 2017.
 #
 # This file is execfile()d with the current directory set to its
@@ -22,7 +22,7 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('..'))
 
-import elastic
+import ebr_connector
 
 # -- General configuration ---------------------------------------------
 
@@ -46,16 +46,16 @@ source_suffix = ['.rst', '.md']
 master_doc = 'index'
 
 # General information about the project.
-project = elastic.__project__
+project = ebr_connector.__project__
 copyright = u"2019, TomTom"
-author = elastic.__author__
+author = ebr_connector.__author__
 
 # The version info for the project you're documenting, acts as replacement
 # for |version| and |release|, also used in various other places throughout
 # the built documents.
 #
 # The short X.Y version.
-version = elastic.__version__
+version = ebr_connector.__version__
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -100,7 +100,7 @@ html_static_path = []
 # -- Options for HTMLHelp output ---------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'elasticdoc'
+htmlhelp_basename = 'ebr_connectordoc'
 
 
 # -- Options for LaTeX output ------------------------------------------

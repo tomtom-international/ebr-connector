@@ -2,7 +2,7 @@
 Tests for the examples.
 """
 
-from elastic.examples.query import query_failed_tests, query_for_successful_job
+from ebr_connector.examples.query import query_failed_tests, query_for_successful_job
 from .conftest import get_index_name
 
 

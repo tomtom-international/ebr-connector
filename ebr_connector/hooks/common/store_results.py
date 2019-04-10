@@ -9,8 +9,8 @@ from datetime import datetime
 import requests
 
 
-from elastic.schema.build_results import BuildResults
-from elastic.hooks.common.args import add_common_args, add_build_args, validate_args
+from ebr_connector.schema.build_results import BuildResults
+from ebr_connector.hooks.common.args import add_common_args, add_build_args, validate_args
 
 
 def parse_args(description, custom_args=None):
@@ -34,7 +34,7 @@ def parse_args(description, custom_args=None):
 
 def status_args(build_status):
     """
-    Callback function to provide the build status from parsed commandline args to :class:`elastic.schema.BuildResults`
+    Callback function to provide the build status from parsed commandline args to :class:`ebr_connector.schema.BuildResults`
 
     Args:
         args: argparse'd arguments that include the build status

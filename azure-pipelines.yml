@@ -1,4 +1,4 @@
-# Azure pipeline to build, test and deploy the elastic package.
+# Azure pipeline to build, test and deploy the ebr_connector package.
 
 trigger:
 - master

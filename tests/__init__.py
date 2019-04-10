@@ -3,7 +3,7 @@
 """Module providing some test data.
 """
 
-from elastic.schema.build_results import Test
+from ebr_connector.schema.build_results import Test
 
 
 def get_test_data_for_successful_build():
