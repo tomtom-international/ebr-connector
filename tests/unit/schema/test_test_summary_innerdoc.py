@@ -2,7 +2,7 @@
 Tests for the TestSummary innerdoc class.
 """
 
-from elastic.schema.build_results import TestSummary
+from ebr_connector.schema.build_results import TestSummary
 
 def test_default_ctor():
     """Test default constructor

@@ -3,7 +3,7 @@ Tests for the TestSuite innerdoc class.
 """
 
 
-from elastic.schema.build_results import TestSuite
+from ebr_connector.schema.build_results import TestSuite
 
 
 def test_default_ctor():

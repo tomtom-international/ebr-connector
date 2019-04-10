@@ -9,8 +9,8 @@ import json
 import ssl
 import pytest
 
-import elastic
-from elastic.schema.build_results import BuildResults
+import ebr_connector
+from ebr_connector.schema.build_results import BuildResults
 from tests import get_test_data_for_failed_build
 
 
@@ -38,7 +38,7 @@ from tests import get_test_data_for_failed_build
 ])
 def test_create_valid_status(test_input, expected):
     """Test various valid build status strings that can be converted
-    to proper :class:`elastic.schema.BuildResults` objects.
+    to proper :class:`ebr_connector.schema.BuildResults` objects.
     """
     assert BuildResults.BuildStatus.create(test_input) == expected
     assert BuildResults.BuildStatus.create(test_input.lower()) == expected
@@ -73,7 +73,7 @@ def test_create_factory_method():
     assert build_results.br_build_id_key == "1234"
     assert build_results.br_platform == "Linux-x86_64"
     assert build_results.br_product == "MyProduct"
-    assert build_results.br_version_key == elastic.__version__
+    assert build_results.br_version_key == ebr_connector.__version__
 
     assert build_results.to_dict() == {
         "br_build_date_time": str(date_time),
@@ -82,7 +82,7 @@ def test_create_factory_method():
         "br_job_url_key": "my_joburl",
         "br_platform": "Linux-x86_64",
         "br_product": "MyProduct",
-        "br_version_key": elastic.__version__
+        "br_version_key": ebr_connector.__version__
         }
 
 

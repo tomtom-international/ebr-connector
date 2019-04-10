@@ -8,14 +8,14 @@ Library for exporting Jenkins build results (including tests) to Elasticsearch
 import sys
 from json.decoder import JSONDecodeError
 
-import elastic
-from elastic.hooks.common.store_results import assemble_build, parse_args, normalize_string
-from elastic.schema.build_results import Test
+import ebr_connector
+from ebr_connector.hooks.common.store_results import assemble_build, parse_args, normalize_string
+from ebr_connector.schema.build_results import Test
 
 
 def jenkins_json_decode(url):
     """
-    Transforms the test results stored by Jenkins into the :class:`elastic.schema.BuildResults` format
+    Transforms the test results stored by Jenkins into the :class:`ebr_connector.schema.BuildResults` format
 
     Args:
         url: URL to Jenkins build to record
@@ -25,7 +25,7 @@ def jenkins_json_decode(url):
         'suites': []
     }
     try:
-        json_results = elastic.hooks.common.store_results.get_json_job_details(url)
+        json_results = ebr_connector.hooks.common.store_results.get_json_job_details(url)
     except JSONDecodeError:
         print("Received error when parsing test results, no results will be included in build.")
         return results

@@ -3,7 +3,7 @@ Tests for the Tests innerdoc class.
 """
 
 from unittest.mock import Mock
-from elastic.schema.build_results import Tests
+from ebr_connector.schema.build_results import Tests
 
 def test_default_ctor():
     """Test default constructor

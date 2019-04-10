@@ -4,4 +4,4 @@ Usage
 
 To use ebr-connector in a project::
 
-    import elastic
+    import ebr_connector

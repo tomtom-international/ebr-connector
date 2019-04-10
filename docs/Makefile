@@ -4,7 +4,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = python -msphinx
-SPHINXPROJ    = elastic
+SPHINXPROJ    = ebr_connector
 SOURCEDIR     = .
 BUILDDIR      = _build
 

@@ -1,7 +1,7 @@
 """
 Module with basic wrapper for making a query to elastic search, as well as default field lists for including/excluding in results
 """
-from elastic.schema.build_results import BuildResults
+from ebr_connector.schema.build_results import BuildResults
 
 # Provides common job details, without all passing and skipped tests
 DETAILED_JOB = {

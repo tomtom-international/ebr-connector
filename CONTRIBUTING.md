@@ -97,7 +97,7 @@ Before you submit a pull request, check that it meets these guidelines:
 
 To run a subset of tests:
 
-    $ py.test tests/test_elastic.py
+    $ py.test tests/unit/schema/test_build_results_document.py
 
 ## Deploying
 
