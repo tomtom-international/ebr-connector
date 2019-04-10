@@ -45,7 +45,7 @@ setup(
         ],
     },
     install_requires=requirements,
-    license="Apache Software License 2.0",
+    license="Apache License 2.0",
     long_description=readme + "\n\n" + changelog,
     long_description_content_type="text/markdown",
     include_package_data=True,
