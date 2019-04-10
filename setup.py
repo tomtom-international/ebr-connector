@@ -19,7 +19,7 @@ with open("README.md") as readme_file:
 with open("CHANGELOG.md") as changelog_file:
     changelog = changelog_file.read()
 
-requirements = ["elasticsearch-dsl>=6.2.1,<7", "requests>=2.18.4,<3", "junitparser>=1.2.2,<2"]
+requirements = ["elasticsearch-dsl>=6.2.1,<7", "requests>=2.18.4,<3"]
 
 setup_requirements = ["pytest-runner"]
 
