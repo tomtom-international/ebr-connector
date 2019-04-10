@@ -19,7 +19,11 @@ with open("README.md") as readme_file:
 with open("CHANGELOG.md") as changelog_file:
     changelog = changelog_file.read()
 
-requirements = ["elasticsearch-dsl>=6.2.1,<7", "requests>=2.18.4,<3"]
+requirements = [
+    "elasticsearch-dsl>=6.2.1,<7",
+    "requests>=2.18.4,<3",
+    "junitparser>=1.2.2,<2",
+]
 
 setup_requirements = ["pytest-runner"]
 
@@ -41,8 +45,9 @@ setup(
     entry_points={
         "console_scripts": [
             "ebr-generate-index-template = elastic.index.generate_template:main",
-            "ebr-store-jenkins-results = elastic.hooks.jenkins.store_results:main"
-        ],
+            "ebr-store-jenkins-results = elastic.hooks.jenkins.store_results:main",
+            "ebr-store-xunit-results = elastic.hooks.xunit.store_results:main",
+        ]
     },
     install_requires=requirements,
     license="Apache License 2.0",
