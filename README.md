@@ -1,8 +1,8 @@
 # ebr-connector
 
-[![Azure DevOps builds](https://img.shields.io/azure-devops/build/tomtomweb/GitHub-TomTom-International/18.svg)](https://dev.azure.com/tomtomweb/GitHub-TomTom-International/_build/latest?definitionId=18&branchName=master)
-[![Azure DevOps tests](https://img.shields.io/azure-devops/tests/tomtomweb/GitHub-TomTom-International/18.svg)](https://dev.azure.com/tomtomweb/GitHub-TomTom-International/_build/latest?definitionId=18&branchName=master)
-[![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/tomtomweb/GitHub-TomTom-International/18.svg)](https://dev.azure.com/tomtomweb/GitHub-TomTom-International/_build/latest?definitionId=18&branchName=master)
+[![Azure DevOps builds](https://img.shields.io/azure-devops/build/tomtomweb/GitHub-TomTom-International/19.svg)](https://dev.azure.com/tomtomweb/GitHub-TomTom-International/_build/latest?definitionId=19&branchName=master)
+[![Azure DevOps tests](https://img.shields.io/azure-devops/tests/tomtomweb/GitHub-TomTom-International/19.svg)](https://dev.azure.com/tomtomweb/GitHub-TomTom-International/_build/latest?definitionId=19&branchName=master)
+[![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/tomtomweb/GitHub-TomTom-International/19.svg)](https://dev.azure.com/tomtomweb/GitHub-TomTom-International/_build/latest?definitionId=19&branchName=master)
 [![PyPI - Version](https://img.shields.io/pypi/v/ebr-connector.svg)](https://pypi.org/project/ebr-connector/)
 [![PyPI - License](https://img.shields.io/pypi/l/ebr-connector.svg)](https://pypi.org/project/ebr-connector/)
 [![PyPI - Python Versions](https://img.shields.io/pypi/pyversions/ebr-connector.svg)](https://pypi.org/project/ebr-connector/)
