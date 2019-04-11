@@ -2,13 +2,13 @@
 Collection of queries that return a single result (in dictionary form)
 """
 
-import warnings
 from elasticsearch_dsl import Q
+from deprecated.sphinx import deprecated
 
 from ebr_connector.prepacked_queries.query import make_query, DETAILED_JOB
 
-warnings.warn("prepacked_queries: the single_jobs module is deprecated", DeprecationWarning, stacklevel=2)
 
+@deprecated(version="0.1.1", reason="It is planned to replace these functions with a DSL")
 def get_build(index, job_name, build_id, wildcard=False):
     """
     Get result of a single build from the elastic search database by its ID and the name of the job it belongs to.
