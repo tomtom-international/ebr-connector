@@ -5,10 +5,11 @@ Collection of queries that return a single result (in dictionary form)
 from elasticsearch_dsl import Q
 from deprecated.sphinx import deprecated
 
+from ebr_connector.prepacked_queries import DEPRECATION_MESSAGE
 from ebr_connector.prepacked_queries.query import make_query, DETAILED_JOB
 
 
-@deprecated(version="0.1.1", reason="It is planned to replace these functions with a DSL")
+@deprecated(version="0.1.1", reason=DEPRECATION_MESSAGE)
 def get_build(index, job_name, build_id, wildcard=False):
     """
     Get result of a single build from the elastic search database by its ID and the name of the job it belongs to.

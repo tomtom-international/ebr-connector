@@ -6,10 +6,11 @@ from elasticsearch_dsl import Q, A
 from deprecated.sphinx import deprecated
 
 from ebr_connector.schema.build_results import BuildResults
+from ebr_connector.prepacked_queries import DEPRECATION_MESSAGE
 from ebr_connector.prepacked_queries.query import make_query, DETAILED_JOB, JOB_MINIMAL
 
 
-@deprecated(version="0.1.1", reason="It is planned to replace these functions with a DSL")
+@deprecated(version="0.1.1", reason=DEPRECATION_MESSAGE)
 def successful_jobs(index, job_name_regex, size=10, start_date="now-7d", end_date="now"):
     """
     Get the results of jobs matching the job name regex provided.
@@ -36,7 +37,7 @@ def successful_jobs(index, job_name_regex, size=10, start_date="now-7d", end_dat
     return result
 
 
-@deprecated(version="0.1.1", reason="It is planned to replace these functions with a DSL")
+@deprecated(version="0.1.1", reason=DEPRECATION_MESSAGE)
 def failed_tests(index, job_name, size=10, fail_count=5, duration_low=162.38, duration_high=320, start_date="now-7d", end_date="now", agg=False): #pylint: disable=too-many-locals
     """
     Get jobs with failed tests matching certain parameters
@@ -79,7 +80,7 @@ def failed_tests(index, job_name, size=10, fail_count=5, duration_low=162.38, du
     return make_query(index, combined_filter, includes=DETAILED_JOB['includes'], excludes=DETAILED_JOB['excludes'], size=size, agg=test_agg)
 
 
-@deprecated(version="0.1.1", reason="It is planned to replace these functions with a DSL")
+@deprecated(version="0.1.1", reason=DEPRECATION_MESSAGE)
 def job_matching_test(index, test_name, passed=True, failed=True, skipped=False, job_name=None, size=10, start_date="now-7d", end_date="now"):
     """
     Get information on a given test
@@ -124,7 +125,7 @@ def job_matching_test(index, test_name, passed=True, failed=True, skipped=False,
     return make_query(index, combined_filter, includes=JOB_MINIMAL['includes'], excludes=JOB_MINIMAL['excludes'], size=size)
 
 
-@deprecated(version="0.1.1", reason="It is planned to replace these functions with a DSL")
+@deprecated(version="0.1.1", reason=DEPRECATION_MESSAGE)
 def get_job(index, job_name, wildcard=False, size=10, start_date="now-7d", end_date="now"):
     """
     Get a list of all the builds recorded for a given job
