@@ -36,16 +36,16 @@ JOB_MINIMAL = {
     ]
 }
 
-def make_query(index, combined_filter, includes, excludes, agg=None, size=1):
+def make_query(index, combined_filter, includes, excludes, agg=None, size=1, offset=0):
     """
     Simplifies the execution and usage of a typical query, including cleaning up the results.
-
     Args:
         index: index to search on
         combined_filter: combined set of filters to run the query with
         includes: list of fields to include on the results (keep as  small as possible to improve execution time)
         excludes: list of fields to explicitly exclude from the results
         size: [Optional] number of results to return. Defaults to 1.
+        offset: [Optional] starting index of results. Defaults to 0.
     Returns:
         List of dicts with results of the query.
     """
@@ -54,7 +54,7 @@ def make_query(index, combined_filter, includes, excludes, agg=None, size=1):
     if agg:
         search = search.aggs.metric('fail_count', agg)
     search = search.query("bool", filter=[combined_filter])[0:1] # pylint: disable=no-member
-    search = search[0:size]
+    search = search[offset:size]
     response = search.execute()
     results = []
 

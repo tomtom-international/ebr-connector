@@ -12,6 +12,7 @@ import sys
 import urllib
 from elasticsearch_dsl import connections
 from ebr_connector.prepacked_queries.multi_jobs import successful_jobs, failed_tests
+from ebr_connector.prepacked_queries.flaky_jobs import get_flaky_tests
 
 
 def main():
@@ -49,6 +50,7 @@ def main():
 
     query_failed_tests(args.index)
     query_for_successful_job(args.index)
+    query_flaky_tests(args.index)
 
 
 def query_for_successful_job(index):
@@ -77,10 +79,34 @@ def query_failed_tests(index):
     return response
 
 
+def query_flaky_tests(index):
+    """Queries for flaky tests
+    """
+    response = get_flaky_tests(index, start_date="now-4w", end_date="now")
+
+    dump_dict(response)
+
+    # Print out a flat list of flaky tests for debugging purposes
+    flaky_tests = []
+    for class_name in response:
+        for test_name in response[class_name]:
+            flaky_tests.append("%s.%s" % (class_name, test_name))
+
+    print("%d flaky tests found:" % len(flaky_tests))
+    dump_dict(flaky_tests)
+
+    return response
+
+
+def dump_dict(dict):
+    """Dump the dictionary formatted on the console.
+    """
+    print(json.dumps(dict, indent=2, sort_keys=True, default=str))
+
 def dump_formatted(json_value):
     """Dump the json value formatted on the console.
     """
-    print(json.dumps(json_value.to_dict(), indent=2, sort_keys=True, default=str))
+    dump_dict(json_value.to_dict())
 
 if __name__ == '__main__':
     sys.exit(main())
