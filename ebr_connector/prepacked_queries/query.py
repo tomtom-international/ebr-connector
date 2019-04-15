@@ -1,7 +1,11 @@
 """
 Module with basic wrapper for making a query to elastic search, as well as default field lists for including/excluding in results
 """
+
+from deprecated.sphinx import deprecated
 from ebr_connector.schema.build_results import BuildResults
+from ebr_connector.prepacked_queries import DEPRECATION_MESSAGE
+
 
 # Provides common job details, without all passing and skipped tests
 DETAILED_JOB = {
@@ -36,6 +40,8 @@ JOB_MINIMAL = {
     ]
 }
 
+
+@deprecated(version="0.1.1", reason=DEPRECATION_MESSAGE)
 def make_query(index, combined_filter, includes, excludes, agg=None, size=1):
     """
     Simplifies the execution and usage of a typical query, including cleaning up the results.
