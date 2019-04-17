@@ -13,6 +13,7 @@ import urllib
 from elasticsearch_dsl import connections
 from ebr_connector.prepacked_queries.multi_jobs import successful_jobs, failed_tests
 from ebr_connector.prepacked_queries.flaky_jobs import get_flaky_tests
+from ebr_connector.prepacked_queries.test_results import get_failing_tests
 
 
 def main():
@@ -48,9 +49,10 @@ def main():
             "ca_certs": args.cacert
         }])
 
-    query_failed_tests(args.index)
-    query_for_successful_job(args.index)
-    query_flaky_tests(args.index)
+    #query_failed_tests(args.index)
+    #query_for_successful_job(args.index)
+    #query_flaky_tests(args.index)
+    query_failing_tests(args.index)
 
 
 def query_for_successful_job(index):
@@ -94,6 +96,19 @@ def query_flaky_tests(index):
 
     print("%d flaky tests found:" % len(flaky_tests))
     dump_dict(flaky_tests)
+
+    return response
+
+
+def query_failing_tests(index):
+    """Queries for failed tests
+    """
+    response = get_failing_tests(index, start_date="now-1d", end_date="now")
+
+    # Iterate over the response and print only the hits
+    for hit in response:
+        dump_dict(hit)
+    print("Hits: %d" % len(response))
 
     return response
 
