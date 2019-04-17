@@ -36,8 +36,9 @@ def test_flaky_query(
     mock_execute.side_effect = [
         get_batch_data(),
         get_results_data_for_ids(["id1", "id2", "id3", "id4"]),
+        get_num_passes_data_for_test("class1", "test1", ["id1", "id2", "id3", "id4"]),
+        get_num_passes_data_for_test("class1", "test2", ["id1", "id2", "id3", "id4"]),
         get_num_passes_data_for_test("class1", "test3", ["id1", "id2", "id3", "id4"]),
-        get_num_passes_data_for_test("class1", "test4", ["id1", "id2", "id3", "id4"]),
         get_results_data_for_ids(["id5", "id6"]),
         get_num_passes_data_for_test("class1", "test2", ["id5", "id6"]),
         get_num_passes_data_for_test("class1", "test3", ["id5", "id6"]),
@@ -61,26 +62,27 @@ def test_flaky_query(
     # Then
     assert len(flaky_tests) == 1
     assert "class1" in flaky_tests
-    assert len(flaky_tests["class1"]) == 2
+    assert len(flaky_tests["class1"]) == 3
+    assert "test1" in flaky_tests["class1"]
     assert "test2" in flaky_tests["class1"]
     assert "test3" in flaky_tests["class1"]
 
     assert len(flaky_tests["class1"]["test2"]) == 1
     assert len(flaky_tests["class1"]["test2"][0]["builds"]) == 2
 
-    verify_data(flaky_tests["class1"]["test2"][0], {
+    verify_data(flaky_tests["class1"]["test1"][0], {
         "class_name": "class1",
-        "test_name": "test2",
-        "platform": "platform2",
+        "test_name": "test1",
+        "platform": "platform1",
         "product_version": "productversion1",
         "report_set": "reportset1",
         "build_version": "buildversion1",
         "job_name": "jobname1",
-        "num_failures": 1,
+        "num_failures": 2,
         "num_passes": 1,
-        "num_runs": 2,
+        "num_runs": 3,
         "num_skipped": 0,
-        "flaky_score": 100
+        "flaky_score": 100 * 2 / 3
     })
 
     verify_data(flaky_tests["class1"]["test2"][0]["builds"][0], {
@@ -94,7 +96,7 @@ def test_flaky_query(
     })
 
     assert len(flaky_tests["class1"]["test3"]) == 3
-    assert len(flaky_tests["class1"]["test3"][0]["builds"]) == 2
+    assert len(flaky_tests["class1"]["test3"][0]["builds"]) == 3
     assert len(flaky_tests["class1"]["test3"][1]["builds"]) == 2
 
     verify_data(flaky_tests["class1"]["test3"][0], {
@@ -107,8 +109,8 @@ def test_flaky_query(
         "job_name": "jobname1",
         "num_failures": 1,
         "num_passes": 1,
-        "num_runs": 2,
-        "num_skipped": 0,
+        "num_runs": 3,
+        "num_skipped": 1,
         "flaky_score": 100
     })
 
@@ -118,8 +120,13 @@ def test_flaky_query(
     })
 
     verify_data(flaky_tests["class1"]["test3"][0]["builds"][1], {
-        "build_date_time": "2019-04-16T22:03:44",
+        "build_date_time": "2019-04-16T22:03:43",
         "build_id": "buildid2"
+    })
+
+    verify_data(flaky_tests["class1"]["test3"][0]["builds"][2], {
+        "build_date_time": "2019-04-16T22:03:44",
+        "build_id": "buildid3"
     })
 
     verify_data(flaky_tests["class1"]["test3"][1], {

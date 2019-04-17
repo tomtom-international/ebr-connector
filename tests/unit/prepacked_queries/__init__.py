@@ -36,11 +36,11 @@ MOCK_JOBS_DATA = {
         "br_product_version_key": "productversion1",
         "br_tests_object": {
             "br_tests_passed_object": [{
-                "br_test": "test1",
+                "br_test": "test4",
                 "br_classname": "class1",
                 "br_reportset": "reportset1"
             },{
-                "br_test": "test2",
+                "br_test": "test5",
                 "br_classname": "class1",
                 "br_reportset": "reportset1"
             }]
@@ -66,7 +66,7 @@ MOCK_JOBS_DATA = {
         "br_job_name": "jobname1",
         "br_job_info": "buildversion1",
         "br_platform": "platform1",
-        "br_build_id_key": "buildid2",
+        "br_build_id_key": "buildid3",
         "br_product_version_key": "productversion1",
         "br_tests_object": {
             "br_tests_failed_object": [{
@@ -81,12 +81,12 @@ MOCK_JOBS_DATA = {
                 "br_test": "test3",
                 "br_classname": "class1",
                 "br_reportset": "reportset1"
-            }, {
+            }],
+            "br_tests_passed_object": [{
                 "br_test": "test4",
                 "br_classname": "class1",
                 "br_reportset": "reportset1"
-            }],
-            "br_tests_passed_object": [{
+            }, {
                 "br_test": "test5",
                 "br_classname": "class1",
                 "br_reportset": "reportset1"
