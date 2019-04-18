@@ -114,16 +114,16 @@ def get_batches(index, start_date, end_date="now", collector=None, job_name=None
 
     if collector:
         # Filter for collector name
-        search_filters &= Q("match", collector=collector)
+        search_filters &= Q("match_phrase", collector=collector)
 
     if job_name:
         # Filter for job name
-        search_type = "wildcard" if "*" in job_name else "term"
+        search_type = "wildcard" if "*" in job_name else "match_phrase"
         search_filters &= Q(search_type, br_job_name__raw=job_name)
 
     if platform:
         # Filter for platform
-        search_type = "wildcard" if "*" in platform else "term"
+        search_type = "wildcard" if "*" in platform else "match_phrase"
         search_filters &= Q(search_type, br_platform__raw=platform)
 
     # Create aggregations to return number of batches
@@ -199,7 +199,7 @@ def get_number_of_times_test_passed_in_batch(index, ids, class_name, test_name):
 
     # Filter for test
     fullname = "%s.%s" % (class_name, test_name)
-    search_filters &= Q("match", br_tests_object__br_tests_passed_object__br_fullname__raw=fullname)
+    search_filters &= Q("match_phrase", br_tests_object__br_tests_passed_object__br_fullname__raw=fullname)
 
     agg = A("terms", field="_id", size=MAXIMUM_NUM_RECORDS)
 
