@@ -40,8 +40,8 @@ setup(
     description="Simple Python package to define a schema for build and test results to be stored in Elasticsearch.",
     entry_points={
         "console_scripts": [
-            "ebr-generate-index-template = elastic.index.generate_template:main",
-            "ebr-store-jenkins-results = elastic.hooks.jenkins.store_results:main"
+            "ebr-generate-index-template = ebr_connector.index.generate_template:main",
+            "ebr-store-jenkins-results = ebr_connector.hooks.jenkins.store_results:main"
         ],
     },
     install_requires=requirements,
