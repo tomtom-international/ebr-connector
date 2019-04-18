@@ -38,11 +38,11 @@ MOCK_JOBS_DATA = {
             "br_tests_passed_object": [{
                 "br_test": "test4",
                 "br_classname": "class1",
-                "br_reportset": "reportset1"
+                "br_reportset": "reportset2"
             },{
                 "br_test": "test5",
                 "br_classname": "class1",
-                "br_reportset": "reportset1"
+                "br_reportset": "reportset2"
             }]
         }
     },
@@ -85,15 +85,15 @@ MOCK_JOBS_DATA = {
             "br_tests_passed_object": [{
                 "br_test": "test4",
                 "br_classname": "class1",
-                "br_reportset": "reportset1"
+                "br_reportset": "reportset2"
             }, {
                 "br_test": "test5",
                 "br_classname": "class1",
-                "br_reportset": "reportset1"
+                "br_reportset": "reportset2"
             }, {
                 "br_test": "test6",
                 "br_classname": "class1",
-                "br_reportset": "reportset1"
+                "br_reportset": "reportset2"
             }]
         }
     },
@@ -145,7 +145,7 @@ MOCK_JOBS_DATA = {
             "br_tests_passed_object": [{
                 "br_test": "test4",
                 "br_classname": "class1",
-                "br_reportset": "reportset1"
+                "br_reportset": "reportset2"
             }]
         }
     },
@@ -180,16 +180,16 @@ MOCK_JOBS_DATA = {
             }, {
                 "br_test": "test4",
                 "br_classname": "class1",
-                "br_reportset": "reportset1"
+                "br_reportset": "reportset2"
             }],
             "br_tests_passed_object": [{
                 "br_test": "test5",
                 "br_classname": "class1",
-                "br_reportset": "reportset1"
+                "br_reportset": "reportset2"
             }, {
                 "br_test": "test6",
                 "br_classname": "class1",
-                "br_reportset": "reportset1"
+                "br_reportset": "reportset2"
             }]
         }
     },
@@ -217,7 +217,7 @@ MOCK_JOBS_DATA = {
             }, {
                 "br_test": "test4",
                 "br_classname": "class1",
-                "br_reportset": "reportset1"
+                "br_reportset": "reportset2"
             }]
         }
     },
@@ -245,15 +245,15 @@ MOCK_JOBS_DATA = {
             }, {
                 "br_test": "test4",
                 "br_classname": "class1",
-                "br_reportset": "reportset1"
+                "br_reportset": "reportset2"
             }, {
                 "br_test": "test5",
                 "br_classname": "class1",
-                "br_reportset": "reportset1"
+                "br_reportset": "reportset2"
             }, {
                 "br_test": "test6",
                 "br_classname": "class1",
-                "br_reportset": "reportset1"
+                "br_reportset": "reportset2"
             }]
         }
     },
@@ -305,7 +305,7 @@ MOCK_JOBS_DATA = {
             "br_tests_passed_object": [{
                 "br_test": "test4",
                 "br_classname": "class1",
-                "br_reportset": "reportset1"
+                "br_reportset": "reportset2"
             }]
         }
     }
