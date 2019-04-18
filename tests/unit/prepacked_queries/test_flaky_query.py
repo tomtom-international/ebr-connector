@@ -33,8 +33,8 @@ def mock_esdsl_source(includes=None, excludes=None):
 @patch("elasticsearch_dsl.Search.execute")
 def test_flaky_query(
         mock_execute,
-        mock_metric,
         mock_source,
+        mock_metric,
         mock_search):
     """Tests that `get_flaky_tests` returns the correct flaky test analysis data.
     """
@@ -68,6 +68,7 @@ def test_flaky_query(
     flaky_tests = get_flaky_tests(index="my_index", start_date="now-4w", end_date="now")
 
     # Then
+    # Validate we find expected flaky tests "class1.test1", "class1.test2" and "class1.test3"
     assert len(flaky_tests) == 1
     assert "class1" in flaky_tests
     assert len(flaky_tests["class1"]) == 3
@@ -75,8 +76,9 @@ def test_flaky_query(
     assert "test2" in flaky_tests["class1"]
     assert "test3" in flaky_tests["class1"]
 
-    assert len(flaky_tests["class1"]["test2"]) == 1
-    assert len(flaky_tests["class1"]["test2"][0]["builds"]) == 2
+    # Validate test "class1.test1"
+    assert len(flaky_tests["class1"]["test1"]) == 1
+    assert len(flaky_tests["class1"]["test1"][0]["builds"]) == 3
 
     verify_data(flaky_tests["class1"]["test1"][0], {
         "class_name": "class1",
@@ -93,6 +95,40 @@ def test_flaky_query(
         "flaky_score": 100 * 2 / 3
     })
 
+    verify_data(flaky_tests["class1"]["test1"][0]["builds"][0], {
+        "build_date_time": "2019-04-16T22:03:42",
+        "build_id": "buildid1"
+    })
+
+    verify_data(flaky_tests["class1"]["test1"][0]["builds"][1], {
+        "build_date_time": "2019-04-16T22:03:43",
+        "build_id": "buildid2"
+    })
+
+    verify_data(flaky_tests["class1"]["test1"][0]["builds"][2], {
+        "build_date_time": "2019-04-16T22:03:44",
+        "build_id": "buildid3"
+    })
+
+    # Validate test "class1.test2"
+    assert len(flaky_tests["class1"]["test2"]) == 1
+    assert len(flaky_tests["class1"]["test2"][0]["builds"]) == 2
+
+    verify_data(flaky_tests["class1"]["test2"][0], {
+        "class_name": "class1",
+        "test_name": "test2",
+        "platform": "platform2",
+        "product_version": "productversion1",
+        "report_set": "reportset1",
+        "build_version": "buildversion1",
+        "job_name": "jobname1",
+        "num_failures": 1,
+        "num_passes": 1,
+        "num_runs": 2,
+        "num_skipped": 0,
+        "flaky_score": 100
+    })
+
     verify_data(flaky_tests["class1"]["test2"][0]["builds"][0], {
         "build_date_time": "2019-04-16T22:03:45",
         "build_id": "buildid1"
@@ -103,9 +139,11 @@ def test_flaky_query(
         "build_id": "buildid2"
     })
 
+    # Validate test "class1.test3"
     assert len(flaky_tests["class1"]["test3"]) == 3
     assert len(flaky_tests["class1"]["test3"][0]["builds"]) == 3
     assert len(flaky_tests["class1"]["test3"][1]["builds"]) == 2
+    assert len(flaky_tests["class1"]["test3"][2]["builds"]) == 2
 
     verify_data(flaky_tests["class1"]["test3"][0], {
         "class_name": "class1",
@@ -159,5 +197,30 @@ def test_flaky_query(
 
     verify_data(flaky_tests["class1"]["test3"][1]["builds"][1], {
         "build_date_time": "2019-04-16T22:03:46",
+        "build_id": "buildid2"
+    })
+
+    verify_data(flaky_tests["class1"]["test3"][2], {
+        "class_name": "class1",
+        "test_name": "test3",
+        "platform": "platform1",
+        "product_version": "productversion1",
+        "report_set": "reportset1",
+        "build_version": "buildversion2",
+        "job_name": "jobname1",
+        "num_failures": 1,
+        "num_passes": 1,
+        "num_runs": 2,
+        "num_skipped": 0,
+        "flaky_score": 100
+    })
+
+    verify_data(flaky_tests["class1"]["test3"][2]["builds"][0], {
+        "build_date_time": "2019-04-16T22:03:51",
+        "build_id": "buildid1"
+    })
+
+    verify_data(flaky_tests["class1"]["test3"][2]["builds"][1], {
+        "build_date_time": "2019-04-16T22:03:52",
         "build_id": "buildid2"
     })
