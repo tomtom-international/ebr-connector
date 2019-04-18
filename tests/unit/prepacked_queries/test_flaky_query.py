@@ -1,28 +1,35 @@
 """
 Tests for the Flaky query.
 """
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 from elasticsearch_dsl import Search
 
 from ebr_connector.prepacked_queries.flaky_jobs import get_flaky_tests
 from . import get_batch_data, get_results_data_for_ids, get_num_passes_data_for_test
 
 
-def mock_search(index=None):
-    mock_search_result = MagicMock()
-    mock_search_result.source = MagicMock()
+def mock_buildresults_search(index=None):
+    """Mocks the BuildResults search() function.
+    """
+    # pylint: disable=unused-argument
     return Search()
 
-def mock_source(includes=None, excludes=None):
+def mock_esdsl_metric(name, agg_type, *args, **params):
+    """Mocks the Elasticsearch DSL metric() function.
+    """
+    # pylint: disable=unused-argument
     return Search()
 
-def mock_metric(name, agg_type, *args, **params):
+def mock_esdsl_source(includes=None, excludes=None):
+    """Mocks the Elasticsearch DSL source() function.
+    """
+    # pylint: disable=unused-argument
     return Search()
 
 
-@patch("ebr_connector.schema.build_results.BuildResults.search", side_effect=mock_search)
-@patch("elasticsearch_dsl.aggs.AggBase.metric", side_effect=mock_metric)
-@patch("elasticsearch_dsl.Search.source", side_effect=mock_source)
+@patch("ebr_connector.schema.build_results.BuildResults.search", side_effect=mock_buildresults_search)
+@patch("elasticsearch_dsl.aggs.AggBase.metric", side_effect=mock_esdsl_metric)
+@patch("elasticsearch_dsl.Search.source", side_effect=mock_esdsl_source)
 @patch("elasticsearch_dsl.Search.execute")
 def test_flaky_query(
         mock_execute,
@@ -31,6 +38,7 @@ def test_flaky_query(
         mock_search):
     """Tests that `get_flaky_tests` returns the correct flaky test analysis data.
     """
+    # pylint: disable=unused-argument
     # Given
     # Mock the responses from the Elasticsearch executions
     mock_execute.side_effect = [

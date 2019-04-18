@@ -34,17 +34,17 @@ JOB_FIELDS = {
     ]
 }
 
-def get_dict_value(dict, key, default=None):
+def get_dict_value(obj, key, default=None):
     """
     Get value of field in dictionary
     Args:
-        dict: Dictionary containing value.
+        obj: Dictionary containing value.
         key: Name of the field to retrieve.
         default: [Optional] Specify a default value, in case the field does not exist.
     Returns:
         The value of the field if it exists, or the default value
     """
-    return dict[key] if key in dict else default
+    return obj[key] if key in obj else default
 
 def calculate_flaky_score(num_passes, num_failures):
     """
@@ -93,12 +93,12 @@ def get_batches(index, start_date, end_date="now", collector=None, job_name=None
                     build_ids = {}
                     for build_id in platform.build_ids.buckets:
                         entries = []
-                        for id in build_id.ids.buckets:
+                        for entry_id in build_id.ids.buckets:
                             num_entries += 1
                             entry = {
-                                "id": id.key,
-                                "num_failed_tests": id.num_failed_tests.value,
-                                "num_passed_tests": id.num_passed_tests.value
+                                "id": entry_id.key,
+                                "num_failed_tests": entry_id.num_failed_tests.value,
+                                "num_passed_tests": entry_id.num_passed_tests.value
                             }
                             entries.append(entry)
                         build_ids[build_id.key] = entries
@@ -476,31 +476,23 @@ def add_flaky_data_for_batch(flaky_data_for_batch, flaky_tests):
                 flaky_tests[class_name][test_name] = []
             flaky_tests[class_name][test_name].append(flaky_data_for_test)
 
-def get_flaky_tests(index, start_date, end_date="now", collector=None, job_name=None, platform=None):
+def get_flaky_data_for_batches(index, batches):
     """
-    Returns the flaky analysis data for the given parameters
+    Returns the flaky analysis data for the given batches
     Args:
         index: Elastic search index to use
-        start_date: Specify start date (string in elastic search format).
-        end_date: [Optional] Specify end date (string in elastic search format). Default is now.
-        collector: [Optional] Collector name to use.
-        job_name: [Optional] Job name to evaluate.
-        platform: [Optional] Platform to evaluate.
+        batches: Dictionary of batches.
     Returns:
         Dictionary of flaky test data, grouped by class name then test name
     """
 
-    # Get all batches of flaky tests
-    response = get_batches(index=index, start_date=start_date, end_date=end_date, collector=collector,
-                           job_name=job_name, platform=platform)
-
     flaky_tests = {}
 
     # Iterate through all batches and get the flaky data for each
-    for build_version in response:
-        for job_name in response[build_version]:
-            for platform in response[build_version][job_name]:
-                batch = response[build_version][job_name][platform]
+    for build_version in batches:
+        for job_name in batches[build_version]:
+            for platform in batches[build_version][job_name]:
+                batch = batches[build_version][job_name][platform]
 
                 num_runs, entry_ids, failed_ids = get_entry_ids_for_batch(batch)
 
@@ -521,3 +513,24 @@ def get_flaky_tests(index, start_date, end_date="now", collector=None, job_name=
                 add_flaky_data_for_batch(flaky_data_for_batch, flaky_tests)
 
     return flaky_tests
+
+def get_flaky_tests(index, start_date, end_date="now", collector=None, job_name=None, platform=None):
+    """
+    Returns the flaky analysis data for the given parameters
+    Args:
+        index: Elastic search index to use
+        start_date: Specify start date (string in elastic search format).
+        end_date: [Optional] Specify end date (string in elastic search format). Default is now.
+        collector: [Optional] Collector name to use.
+        job_name: [Optional] Job name to evaluate.
+        platform: [Optional] Platform to evaluate.
+    Returns:
+        Dictionary of flaky test data, grouped by class name then test name
+    """
+
+    # Get all batches of flaky tests
+    batches = get_batches(index=index, start_date=start_date, end_date=end_date, collector=collector,
+                          job_name=job_name, platform=platform)
+
+    # Get the flaky data for all batches
+    return get_flaky_data_for_batches(index, batches)
