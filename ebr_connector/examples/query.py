@@ -49,9 +49,9 @@ def main():
             "ca_certs": args.cacert
         }])
 
-    #query_failed_tests(args.index)
-    #query_for_successful_job(args.index)
-    #query_flaky_tests(args.index)
+    query_failed_tests(args.index)
+    query_for_successful_job(args.index)
+    query_flaky_tests(args.index)
     query_failing_tests(args.index)
 
 
