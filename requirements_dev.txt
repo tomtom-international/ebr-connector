@@ -1,4 +1,4 @@
-pip==19.0.3
+pip==19.1.1
 setuptools==41.0.1
 virtualenv==16.5.0
 
