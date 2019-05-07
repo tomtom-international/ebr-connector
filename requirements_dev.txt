@@ -1,5 +1,5 @@
 pip==19.0.3
-setuptools==41.0.0
+setuptools==41.0.1
 virtualenv==16.5.0
 
 bumpversion==0.5.3
@@ -20,4 +20,4 @@ pytest-cov==2.6.1
 pytest-pylint==0.14.0
 pytest-runner==4.4
 setuptools-lint==0.6.0
-tox==3.8.6
+tox==3.9.0
