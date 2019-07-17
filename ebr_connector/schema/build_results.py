@@ -39,15 +39,15 @@ class Test(InnerDoc):
         br_duration: Duration in milliseconds (float) of the test
         br_reportset: (Optional) Report set the test is a part of
     """
-    br_suite = Text(fields={'raw': Keyword()})
-    br_classname = Text(fields={'raw': Keyword()})
-    br_test = Text(fields={'raw': Keyword()})
+
+    br_suite = Text(fields={"raw": Keyword()})
+    br_classname = Text(fields={"raw": Keyword()})
+    br_test = Text(fields={"raw": Keyword()})
     br_result = Text()
     br_message = Text()
     br_duration = Float()
     br_reportset = Text()
-    br_fullname = Text(fields={'raw': Keyword()})
-
+    br_fullname = Text(fields={"raw": Keyword()})
 
     class Result(Enum):
         """Enum for keeping the test results in sync across CI hooks.
@@ -76,8 +76,16 @@ class Test(InnerDoc):
         Factory method for creating a new instance of :class:`ebr_connector.schema.Test`.
         """
 
-        return Test(br_suite=suite, br_classname=classname, br_test=test, br_result=result, br_message=message,
-                    br_duration=duration, br_reportset=reportset, br_fullname=suite + "." + test)
+        return Test(
+            br_suite=suite,
+            br_classname=classname,
+            br_test=test,
+            br_result=result,
+            br_message=message,
+            br_duration=duration,
+            br_reportset=reportset,
+            br_fullname=suite + "." + test,
+        )
 
 
 class TestSuite(InnerDoc):
@@ -93,21 +101,29 @@ class TestSuite(InnerDoc):
         br_duration: Duration in milliseconds (float) of the entire test suite
         br_package: (Optional) package the test set is associated with
     """
-    br_name = Text(fields={'raw': Keyword()})
+
+    br_name = Text(fields={"raw": Keyword()})
     br_failures_count = Integer()
     br_skipped_count = Integer()
     br_passed_count = Integer()
     br_total_count = Integer()
     br_duration = Float()
-    br_package = Text(fields={'raw': Keyword()})
+    br_package = Text(fields={"raw": Keyword()})
 
     @staticmethod
     def create(name, failures_count, skipped_count, passed_count, total_count, duration, package=None):
         """
         Factory method for creating a new instance of :class:`ebr_connector.schema.TestSuite`.
         """
-        return TestSuite(br_name=name, br_failures_count=failures_count, br_skipped_count=skipped_count,
-                         br_passed_count=passed_count, br_total_count=total_count, br_duration=duration, br_package=package)
+        return TestSuite(
+            br_name=name,
+            br_failures_count=failures_count,
+            br_skipped_count=skipped_count,
+            br_passed_count=passed_count,
+            br_total_count=total_count,
+            br_duration=duration,
+            br_package=package,
+        )
 
 
 class TestSummary(InnerDoc):
@@ -120,6 +136,7 @@ class TestSummary(InnerDoc):
         br_total_skipped_count: Total number of all skipped test cases
         br_total_count: Total number of all passed/failed/skipped test cases
     """
+
     br_total_passed_count = Integer()
     br_total_failed_count = Integer()
     br_total_skipped_count = Integer()
@@ -130,8 +147,12 @@ class TestSummary(InnerDoc):
         """
         Factory method for creating a new instance of :class:`ebr_connector.schema.TestSummary`.
         """
-        return TestSummary(br_total_passed_count=total_passed_count, br_total_failed_count=total_failed_count,
-                           br_total_skipped_count=total_skipped_count, br_total_count=total_count)
+        return TestSummary(
+            br_total_passed_count=total_passed_count,
+            br_total_failed_count=total_failed_count,
+            br_total_skipped_count=total_skipped_count,
+            br_total_count=total_count,
+        )
 
 
 class Tests(InnerDoc):
@@ -145,6 +166,7 @@ class Tests(InnerDoc):
         br_tests_skipped_object: Set of skipped test cases
         br_summary_object: Summary over all tests
     """
+
     br_suites_object = Nested(TestSuite)
     br_tests_passed_object = Nested(Test)
     br_tests_failed_object = Nested(Test)
@@ -156,8 +178,13 @@ class Tests(InnerDoc):
         """
         Factory method for creating a new instance of :class:`ebr_connector.schema.Tests`.
         """
-        return Tests(br_suites_object=suites, br_tests_passed_object=tests_passed, br_tests_failed_object=tests_failed,
-                     br_tests_skipped_object=tests_skipped, br_summary_object=summary)
+        return Tests(
+            br_suites_object=suites,
+            br_tests_passed_object=tests_passed,
+            br_tests_failed_object=tests_failed,
+            br_tests_skipped_object=tests_skipped,
+            br_summary_object=summary,
+        )
 
 
 class _BuildResultsMetaDocument(Document):
@@ -171,6 +198,7 @@ class _BuildResultsMetaDocument(Document):
         This data is for pure information purposes and won't be used at all by Elasticsearch.
         See as well https://www.ebr_connector.co/guide/en/elasticsearch/reference/current/mapping-meta-field.html#mapping-meta-field.
         """
+
         meta = MetaField(template_version=ebr_connector.__version__)
         dynamic_templates = MetaField(DYNAMIC_TEMPLATES)
 
@@ -193,14 +221,15 @@ class BuildResults(_BuildResultsMetaDocument):
         br_version_key: Version of the BuildResults schema
         br_product_version_key: Version of the product (eg. Commit hash or semantic version)
     """
-    br_job_name = Text(fields={'raw': Keyword()})
+
+    br_job_name = Text(fields={"raw": Keyword()})
     br_job_url_key = Keyword()
-    br_job_info = Text(fields={'raw': Keyword()})
-    br_source = Text(fields={'raw': Keyword()})
+    br_job_info = Text(fields={"raw": Keyword()})
+    br_source = Text(fields={"raw": Keyword()})
     br_build_date_time = Date()
     br_build_id_key = Keyword()
-    br_platform = Text(fields={'raw': Keyword()})
-    br_product = Text(fields={'raw': Keyword()})
+    br_platform = Text(fields={"raw": Keyword()})
+    br_product = Text(fields={"raw": Keyword()})
     br_status_key = Keyword()
     br_tests_object = Object(Tests)
     br_version_key = Keyword()
@@ -210,6 +239,7 @@ class BuildResults(_BuildResultsMetaDocument):
         """
         Status of a build
         """
+
         ABORTED = 1
         FAILURE = 2
         NOT_BUILT = 3
@@ -217,7 +247,6 @@ class BuildResults(_BuildResultsMetaDocument):
         SUCCESS = 5
         TIMEOUT = 6
         UNSTABLE = 7
-
 
         @staticmethod
         def create(build_status_str):
@@ -243,15 +272,26 @@ class BuildResults(_BuildResultsMetaDocument):
                 raise ValueError("Unknown build status string '%s'" % build_status_str)
             return status
 
-
     @staticmethod
-    def create(job_name, job_link, build_date_time, build_id, platform, product=None, job_info=None, product_version=None):
+    def create(
+        job_name, job_link, build_date_time, build_id, platform, product=None, job_info=None, product_version=None
+    ):
         """
         Creates an immutable instance of :class:`ebr_connector.schema.BuildResults`.
         """
-        return BuildResults(br_job_name=job_name, br_job_url_key=job_link, br_build_date_time=build_date_time, br_build_id_key=build_id,
-                            br_platform=platform, br_product=product, br_job_info=job_info, br_status_key=None,
-                            br_tests_object={}, br_version_key=ebr_connector.__version__, br_product_version_key=product_version)
+        return BuildResults(
+            br_job_name=job_name,
+            br_job_url_key=job_link,
+            br_build_date_time=build_date_time,
+            br_build_id_key=build_id,
+            br_platform=platform,
+            br_product=product,
+            br_job_info=job_info,
+            br_status_key=None,
+            br_tests_object={},
+            br_version_key=ebr_connector.__version__,
+            br_product_version_key=product_version,
+        )
 
     def store_tests(self, retrieve_function, *args, **kwargs):
         """
@@ -265,8 +305,8 @@ class BuildResults(_BuildResultsMetaDocument):
             results = retrieve_function(*args, **kwargs)
             self.br_tests_object = Tests()
 
-            for test in results.get('tests', None):
-                test_result = Test.Result[test.get('result', Test.Result.FAILED)]
+            for test in results.get("tests", None):
+                test_result = Test.Result[test.get("result", Test.Result.FAILED)]
                 if test_result == Test.Result.PASSED:
                     self.br_tests_object.br_tests_passed_object.append(Test.create(**test))
                 elif test_result == Test.Result.FAILED:
@@ -277,12 +317,14 @@ class BuildResults(_BuildResultsMetaDocument):
             total_passed_count = len(self.br_tests_object.br_tests_passed_object)
             total_failed_count = len(self.br_tests_object.br_tests_failed_object)
             total_skipped_count = len(self.br_tests_object.br_tests_skipped_object)
-            self.br_tests_object.br_summary_object = TestSummary.create(total_passed_count=total_passed_count,
-                                                                        total_failed_count=total_failed_count,
-                                                                        total_skipped_count=total_skipped_count,
-                                                                        total_count=total_passed_count + total_failed_count + total_skipped_count)
+            self.br_tests_object.br_summary_object = TestSummary.create(
+                total_passed_count=total_passed_count,
+                total_failed_count=total_failed_count,
+                total_skipped_count=total_skipped_count,
+                total_count=total_passed_count + total_failed_count + total_skipped_count,
+            )
 
-            for suite in results.get('suites', None):
+            for suite in results.get("suites", None):
                 self.br_tests_object.br_suites_object.append(TestSuite.create(**suite))
 
         except (KeyError, TypeError):

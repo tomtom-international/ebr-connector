@@ -19,26 +19,17 @@ DETAILED_JOB = {
         "br_product",
         "br_status_key",
         "br_version_key",
-        "br_tests_object"
+        "br_tests_object",
     ],
     "excludes": [
         "lhi*",
         "br_tests_object.br_tests_passed_object.*",
         "br_tests_object.br_tests_skipped_object.*",
-        "br_tests_object.br_suites_object.*"
-    ]
+        "br_tests_object.br_suites_object.*",
+    ],
 }
 
-JOB_MINIMAL = {
-    "includes": [
-        "br_job_name",
-        "br_build_id_key",
-        "br_status_key",
-        "br_build_date_time"
-    ],
-    "excludes": [
-    ]
-}
+JOB_MINIMAL = {"includes": ["br_job_name", "br_build_id_key", "br_status_key", "br_build_date_time"], "excludes": []}
 
 
 @deprecated(version="0.1.1", reason=DEPRECATION_MESSAGE)
@@ -58,15 +49,15 @@ def make_query(index, combined_filter, includes, excludes, agg=None, size=1):
     search = BuildResults().search(index=index)
     search = search.source(includes=includes, excludes=excludes)
     if agg:
-        search = search.aggs.metric('fail_count', agg)
-    search = search.query("bool", filter=[combined_filter])[0:1] # pylint: disable=no-member
+        search = search.aggs.metric("fail_count", agg)
+    search = search.query("bool", filter=[combined_filter])[0:1]  # pylint: disable=no-member
     search = search[0:size]
     response = search.execute()
     results = []
 
     if agg:
-        results = response['aggregations']['fail_count']['buckets']
+        results = response["aggregations"]["fail_count"]["buckets"]
     else:
-        for hit in response['hits']['hits']:
-            results.append(hit['_source'])
+        for hit in response["hits"]["hits"]:
+            results.append(hit["_source"])
     return results

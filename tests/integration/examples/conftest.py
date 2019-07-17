@@ -36,34 +36,45 @@ def get_index_data():
             "callback": get_test_data_for_failed_build,
             "buildstatus": "FAILURE",
             "buildid": 1234,
-            "jobname": "cpp-reflection-tests-BB-baseline"
+            "jobname": "cpp-reflection-tests-BB-baseline",
         },
         {
             "callback": get_test_data_for_successful_build,
             "buildstatus": "SUCCESS",
             "buildid": 3,
-            "jobname": "cpp-reflection-tests-BB/PR-1234"
+            "jobname": "cpp-reflection-tests-BB/PR-1234",
         },
         {
             "callback": get_test_data_for_successful_build,
             "buildstatus": "SUCCESS",
             "buildid": 12345,
-            "jobname": "cpp-reflection-tests-BB-baseline"
-        }]
+            "jobname": "cpp-reflection-tests-BB-baseline",
+        },
+    ]
 
     index_data = []
     for job_data in job_data_set:
         date_time = (datetime.utcnow()).isoformat()
-        build_results = BuildResults.create(job_name=job_data.get("jobname"),
-                                            job_link="http://ci/%s" % job_data.get("jobname"),
-                                            build_date_time=str(date_time),
-                                            build_id=job_data.get("buildid"),
-                                            platform="Linux-x86_64", product="MyProduct")
+        build_results = BuildResults.create(
+            job_name=job_data.get("jobname"),
+            job_link="http://ci/%s" % job_data.get("jobname"),
+            build_date_time=str(date_time),
+            build_id=job_data.get("buildid"),
+            platform="Linux-x86_64",
+            product="MyProduct",
+        )
         mock_status_callback = MagicMock()
         mock_status_callback.return_value = job_data.get("buildstatus")
         build_results.store_tests(job_data.get("callback"))
         build_results.store_status(mock_status_callback)
-        index_data.append({"_index": get_index_name(), "_type": "doc", "_id": random.getrandbits(128), "_source": build_results.to_dict()})
+        index_data.append(
+            {
+                "_index": get_index_name(),
+                "_type": "doc",
+                "_id": random.getrandbits(128),
+                "_source": build_results.to_dict(),
+            }
+        )
 
     return index_data
 
@@ -80,8 +91,13 @@ def elasticsearch_instance():
             es_container[0].remove()
     except docker.errors.DockerException:
         pass
-    es_container = docker_client.containers.run("docker.elastic.co/elasticsearch/elasticsearch-oss:6.5.1",
-                                                detach=True, auto_remove=True, ports={"9200": "9200"}, name="ebr_elasticsearch")
+    es_container = docker_client.containers.run(
+        "docker.elastic.co/elasticsearch/elasticsearch-oss:6.5.1",
+        detach=True,
+        auto_remove=True,
+        ports={"9200": "9200"},
+        name="ebr_elasticsearch",
+    )
     yield
     # try:
     #     es_container.stop()
@@ -102,9 +118,7 @@ def client(elasticsearch_instance):
 def create_index(connection):
     """Creates an test index based on the BuildResults meta data (eg. mapping)
     """
-    connection.indices.create(
-        index=get_index_name(),
-        body=generate_template(get_alias_name()))
+    connection.indices.create(index=get_index_name(), body=generate_template(get_alias_name()))
 
 
 # pylint: disable=redefined-outer-name
@@ -115,4 +129,4 @@ def data_client(client):
     create_index(client)
     bulk(client, get_index_data(), raise_on_error=True, refresh=True)
     yield client
-    #client.indices.delete(get_index_name())
+    # client.indices.delete(get_index_name())
