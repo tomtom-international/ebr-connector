@@ -28,6 +28,8 @@ def get_build(index, job_name, build_id, wildcard=False):
     match_job_name = Q(search_type, br_job_name__raw=job_name)
     match_build_id = Q(search_type, br_build_id_key=build_id)
     combined_filter = match_job_name + match_build_id
-    result = make_query(index, combined_filter, includes=DETAILED_JOB['includes'], excludes=DETAILED_JOB['excludes'], size=1)
+    result = make_query(
+        index, combined_filter, includes=DETAILED_JOB["includes"], excludes=DETAILED_JOB["excludes"], size=1
+    )
 
     return result[0]

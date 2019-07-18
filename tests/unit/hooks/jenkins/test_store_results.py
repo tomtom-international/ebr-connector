@@ -13,9 +13,8 @@ from . import get_jenkins_test_report_response
 @patch("ssl.create_default_context")
 @patch("ebr_connector.hooks.common.store_results.get_json_job_details")
 def test_store_tests_returns_valid_build_results_document(
-        mock_get_json_job_details,
-        mock_ssl_create_default_context,
-        mock_socket):
+    mock_get_json_job_details, mock_ssl_create_default_context, mock_socket
+):
     """Tests that `store_tests` translates the test data object properly to a BuildResults document.
     """
     # Given
@@ -34,7 +33,8 @@ def test_store_tests_returns_valid_build_results_document(
     mock_get_json_job_details.side_effect = [
         {"fullName": "a_job_name"},
         {"url": "http://abc", "timestamp": "1550567699000", "result": "FAILURE"},
-        get_jenkins_test_report_response()]
+        get_jenkins_test_report_response(),
+    ]
 
     # When
     build_results = store(mock_args)
@@ -56,9 +56,8 @@ def test_store_tests_returns_valid_build_results_document(
 @patch("ssl.create_default_context")
 @patch("ebr_connector.hooks.common.store_results.get_json_job_details")
 def test_store_tests_should_return_empty_results_if_json_decoder_exception_thrown(
-        mock_get_json_job_details,
-        mock_ssl_create_default_context,
-        mock_socket):
+    mock_get_json_job_details, mock_ssl_create_default_context, mock_socket
+):
     """Tests that `store_tests` translates the test data object properly to a BuildResults document.
     """
     # Given
@@ -77,7 +76,8 @@ def test_store_tests_should_return_empty_results_if_json_decoder_exception_throw
     mock_get_json_job_details.side_effect = [
         {"fullName": "a_job_name"},
         {"url": "http://abc", "timestamp": "1550567699000", "result": "FAILURE"},
-        JSONDecodeError("dummy message", "doc", 1)]
+        JSONDecodeError("dummy message", "doc", 1),
+    ]
 
     # When
     build_results = store(mock_args)

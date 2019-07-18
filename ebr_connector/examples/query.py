@@ -19,13 +19,19 @@ def main():
     """
 
     parser = argparse.ArgumentParser(description="Script runnig several example queries against Elasticsearch.")
-    parser.add_argument("--host", default="localhost", help="[Optional] Elasticsearch host to connect to (default: localhost)")
+    parser.add_argument(
+        "--host", default="localhost", help="[Optional] Elasticsearch host to connect to (default: localhost)"
+    )
     parser.add_argument("--port", default=9200, help="[Optional] Elasticsearch port to connect to (default: 9200)")
     parser.add_argument("--cacert", help="[Optional] CA cert file in PEM format (if required)")
     parser.add_argument("--ssl", default=True, type=bool, help="[Optional] Set to false to use plaintext HTTP")
     parser.add_argument("--user", default="elastic", help="[Optional] User account to bind to (default: elastic)")
-    parser.add_argument("--password", default=None, help="[Optional] Password for user account to bind to (default: None)")
-    parser.add_argument("--index", default="staging*", help="[Optional] Name of Elasticsearch index (default: staging*)")
+    parser.add_argument(
+        "--password", default=None, help="[Optional] Password for user account to bind to (default: None)"
+    )
+    parser.add_argument(
+        "--index", default="staging*", help="[Optional] Name of Elasticsearch index (default: staging*)"
+    )
     args = parser.parse_args()
 
     if not args.password and args.user:
@@ -37,15 +43,18 @@ def main():
 
     # Create default connection to Elasticsearch instance
     connections.create_connection(
-        hosts=[{
-            "host":  args.host,
-            "http_auth": enc_user + ":" + enc_password,
-            "port": args.port,
-            "timeout": 20,
-            "use_ssl": args.ssl,
-            "verify_certs": bool(args.cacert),
-            "ca_certs": args.cacert
-        }])
+        hosts=[
+            {
+                "host": args.host,
+                "http_auth": enc_user + ":" + enc_password,
+                "port": args.port,
+                "timeout": 20,
+                "use_ssl": args.ssl,
+                "verify_certs": bool(args.cacert),
+                "ca_certs": args.cacert,
+            }
+        ]
+    )
 
     query_failed_tests(args.index)
     query_for_successful_job(args.index)
@@ -82,5 +91,6 @@ def dump_formatted(json_value):
     """
     print(json.dumps(json_value.to_dict(), indent=2, sort_keys=True, default=str))
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     sys.exit(main())

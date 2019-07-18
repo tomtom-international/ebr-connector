@@ -26,15 +26,10 @@ def generate_template(index_name):
     document = _BuildResultsMetaDocument()
     index = Index(name=index_name)
     index.document(document)
-    index.settings(
-        refresh_interval="30s",
-        number_of_shards="1",
-        number_of_replicas="1"
-    )
+    index.settings(refresh_interval="30s", number_of_shards="1", number_of_replicas="1")
     index.aliases(**{index_name: {}})
     index_template = index.as_template(template_name="template_" + index_name, pattern="%s-*" % index_name)
     return index_template.to_dict()
-
 
 
 def main():
@@ -53,5 +48,6 @@ def main():
     else:
         print(json.dumps(output, ensure_ascii=False, indent=4, sort_keys=True))
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     sys.exit(main())

@@ -11,8 +11,9 @@ def test_query_failed_tests(data_client):
     """Test `query_failed_tests` example.
     """
     response = query_failed_tests(get_index_name())
-    assert len(response) == 1 # 1 documents
+    assert len(response) == 1  # 1 documents
     assert len(response[0]["br_tests_object"]["br_tests_failed_object"]) == 5
+
 
 # pylint: disable=unused-argument
 def test_query_for_successful_job(data_client):
