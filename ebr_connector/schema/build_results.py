@@ -38,6 +38,7 @@ class Test(InnerDoc):
         br_message: Any output from the test
         br_duration: Duration in milliseconds (float) of the test
         br_reportset: (Optional) Report set the test is a part of
+        br_context: (Optional) The context of the test
     """
 
     br_suite = Text(fields={"raw": Keyword()})
@@ -47,6 +48,7 @@ class Test(InnerDoc):
     br_message = Text()
     br_duration = Float()
     br_reportset = Text()
+    br_context = Text()
     br_fullname = Text(fields={"raw": Keyword()})
 
     class Result(Enum):
@@ -71,7 +73,7 @@ class Test(InnerDoc):
             raise ValueError("Unknown test result value '%s'" % result_str)
 
     @staticmethod
-    def create(suite, classname, test, result, message, duration, reportset=None):
+    def create(suite, classname, test, result, message, duration, reportset=None, context=None):
         """
         Factory method for creating a new instance of :class:`ebr_connector.schema.Test`.
         """
@@ -84,6 +86,7 @@ class Test(InnerDoc):
             br_message=message,
             br_duration=duration,
             br_reportset=reportset,
+            br_context=context,
             br_fullname=suite + "." + test,
         )
 
