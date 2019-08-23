@@ -38,7 +38,7 @@ class Test(InnerDoc):
         br_message: Any output from the test
         br_duration: Duration in milliseconds (float) of the test
         br_reportset: (Optional) Report set the test is a part of
-        br_context: (Optional) The context of the test
+        br_context: (Optional) The runtime context of the test required to reproduce this execution
     """
 
     br_suite = Text(fields={"raw": Keyword()})
