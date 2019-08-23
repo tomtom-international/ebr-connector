@@ -1,4 +1,4 @@
-virtualenv==16.7.3
+virtualenv==16.7.4
 pip==19.2.2
 setuptools==41.2.0
 
