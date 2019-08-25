@@ -1,5 +1,5 @@
 virtualenv==16.7.4
-pip==19.2.2
+pip==19.2.3
 setuptools==41.2.0
 
 bumpversion==0.5.3
