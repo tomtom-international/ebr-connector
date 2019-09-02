@@ -15,7 +15,7 @@ deprecated==1.2.5
 
 coverage==4.5.4
 pylint==2.3.1
-pytest==5.1.1
+pytest==5.1.2
 pytest-cov==2.7.1
 pytest-pylint==0.14.1
 pytest-runner==5.1
