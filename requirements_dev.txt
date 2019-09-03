@@ -20,6 +20,6 @@ pytest-cov==2.7.1
 pytest-pylint==0.14.1
 pytest-runner==5.1
 setuptools-lint==0.6.0
-tox==3.13.2
+tox==3.14.0
 
 pytest-black==0.3.7
