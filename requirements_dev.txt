@@ -3,7 +3,7 @@ pip==19.2.3
 setuptools==41.2.0
 
 bumpversion==0.5.3
-twine==1.14.0
+twine==2.0.0
 
 cmarkgfm==0.4.2
 m2r==0.2.1
