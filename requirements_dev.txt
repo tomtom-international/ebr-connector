@@ -18,7 +18,7 @@ pylint==2.3.1
 pytest==5.2.1
 pytest-cov==2.8.1
 pytest-pylint==0.14.1
-pytest-runner==5.1
+pytest-runner==5.2
 setuptools-lint==0.6.0
 tox==3.14.0
 
