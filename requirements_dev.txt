@@ -1,6 +1,6 @@
 virtualenv==16.7.7
-pip==19.3
-setuptools==41.4.0
+pip==19.3.1
+setuptools==41.6.0
 
 bumpversion==0.5.3
 twine==1.14.0
@@ -8,18 +8,18 @@ twine==1.14.0
 cmarkgfm==0.4.2
 m2r==0.2.1
 recommonmark==0.6.0
-Sphinx==2.2.0
+Sphinx==2.2.1
 sphinx-rtd-theme==0.4.3
 watchdog==0.9.0
-deprecated==1.2.6
+deprecated==1.2.7
 
 coverage==4.5.4
 pylint==2.4.4
-pytest==5.2.1
+pytest==5.2.4
 pytest-cov==2.8.1
 pytest-pylint==0.14.1
-pytest-runner==5.1
+pytest-runner==5.2
 setuptools-lint==0.6.0
-tox==3.14.0
+tox==3.14.1
 
 pytest-black==0.3.7
