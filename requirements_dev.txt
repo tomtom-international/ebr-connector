@@ -2,7 +2,7 @@ virtualenv==16.7.8
 pip==19.3.1
 setuptools==42.0.2
 
-bumpversion==0.5.3
+bumpversion==0.6.0
 twine==1.14.0
 
 cmarkgfm==0.4.2
