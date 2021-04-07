@@ -5,8 +5,7 @@
 
 
 def get_jenkins_test_report_response():
-    """Returns a Jenkins test report in JSON format as it is done via the `/testreport/api/json` endpoint.
-    """
+    """Returns a Jenkins test report in JSON format as it is done via the `/testreport/api/json` endpoint."""
     # pylint: disable=line-too-long
     return {
         "_class": "hudson.tasks.junit.TestResult",

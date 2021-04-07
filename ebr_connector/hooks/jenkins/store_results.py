@@ -67,8 +67,7 @@ def jenkins_json_decode(url):
 
 
 def store(args):
-    """Fetches the test report from Jenkins and stores the data into logstash.
-    """
+    """Fetches the test report from Jenkins and stores the data into logstash."""
     jenkins_build = assemble_build(
         args, jenkins_json_decode, [args.buildurl + "/" + args.buildid + "/testReport/api/json"]
     )

@@ -43,22 +43,19 @@ def test_create_valid_status(test_input, expected):
 
 
 def test_create_status_throws_exception():
-    """Test that unknown status strings should result in exception.
-    """
+    """Test that unknown status strings should result in exception."""
     with pytest.raises(ValueError):
         BuildResults.BuildStatus.create("unknown_status")
 
 
 def test_default_constructor():
-    """Test default constructor
-    """
+    """Test default constructor"""
     build_results = BuildResults()
     assert build_results.__dict__ == {"_d_": {}, "meta": {}}
 
 
 def test_create_factory_method():
-    """Test create factory method
-    """
+    """Test create factory method"""
     date_time = datetime.utcnow()
     build_results = BuildResults.create(
         job_name="my_jobname",
@@ -89,8 +86,7 @@ def test_create_factory_method():
 
 
 def create_dummy_build_result():
-    """Creates a dummy build results object
-    """
+    """Creates a dummy build results object"""
 
     date_time = datetime.utcnow()
     return BuildResults.create(
@@ -104,8 +100,7 @@ def create_dummy_build_result():
 
 
 def test_store_tests_with_empty_tests_and_suites():
-    """Test with no tests and suites.
-    """
+    """Test with no tests and suites."""
     # Given
     build_results = create_dummy_build_result()
 
@@ -130,8 +125,7 @@ def test_store_tests_with_empty_tests_and_suites():
 
 
 def test_store_tests_with_empty_results():
-    """Test with no tests and suites.
-    """
+    """Test with no tests and suites."""
     # Given
     build_results = create_dummy_build_result()
 
@@ -149,8 +143,7 @@ def test_store_tests_with_empty_results():
 @patch("ssl.create_default_context")
 @pytest.mark.parametrize("cafile_input", [(None), ("my_cacert.pem")])
 def test_save_logcollect(mock_ssl_create_default_context, mock_socket_class, cafile_input):
-    """Test checking that sockets are properly created and data send to server.
-    """
+    """Test checking that sockets are properly created and data send to server."""
     # Given
     ## bare socket
     mock_socket = mock_socket_class.return_value
@@ -184,8 +177,7 @@ def test_save_logcollect(mock_ssl_create_default_context, mock_socket_class, caf
 # @patch("socket.socket")
 @patch("ssl.create_default_context")
 def test_save_logcollect_should_use_client_authentication(mock_ssl_create_default_context):
-    """Test that connection is established with client authentication
-    """
+    """Test that connection is established with client authentication"""
     # Given
     mock_context = MagicMock()
     ## SSL context
@@ -204,8 +196,7 @@ def test_save_logcollect_should_use_client_authentication(mock_ssl_create_defaul
 
 
 def test_store_tests_returns_a_properly_translated_document():
-    """Tests that `store_tests` translates the test data object properly to a BuildResults document.
-    """
+    """Tests that `store_tests` translates the test data object properly to a BuildResults document."""
     # Given
     build_results = create_dummy_build_result()
 
@@ -248,8 +239,7 @@ def test_store_status_should_not_throw(exception):
 
 
 def test_store_status_called_without_args():
-    """Tests that `store_status` calls the callback function without args.
-    """
+    """Tests that `store_status` calls the callback function without args."""
     # Given
     build_results = create_dummy_build_result()
     mock_status_callback = MagicMock()
@@ -263,8 +253,7 @@ def test_store_status_called_without_args():
 
 @pytest.mark.parametrize("args_input,args_expected", [("{'id': 'test'}", "{'id': 'test'}"), ("test", "test")])
 def test_store_status_called_with_args(args_input, args_expected):
-    """Tests that `store_status` calls the callback function with args.
-    """
+    """Tests that `store_status` calls the callback function with args."""
     # Given
     build_results = create_dummy_build_result()
     mock_status_callback = MagicMock()

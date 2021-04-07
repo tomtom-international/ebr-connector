@@ -7,15 +7,13 @@ from ebr_connector.schema.build_results import Tests
 
 
 def test_default_ctor():
-    """Test default constructor
-    """
+    """Test default constructor"""
     summary = Tests()
     assert summary.__dict__ == {"_d_": {}, "meta": {}}
 
 
 def test_create_factory_method():
-    """TestSummary create factory method
-    """
+    """TestSummary create factory method"""
     summary = Mock()
     suites = Mock()
     tests_passed = Mock()
