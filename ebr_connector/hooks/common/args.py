@@ -4,6 +4,7 @@
 Module with common argparser configuration for hooks
 """
 
+import sys
 import ebr_connector
 
 
@@ -57,4 +58,4 @@ def validate_args(args):
     """
     if (args.clientcert or args.clientkey) and not (args.clientcert and args.clientkey):
         print("Either both '--clientcert' and '--clientkey' must be set or neither should be set.")
-        exit(1)
+        sys.exit(1)
