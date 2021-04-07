@@ -15,8 +15,7 @@ from . import get_jenkins_test_report_response
 def test_store_tests_returns_valid_build_results_document(
     mock_get_json_job_details, mock_ssl_create_default_context, mock_socket
 ):
-    """Tests that `store_tests` translates the test data object properly to a BuildResults document.
-    """
+    """Tests that `store_tests` translates the test data object properly to a BuildResults document."""
     # Given
     mock_socket = mock_socket.return_value
     mock_context = MagicMock()
@@ -58,8 +57,7 @@ def test_store_tests_returns_valid_build_results_document(
 def test_store_tests_should_return_empty_results_if_json_decoder_exception_thrown(
     mock_get_json_job_details, mock_ssl_create_default_context, mock_socket
 ):
-    """Tests that `store_tests` translates the test data object properly to a BuildResults document.
-    """
+    """Tests that `store_tests` translates the test data object properly to a BuildResults document."""
     # Given
     mock_socket = mock_socket.return_value
     mock_context = MagicMock()

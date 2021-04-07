@@ -99,6 +99,5 @@ def normalize_string(value):
 
 
 def get_json_job_details(buildurl):
-    """Returns detailed information in JSON about a job/build/etc. depending on the passed URL.
-    """
+    """Returns detailed information in JSON about a job/build/etc. depending on the passed URL."""
     return requests.get(buildurl + "/api/json").json()

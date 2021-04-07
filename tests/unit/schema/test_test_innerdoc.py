@@ -32,22 +32,19 @@ def test_create_valid_test_result(test_input, expected):
 
 
 def test_create_test_result_throws_exception():
-    """Test that unknown status strings should result in exception.
-    """
+    """Test that unknown status strings should result in exception."""
     with pytest.raises(ValueError):
         Test.Result.create("unknown_result")
 
 
 def test_default_ctor():
-    """Test default constructor
-    """
+    """Test default constructor"""
     test = Test()
     assert test.__dict__ == {"_d_": {}, "meta": {}}
 
 
 def test_create_factory_method():
-    """Test create factory method
-    """
+    """Test create factory method"""
     test = Test.create(
         suite="my_suitename",
         classname="my_classname",

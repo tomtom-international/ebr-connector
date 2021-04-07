@@ -15,8 +15,7 @@ from ebr_connector.prepacked_queries.multi_jobs import successful_jobs, failed_t
 
 
 def main():
-    """Main entrypoint for example script querying ElasticSearch.
-    """
+    """Main entrypoint for example script querying ElasticSearch."""
 
     parser = argparse.ArgumentParser(description="Script runnig several example queries against Elasticsearch.")
     parser.add_argument(
@@ -61,8 +60,7 @@ def main():
 
 
 def query_for_successful_job(index):
-    """Queries for successful tests
-    """
+    """Queries for successful tests"""
     response = successful_jobs(index, "cpp-reflection-tests-BB.*PR-.*", size=5)
 
     # Iterate over the search results
@@ -74,8 +72,7 @@ def query_for_successful_job(index):
 
 
 def query_failed_tests(index):
-    """Queries for failed tests
-    """
+    """Queries for failed tests"""
     response = failed_tests(index, job_name="cpp-reflection-tests-BB-baseline", size=5)
 
     # Iterate over the response and print only the hits
@@ -87,8 +84,7 @@ def query_failed_tests(index):
 
 
 def dump_formatted(json_value):
-    """Dump the json value formatted on the console.
-    """
+    """Dump the json value formatted on the console."""
     print(json.dumps(json_value.to_dict(), indent=2, sort_keys=True, default=str))
 
 

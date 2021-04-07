@@ -52,8 +52,7 @@ class Test(InnerDoc):
     br_fullname = Text(fields={"raw": Keyword()})
 
     class Result(Enum):
-        """Enum for keeping the test results in sync across CI hooks.
-        """
+        """Enum for keeping the test results in sync across CI hooks."""
 
         FAILED = 1
         PASSED = 2
@@ -61,8 +60,7 @@ class Test(InnerDoc):
 
         @staticmethod
         def create(result_str):
-            """Converts a test result string into a :class:`ebr_connector.schema.Test.Result` enum.
-            """
+            """Converts a test result string into a :class:`ebr_connector.schema.Test.Result` enum."""
             upper_result_str = result_str.upper()
             if upper_result_str in ["PASS", "PASSED", "SUCCESS", "FIXED"]:
                 return Test.Result.PASSED
@@ -191,8 +189,7 @@ class Tests(InnerDoc):
 
 
 class _BuildResultsMetaDocument(Document):
-    """Base class for the BuildResults document describing the index structure.
-    """
+    """Base class for the BuildResults document describing the index structure."""
 
     # pylint: disable=too-few-public-methods
     class Meta:
