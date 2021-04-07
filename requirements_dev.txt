@@ -6,7 +6,7 @@ bumpversion==0.6.0
 twine==3.4.1
 
 cmarkgfm==0.5.3
-m2r==0.2.1
+m2r2==0.2.7
 recommonmark==0.7.1
 Sphinx==3.5.3
 sphinx-rtd-theme==0.5.2
