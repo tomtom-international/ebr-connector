@@ -1,7 +1,7 @@
 [tool.black]
 line-length = 120
 include = '\.pyi?$'
-exclude = '''
+extend-exclude = '''
 /(
     \.eggs
   | \.git
@@ -13,3 +13,5 @@ exclude = '''
   | buck-out
   | build
   | dist
+\)
+'''
